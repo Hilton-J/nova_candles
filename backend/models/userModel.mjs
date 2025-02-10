@@ -14,28 +14,15 @@ const addressSchema = mongoose.Schema({
 });
 
 const userSchema = mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
-  },
-  emailAddress: {
-    type: String,
-    required: true
-  },
-  cellPhone: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  cellPhoneNo: { type: Number, required: true },
+  password: { type: String, required: true },
   role: {
     type: String,
+    enum: ['customer', 'admin'],
+    default: 'customer',
     required: true
   },
   shipToAddress: [addressSchema],

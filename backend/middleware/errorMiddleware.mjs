@@ -1,10 +1,13 @@
-export const notFound = (req, res, next) => {
-  const error = new error(`Not Found - ${req.originalUrl}`);
+//Custom Error handler
+//This will handle any error that will occur in our routes custom
+
+export const notFound = (req, res, next) => { // For routes that don't exist
+  const error = new Error(`Not Found - ${req.originalUrl}`);
   res.status(404);
   next(error);
 };
 
-export const errorHandler = (err, req, res) => {
+export const errorHandler = (err, req, res, next) => { // For errors in our routes
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message;
 
@@ -16,5 +19,5 @@ export const errorHandler = (err, req, res) => {
   res.status(statusCode).json({
     message,
     stack: process.env.NODE_ENV === 'production' ? null : err.stack
-  })
-}
+  });
+};
