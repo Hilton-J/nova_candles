@@ -13,7 +13,7 @@ export const errorHandler = (err, req, res, next) => { // For errors in our rout
 
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
     statusCode = 404;
-    message = 'Resource not found';
+    message = 'Invalid ID format';
   }
 
   res.status(statusCode).json({

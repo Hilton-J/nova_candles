@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
-import Product from '../models/productModel.mjs'
+import Product from '../models/productModel.mjs';
+import mongoose from 'mongoose'
 
 // @dsc     Add Product
 // route    POST /api/products
@@ -19,7 +20,7 @@ export const createProduct = asyncHandler(async (req, res) => {
   if (product) {
     res.status(201).json({
       success: true,
-      message: 'Product added successfully!'
+      message: 'Product added successfully'
     })
   } else {
     res.status(400);
@@ -57,16 +58,85 @@ export const getAllProducts = asyncHandler(async (req, res) => {
 // @dsc     Get Product by ID
 // route    GET /api/products/:id
 // @access  Public
-export const registerUser = asyncHandler(async (req, res) => {
+export const getProductById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const product = await Product.findById({ _id: id })
-
+  const product = await Product.findById(id);
   if (product) {
     res.status(201).json(product);
   } else {
-    res.status(400);
-    throw new Error('Error fetching product');
+    res.status(404);
+    throw new Error('Resource not found');
   }
 });
 
+// @dsc     Update Product
+// route    PUT /api/products/add
+// @access  Private (admin only)
+export const updateProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById({ _id: id });
+
+  if (product) {
+    product.productName = req.body.productName || product.productName;
+    product.description = req.body.description || product.description;
+    product.price = req.body.price || product.price;
+    product.size = req.body.size || product.size;
+    product.stock = req.body.stock || product.stock;
+    product.type = req.body.type || product.type;
+    product.gallery = req.body.gallery || product.gallery;
+
+    const updatedProduct = await product.save();
+
+    res.status(201).json({
+      success: true,
+      message: `Product updated successfully`,
+      results: updatedProduct
+    });
+  } else {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+});
+
+// @dsc     Delete Product
+// route    DELETE /api/products/:id
+// @access  Private (admin only)
+export const deleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const product = await Product.findByIdAndDelete(id);
+
+  if (product) {
+    res.status(201).json({
+      success: true,
+      message: 'Product deleted successfully'
+    });
+  } else {
+    res.status(404);
+    throw new Error('Product not found')
+  }
+});
+
+// @dsc     Deactivate Product
+// route    PATCH /api/products/:id
+// @access  Private (admin only)
+export const deactivateProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById({ _id: id });
+
+  if (product) {
+    product.isActive = req.body.isActive || product.isActive;
+
+    const updatedProduct = await product.save();
+
+    res.status(201).json({
+      success: true,
+      message: `Product updated successfully`,
+      results: updatedProduct
+    });
+  } else {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+});

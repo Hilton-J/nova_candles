@@ -17,7 +17,7 @@ export const login = asyncHandler(async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       role: user.role
-    })
+    });
   } else {
     res.status(400);
     throw new Error('Invalid email or password');
@@ -63,6 +63,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   const skip = (page - 1) * limit;
 
   const users = await User.find({})
+    .select('-password')
     .skip(skip)
     .limit(limit);
 
@@ -112,7 +113,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 // route    POST /api/users/profile
 // @access  Private
 export const updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).select('-password');
 
   if (user) {
     user.firstName = req.body.firstName || user.firstName;
@@ -127,7 +128,11 @@ export const updateUser = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save();
 
-    res.status(200).json({ success: true, message: `User updated successfully` });
+    res.status(200).json({
+      success: true,
+      message: `User updated successfully`,
+      updatedUser
+    });
   } else {
     res.status(404);
     throw new Error('User not found');
@@ -145,7 +150,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
   if (user) {
     res.status(200).json({
       success: true,
-      message: `${user.firstName} ${user.lastName} deleted successfully!`
+      message: `${user.firstName} ${user.lastName} deleted successfully`
     });
   } else {
     res.status(404);
