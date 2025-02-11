@@ -47,9 +47,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
   if (user) {
     generateToken(res, user._id);
-    res.status(201).json(
-      user
-    );
+    res.status(201).json({ success: true, message: `Welcome, ${firstName} ${lastName}!` });
   } else {
     res.status(400);
     throw new Error('Invalid user data');
@@ -68,14 +66,14 @@ export const getAllUsers = asyncHandler(async (req, res) => {
     .skip(skip)
     .limit(limit);
 
-  const total = await User.countDocuments();
+  const totalResults = await User.countDocuments();
 
   if (users.length > 0) {
     res.status(201).json({
-      data: users,
       page,
-      limit,
-      total
+      results: users,
+      totalPages: Math.ceil(totalResults / limit),
+      totalResults
     });
   } else {
     res.status(400);
@@ -96,18 +94,61 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 // @dsc     Get User
-// route    POST /api/users/:id
+// route    GET /api/users/:id
 // @access  Private
 export const getUserById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findById({ _id: id });
+  const user = {
+    _id: req.user._id,
+    fistName: req.user.firstName,
+    lastName: req.user.lastName,
+    email: req.user.email,
+    role: req.user.role
+  };
+
+  res.status(201).json(user);
+});
+
+// @dsc     Update user
+// route    POST /api/users/profile
+// @access  Private
+export const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
 
   if (user) {
-    res.status(201).json({
-      data: user,
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.email = req.body.email || user.email;
+    user.cellPhoneNo = req.body.cellPhoneNo || user.cellPhoneNo;
+    user.shipToAddress = req.body.shipToAddress || user.shipToAddress;
+    user.isActive = req.body.isActive || user.isActive;
+    user.role = req.body.role || user.role;
+
+    if (req.body.password) user.password = req.body.password
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({ success: true, message: `User updated successfully` });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Delete user
+// route    DELETE /api/users/:id
+// @access  Private
+export const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findByIdAndDelete(id);
+
+  if (user) {
+    res.status(200).json({
+      success: true,
+      message: `${user.firstName} ${user.lastName} deleted successfully!`
     });
   } else {
-    res.status(400);
-    throw new Error('');
+    res.status(404);
+    throw new Error('User not found');
   }
 });

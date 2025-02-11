@@ -26,6 +26,7 @@ const userSchema = mongoose.Schema({
     required: true
   },
   shipToAddress: [addressSchema],
+  isActive: { type: Boolean, default: true }
 }, {
   timestamps: true
 });
