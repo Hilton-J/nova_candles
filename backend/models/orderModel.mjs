@@ -13,7 +13,7 @@ const addressSchema = mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-  orderNumber: { type: String, required: true },
+  orderNumber: { type: String, required: true, unique: true },
   orderDate: { type: Date, required: true, default: new Date() },
   qty: { type: Number, required: true },
   productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
