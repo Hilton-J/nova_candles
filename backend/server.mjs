@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import { errorHandler, notFound } from './middleware/errorMiddleware.mjs';
 import userRoutes from './routes/userRoute.mjs'
 import productRoutes from './routes/productRoute.mjs'
+import orderRoutes from './routes/orderRoute.mjs'
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

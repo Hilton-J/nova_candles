@@ -140,3 +140,58 @@ export const deactivateProduct = asyncHandler(async (req, res) => {
     throw new Error('Product not found');
   }
 });
+
+// @dsc     Review Product
+// route    PATCH /api/products/:id
+// @access  Private (admin only)
+export const reviewProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { rating, comment } = req.body;
+  const user = req.user;
+
+  if (!rating || !comment) {
+    res.status(400);
+    throw new Error('Missing information');
+  }
+
+  //Finds and check if the user already reviewed
+  const product = await Product.findOne({
+    _id: id,
+    'reviews.userId': user._id
+  });
+  if (product) {
+    res.status(400);
+    throw new Error('Product already reviewed by this user')
+  }
+
+  const updateProduct = await Product.findByIdAndUpdate(
+    id,
+    {
+      $push: {
+        reviews: {
+          userId: user._id,
+          rating,
+          comment,
+          date: new Date()
+        }
+      }
+    },
+    { new: true, runValidators: true }
+  );
+  if (updateProduct) {
+    // product.reviews.userId = user._id || product.reviews.userId;
+    // product.reviews.rating = rating || product.reviews.rating;
+    // product.reviews.comment = comment || product.reviews.comment;
+
+    // const updatedProduct = await product.save();
+
+    res.status(201).json({
+      success: true,
+      message: `Review added successfully`,
+      results: updateProduct
+    });
+  } else {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+});

@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema({
     default: 'customer',
     required: true
   },
-  shipToAddress: [addressSchema],
+  shipToAddress: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true }],
   isActive: { type: Boolean, default: true }
 }, {
   timestamps: true
