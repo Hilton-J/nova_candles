@@ -23,7 +23,7 @@ export const placeOder = asyncHandler(async (req, res) => {
       message: 'Order placed successfully'
     })
   } else {
-    res.status(404);
+    res.status(400);
     throw new Error('Invalid order data')
   }
 });

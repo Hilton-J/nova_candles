@@ -24,7 +24,8 @@ export const addPayment = asyncHandler(async (req, res) => {
       message: 'Payment proccessed'
     })
   } else {
-
+    res.status(400);
+    
   }
 });
 

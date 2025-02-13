@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import Product from '../models/productModel.mjs';
-import mongoose from 'mongoose'
 
 // @dsc     Add Product
 // route    POST /api/products
@@ -159,6 +158,7 @@ export const reviewProduct = asyncHandler(async (req, res) => {
     _id: id,
     'reviews.userId': user._id
   });
+  
   if (product) {
     res.status(400);
     throw new Error('Product already reviewed by this user')

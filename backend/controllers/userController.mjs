@@ -16,7 +16,8 @@ export const login = asyncHandler(async (req, res) => {
       fistName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      role: user.role
+      role: user.role,
+      cart: user.cart
     });
   } else {
     res.status(400);
@@ -103,7 +104,8 @@ export const getUserById = asyncHandler(async (req, res) => {
     fistName: req.user.firstName,
     lastName: req.user.lastName,
     email: req.user.email,
-    role: req.user.role
+    role: req.user.role,
+    cart: req.user.cart
   };
 
   res.status(201).json(user);
@@ -114,6 +116,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 // @access  Private
 export const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');
+
 
   if (user) {
     user.firstName = req.body.firstName || user.firstName;
@@ -151,6 +154,40 @@ export const deleteUser = asyncHandler(async (req, res) => {
     res.status(200).json({
       success: true,
       message: `${user.firstName} ${user.lastName} deleted successfully`
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Add to Cart
+// route    PATCH /api/users/cart/:id
+// @access  Private
+export const addCart = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user._id;
+
+  const cart = await User.findOne({ 'cart': id });
+  if (cart) {
+    res.status(409);
+    throw new Error("Product already exist");
+  }
+
+  const updateCart = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: {
+        cart: id
+      }
+    },
+    { new: true, runValidators: true } 
+  )
+
+  if (updateCart) {
+    res.status(201).json({
+      success: true,
+      message: 'Product added to cart successfully'
     });
   } else {
     res.status(404);
