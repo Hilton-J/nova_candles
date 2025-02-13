@@ -7,13 +7,13 @@ import Order from '../models/orderModel.mjs';
 export const placeOder = asyncHandler(async (req, res) => {
   const { orderNumber, qty, items, totalAmount, deliveryAddress } = req.body;
 
-  const user = req.user._id;
+  const userId = req.user._id;
   const order = await Order.create({
     orderNumber,
     qty,
     items,
     totalAmount,
-    userId: user,
+    userId,
     deliveryAddress
   });
 
