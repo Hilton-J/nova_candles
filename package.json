@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node backend/server.mjs",
-    "server": "nodemon backend/server.mjs"
+    "server": "nodemon backend/server.mjs",
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "concurrently": "^9.1.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

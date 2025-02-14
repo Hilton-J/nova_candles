@@ -1,1 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inconsolata:wght@200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rufina:wght@400;700&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --font-rufina: "Rufina";
+  --color-accent: #844001;
+  --color-primary: #fff8ef;
+  --color-secondary: #fdefe4;
+  --font-cinzel: "Cinzel Decorative";
+  --font-playfair: "Playfair Display";
+}
+
+@layer base {
+  body {
+    background-color: var(--color-primary);
+    font-family: var(--font-playfair);
+  }
+}
