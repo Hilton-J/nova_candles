@@ -54,3 +54,4 @@ export default tseslint.config({
 - Concurrently: npm i concurrently
 - React-router: npm i react-router
 - React-icons: npm i react-icons
+- Redux: npm i @reduxjs/toolkit react-redux

@@ -21,4 +21,10 @@
       display: none;
     }
   }
+  h1 {
+    font-family: var(--font-rufina);
+  }
+  p {
+    font-family: var(--font-playfair);
+  }
 }
