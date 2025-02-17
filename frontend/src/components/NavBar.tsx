@@ -7,19 +7,19 @@ const NavBar = () => {
 
   return (
     <div className='flex justify-between items-center w-[90%]'>
-      <div>
+      <div className="">
         <NavLink to='/'>
-          <h1 className='font-cinzel text-accent text-4xl font-bold'>NOVA</h1>
+          <h1 className='font-cinzel text-accent text-3xl xl:text-4xl 2xl:text-7xl font-bold'>NOVA</h1>
         </NavLink>
       </div>
       <div className='flex items-center gap-10'>
-        <NavLink to='/about' className={`${activeNavLink} hover:text-accent`}>
+        <NavLink to='/about' className={`${activeNavLink} hover:text-accent xl:text-xl 2xl:text-4xl`}>
           ABOUT
         </NavLink>
-        <NavLink to='/shop' className={`${activeNavLink} hover:text-accent`}>
+        <NavLink to='/shop' className={`${activeNavLink} hover:text-accent xl:text-xl 2xl:text-4xl`}>
           SHOP
         </NavLink>
-        <span className='hover:text-accent'>
+        <span className='hover:text-accent xl:text-xl 2xl:text-4xl'>
           <HiOutlineShoppingBag />
         </span>
       </div>
