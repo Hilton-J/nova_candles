@@ -5,12 +5,12 @@ import Order from '../models/orderModel.mjs';
 //route    POST /api/orders
 //@access  Private
 export const placeOder = asyncHandler(async (req, res) => {
-  const { orderNumber, qty, items, totalAmount, deliveryAddress } = req.body;
+  const { orderNumber, quantity, items, totalAmount, deliveryAddress } = req.body;
 
   const userId = req.user._id;
   const order = await Order.create({
     orderNumber,
-    qty,
+    quantity,
     items,
     totalAmount,
     userId,
