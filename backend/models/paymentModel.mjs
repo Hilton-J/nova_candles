@@ -7,7 +7,7 @@ const paymentSchema = new mongoose.Schema({
   cardBrand: { type: String, required: true },
   last4Digits: { type: String, required: true },
   status: { type: String, required: true },
-  amount: { type: String, required: true },
+  amount: { type: Number, required: true },
 }, { timestamps: true });
 
 const payment = mongoose.model('Payment', paymentSchema);

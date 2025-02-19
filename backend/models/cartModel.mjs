@@ -9,6 +9,6 @@ const cartSchema = mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   items: { itemsSchema },
   total: { type: Number, required: true }
-}, { timeStamps: true }
+}, { timestamps: true }
 
 )

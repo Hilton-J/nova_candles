@@ -9,3 +9,97 @@ export interface UserInfo {
 export interface AuthState {
   userInfo: UserInfo | null;
 }
+
+export interface ApiResponce<T> {
+  page: number;
+  results: T[];
+  totalPages: number;
+  totalResults: number;
+}
+
+export interface IReview {
+  userId: string;
+  rating: number;
+  comment: string;
+  date: Date;
+}
+
+export interface IProduct {
+  productName: string;
+  description: string;
+  price: number;
+  size: string;
+  stock: number;
+  type: string;
+  image: string[];
+  reviews: IReview[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+//TODO: This interface is bound to change, specifically the diliveryAddress field
+export interface IOrder {
+  orderNumber: string;
+  orderDate: string;
+  quantity: number;
+  items: string[];
+  totalAmount: number;
+  userId: string;
+  diliveryAddress: IAddress;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface IPayment {
+  orderId: string;
+  userId: string;
+  paymentMethod: string;
+  cardBrand: string;
+  last4Digits: string;
+  status: string;
+  amount: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface IAddress {
+  recipientName: string;
+  recipientCellNumber: string;
+  streetAddress: string;
+  complex: string;
+  suburb: string;
+  city: string;
+  province: string;
+  postalCode: string;
+}
+
+export interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  cellPhoneNo: string;
+  password: string;
+  role: string;
+  shipToAddress: IAddress[];
+  cart: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CartItem {
+  productId: string;
+  quantity: number;
+}
+
+export interface Cart {
+  user: string;
+  items: CartItem[];
+  total: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface IMutationResponse {
+  success: boolean;
+  message: string;
+}

@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   deliveryAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true }
 }, {
-  timestamp: true
+  timestamps: true
 });
 
 const order = mongoose.model('Order', orderSchema);
