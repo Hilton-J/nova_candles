@@ -1,4 +1,4 @@
-import Footer from "../components/Footer";
+// import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import Instagram from "../components/Instagram";
 import Products from "../components/Products";
@@ -13,7 +13,6 @@ const MainPage = () => {
       <Products />
       <Instagram />
       <Subscribe />
-      <Footer />
     </>
   );
 };

@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { Outlet } from "react-router";
 
@@ -11,6 +12,9 @@ const MainLayout = () => {
       <main className='w-[90%]'>
         <Outlet />
       </main>
+      <footer className='bg-white w-full p-24 '>
+        <Footer />
+      </footer>
     </section>
   );
 };
