@@ -83,7 +83,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     product.size = req.body.size || product.size;
     product.stock = req.body.stock || product.stock;
     product.type = req.body.type || product.type;
-    product.gallery = req.body.gallery || product.gallery;
+    product.images = req.body.gallery || product.images;
 
     const updatedProduct = await product.save();
 

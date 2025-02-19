@@ -84,7 +84,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 // @dsc     User logout
-// route    POST /api/users
+// route    POST /api/users/logout
 // @access  Public
 export const logout = asyncHandler(async (req, res) => {
   res.cookie('jwt', ' ', {
@@ -112,7 +112,7 @@ export const getUserById = asyncHandler(async (req, res) => {
 });
 
 // @dsc     Update user
-// route    POST /api/users/profile
+// route    PUT /api/users/profile
 // @access  Private
 export const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');
@@ -134,7 +134,7 @@ export const updateUser = asyncHandler(async (req, res) => {
     res.status(200).json({
       success: true,
       message: `User updated successfully`,
-      updatedUser
+      results: updatedUser
     });
   } else {
     res.status(404);
@@ -181,7 +181,7 @@ export const addCart = asyncHandler(async (req, res) => {
         cart: id
       }
     },
-    { new: true, runValidators: true } 
+    { new: true, runValidators: true }
   )
 
   if (updateCart) {

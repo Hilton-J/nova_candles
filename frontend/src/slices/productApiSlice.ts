@@ -19,8 +19,67 @@ export const productApiSlice = apiSlice.injectEndpoints({
     }),
 
     getAllProduct: builder.query<ApiResponce<IProduct>, { page?: number }>({
-      query: ({ page }) => `${PRODUCT_URL}?page=${page}`,
+      query: (page) => `${PRODUCT_URL}?page=${page}`,
       providesTags: ["Product"],
+    }),
+
+    getProductById: builder.query<IProduct, string>({
+      query: (id) => `${PRODUCT_URL}/${id}`,
+      providesTags: ["Product"],
+    }),
+
+    updateProduct: builder.mutation<
+      IMutationResponse<IProduct>,
+      { id: string; data: Partial<IProduct> }
+    >({
+      query: ({ id, data }) => ({
+        url: `${PRODUCT_URL}/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
+    deleteProduct: builder.mutation<IMutationResponse, string>({
+      query: (id) => ({
+        url: `${PRODUCT_URL}/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
+    deactivateProduct: builder.mutation<
+      IMutationResponse<IProduct>,
+      { id: string; data: Partial<IProduct> }
+    >({
+      query: ({ id, data }) => ({
+        url: `${PRODUCT_URL}/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
+    reviewProduct: builder.mutation<
+      IMutationResponse<IProduct>,
+      { id: string; data: Partial<IProduct> }
+    >({
+      query: ({ id, data }) => ({
+        url: `${PRODUCT_URL}/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Product"],
     }),
   }),
 });
+
+export const {
+  useCreateProductMutation,
+  useGetAllProductQuery,
+  useGetProductByIdQuery,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useDeactivateProductMutation,
+  useReviewProductMutation,
+} = productApiSlice;

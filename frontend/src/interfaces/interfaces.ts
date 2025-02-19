@@ -25,6 +25,7 @@ export interface IReview {
 }
 
 export interface IProduct {
+  _id: string;
   productName: string;
   description: string;
   price: number;
@@ -39,6 +40,7 @@ export interface IProduct {
 
 //TODO: This interface is bound to change, specifically the diliveryAddress field
 export interface IOrder {
+  _id: string;
   orderNumber: string;
   orderDate: string;
   quantity: number;
@@ -51,6 +53,7 @@ export interface IOrder {
 }
 
 export interface IPayment {
+  _id: string;
   orderId: string;
   userId: string;
   paymentMethod: string;
@@ -63,6 +66,7 @@ export interface IPayment {
 }
 
 export interface IAddress {
+  _id: string;
   recipientName: string;
   recipientCellNumber: string;
   streetAddress: string;
@@ -74,6 +78,7 @@ export interface IAddress {
 }
 
 export interface IUser {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -92,6 +97,7 @@ export interface CartItem {
 }
 
 export interface Cart {
+  _id: string;
   user: string;
   items: CartItem[];
   total: number;
@@ -99,7 +105,8 @@ export interface Cart {
   updatedAt?: string;
 }
 
-export interface IMutationResponse {
+export interface IMutationResponse<T = void> {
   success: boolean;
   message: string;
+  results?: T;
 }
