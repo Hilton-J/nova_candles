@@ -12,7 +12,7 @@ const MainLayout = () => {
       <main className='w-[90%]'>
         <Outlet />
       </main>
-      <footer className='bg-white w-full p-24 '>
+      <footer className='bg-secondary w-full p-24 '>
         <Footer />
       </footer>
     </section>

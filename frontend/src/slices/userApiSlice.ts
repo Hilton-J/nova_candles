@@ -33,7 +33,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    getAllUsers: builder.query<ApiResponce<IUser>, { page?: number }>({
+    getAllUsers: builder.query<ApiResponce<IUser>, number>({
       query: (page) => `${USERS_URL}?page=${page}`,
       providesTags: ["User"],
     }),
