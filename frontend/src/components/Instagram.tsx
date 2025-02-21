@@ -23,10 +23,10 @@ const Instagram = () => {
         </span>
       </p>
       <div className='grid grid-cols-4 mt-10'>
-        <img src={image1} alt='Intagram post' />
-        <img src={image2} alt='Intagram post' />
-        <img src={image3} alt='Intagram post' />
-        <img src={image4} alt='Intagram post' />
+        <img src={image1} alt='Intagram post' className="size" />
+        <img src={image2} alt='Intagram post' className="size" />
+        <img src={image3} alt='Intagram post' className="size" />
+        <img src={image4} alt='Intagram post' className="size" />
       </div>
     </section>
   );

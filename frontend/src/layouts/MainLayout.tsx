@@ -1,6 +1,7 @@
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
 import { Outlet } from "react-router";
+import { ToastContainer } from "react-toastify";
 
 const MainLayout = () => {
   return (
@@ -9,12 +10,13 @@ const MainLayout = () => {
         <NavBar />
       </header>
 
-      <main className='w-[90%]'>
+      <main className='w-[90%] min-h-screen'>
         <Outlet />
       </main>
       <footer className='bg-secondary w-full p-24 '>
         <Footer />
       </footer>
+      <ToastContainer />
     </section>
   );
 };
