@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 const MainLayout = () => {
   return (
     <>
-      <section className='flex flex-col items-center gap-10 md:gap-15 xl:gap-20'>
+      <section className='flex flex-col items-center gap-10 md:gap-15 xl:gap-20 max-w-[1536px]'>
         <header className='py-2 xl:py-4 2xl:py-5 w-full flex justify-center border-b border-b-black/20'>
           <NavBar />
         </header>

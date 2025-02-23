@@ -11,7 +11,7 @@ const Shop = () => {
 
   return (
     <section className='flex flex-col items-center gap-5 h-full'>
-      <h1 className='2xl:text-5xl w-[45%] text-center'>
+      <h1 className='text-center xl:w-[28rem] 2xl:w-[45rem] xl:text-3xl 2xl:text-5xl'>
         Curated Premium Wax Candles For Every Mood
       </h1>
       {isLoading && data ? (

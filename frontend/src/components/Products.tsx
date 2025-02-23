@@ -3,7 +3,7 @@ import { Link } from "react-router";
 const Products = () => {
   return (
     <section className='flex flex-col items-center mt-15 gap-5'>
-      <h1 className='2xl:text-5xl w-[45%] text-center'>
+      <h1 className='text-center xl:w-[28rem] 2xl:w-[45rem] xl:text-3xl 2xl:text-5xl'>
         Curated Premium Wax Candles For Every Mood
       </h1>
       <Link

@@ -22,11 +22,11 @@ const Instagram = () => {
           </Link>
         </span>
       </p>
-      <div className='grid grid-cols-4 mt-10'>
-        <img src={image1} alt='Intagram post' className="size" />
-        <img src={image2} alt='Intagram post' className="size" />
-        <img src={image3} alt='Intagram post' className="size" />
-        <img src={image4} alt='Intagram post' className="size" />
+      <div className='grid grid-cols-4 mt-10 gap-10'>
+        <img src={image4} alt='Intagram post' className='size-full' />
+        <img src={image1} alt='Intagram post' className='size-full' />
+        <img src={image2} alt='Intagram post' className='size-full' />
+        <img src={image3} alt='Intagram post' className='size-full' />
       </div>
     </section>
   );

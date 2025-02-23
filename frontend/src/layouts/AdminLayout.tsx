@@ -4,11 +4,11 @@ import { ToastContainer } from "react-toastify";
 
 const AdminLayout = () => {
   return (
-    <>
+    <section className='max-w-[1536px]'>
       <NavBar />
       <Outlet />
       <ToastContainer />
-    </>
+    </section>
   );
 };
 

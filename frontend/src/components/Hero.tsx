@@ -4,10 +4,10 @@ const Hero = () => {
     <section className='mb-15 space-y-10 md:space-y-20'>
       <div className=' grid md:grid-cols-2 items-center'>
         <div className='space-y-5 md:w-[80%] lg:w-[75%] xl:w-[80%] 2xl:w-[90%]'>
-          <h1 className='md:text-[2rem] lg:text-[2.9rem] xl:text-[3.5rem] 2xl:text-[5rem] md:leading-9 lg:leading-12 xl:leading-none'>
+          <h1 className='md:text-[2rem] lg:text-[2.9rem] xl:text-[3rem] 2xl:text-[4rem] md:leading-9 lg:leading-12 xl:leading-none'>
             Handcrafted Elegance For Every Moment
           </h1>
-          <p className='text-black/70 md:text-[0.8rem] lg:text-[1.1rem] xl:text-[1.4rem] 2xl:text-[1.9rem]'>
+          <p className='text-black/70 md:text-[0.8rem] lg:text-[1.1rem] xl:text-[1.2rem] 2xl:text-[1.5rem]'>
             What Makes Us Different? Every candle is a blend of artistry and
             sincerity, hand-poured with care to bring warmth and light to your
             moments.
@@ -18,10 +18,10 @@ const Hero = () => {
         </div>
       </div>
       <div className='grid md:grid-cols-2'>
-        <h1 className='md:text-[1.7rem] lg:text-4xl xl:text-[3rem] 2xl:text-[4rem] w-[90%]'>
+        <h1 className='md:text-[1.7rem] lg:text-4xl xl:text-[2.5rem] 2xl:text-[3.2rem] w-[90%]'>
           Natural And Sustainably Sourced Soy Candles
         </h1>
-        <p className='text-black/70 md:text-[0.8rem] lg:text-[0.95rem] xl:text-[1.2rem] 2xl:text-[1.5rem]'>
+        <p className='text-black/70 md:text-[0.8rem] lg:text-[0.95rem] xl:text-[1rem] 2xl:text-[1.2rem]'>
           Join countless others who have discovered the beauty of soy candles.
           Made from natural and sustainable ingredients; our candles offer a
           clean, long-lasting burn, free from harmful chemicals. Because you
