@@ -17,16 +17,9 @@ const Shop = () => {
       {isLoading && data ? (
         <Loader loading={!isLoading} />
       ) : (
-        <div className='grid grid-cols-5'>
-          {data?.results.map((res: IProduct, index: number) => (
-            <ProductCard /*TODO: This needs to be disigned */
-              image='No Image'
-              title={res.productName}
-              id={res._id}
-              index={index}
-              size={res.size}
-              price={res.price}
-            />
+        <div className='grid grid-cols-4 gap-x-10 gap-y-5'>
+          {data?.results.map((res: IProduct) => (
+            <ProductCard /*TODO: This needs to be disigned */ {...res} />
           ))}
         </div>
       )}

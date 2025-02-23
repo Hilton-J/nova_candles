@@ -1,23 +1,28 @@
-interface Props {
-  image: string;
-  title: string;
-  id: string;
-  index: number;
-  size: string;
-  price: number;
-}
+import { Link } from "react-router";
+import { IProduct } from "../interfaces/interfaces";
+import placeHolderPoster from "../assets/images/BlackRaspberryVanilla.webp";
 
-const ProductCard = (props: Props) => {
+const ProductCard = (props: IProduct) => {
   return (
-    <div key={props.index}>
-      <img src={props.image} alt={props.title} />
-      <div>
-        {props.id}
-        {props.title}
-        {props.price}
+    <Link
+      key={props._id}
+      to={`/shop/${props._id}`}
+      className='border border-black/20 grid grid-rows-subgrid row-span-3 gap-0'
+    >
+      <img
+        src={
+          props.images && props.images.length > 0
+            ? props.images[0]
+            : placeHolderPoster
+        }
+        alt={props.productName}
+      />
+      <div className='flex justify-between'>
+        {props.productName}
+        <span>{props.price}</span>
       </div>
       {props.size}
-    </div>
+    </Link>
   );
 };
 

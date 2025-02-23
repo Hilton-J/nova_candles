@@ -32,7 +32,7 @@ export interface IProduct {
   size: string;
   stock: number;
   type: string;
-  image: string[];
+  images: string[];
   reviews: IReview[];
   createdAt?: string;
   updatedAt?: string;
