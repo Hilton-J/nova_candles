@@ -7,7 +7,7 @@ const ProductCard = (props: IProduct) => {
     <Link
       key={props._id}
       to={`/shop/${props._id}`}
-      className='border border-black/20 grid grid-rows-subgrid row-span-3 gap-0'
+      className='border border-black/20 grid grid-rows-subgrid row-span-3 gap-0 hover:shadow '
     >
       <img
         src={
@@ -16,6 +16,7 @@ const ProductCard = (props: IProduct) => {
             : placeHolderPoster
         }
         alt={props.productName}
+        className="w-full"
       />
       <div className='flex justify-between'>
         {props.productName}

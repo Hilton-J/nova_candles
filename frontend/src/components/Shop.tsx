@@ -17,9 +17,9 @@ const Shop = () => {
       {isLoading && data ? (
         <Loader loading={!isLoading} />
       ) : (
-        <div className='grid grid-cols-4 gap-x-10 gap-y-5'>
+        <div className='grid grid-cols-4 gap-x-10 gap-y-5 w-full'>
           {data?.results.map((res: IProduct) => (
-            <ProductCard /*TODO: This needs to be disigned */ {...res} />
+            <ProductCard {...res} />
           ))}
         </div>
       )}
