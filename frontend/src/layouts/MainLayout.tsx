@@ -11,7 +11,7 @@ const MainLayout = () => {
           <NavBar />
         </header>
 
-        <main className='w-[90%] min-h-screen h-screen'>
+        <main className='w-[90%] min-h-screen'>
           <Outlet />
         </main>
         <footer className='bg-secondary w-full p-24 '>
