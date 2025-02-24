@@ -5,7 +5,7 @@ import Product from '../models/productModel.mjs';
 // route    POST /api/products
 // @access  Private
 export const createProduct = asyncHandler(async (req, res) => {
-  const { productName, description, price, size, stock, type } = req.body;
+  const { productName, description, price, size, stock, type, images } = req.body;
 
   const product = await Product.create({
     productName,
@@ -13,7 +13,8 @@ export const createProduct = asyncHandler(async (req, res) => {
     price,
     size,
     stock,
-    type
+    type,
+    images
   });
 
   if (product) {
@@ -83,7 +84,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     product.size = req.body.size || product.size;
     product.stock = req.body.stock || product.stock;
     product.type = req.body.type || product.type;
-    product.images = req.body.gallery || product.images;
+    product.images.push(req.body.images || product.images);
 
     const updatedProduct = await product.save();
 
@@ -142,7 +143,7 @@ export const deactivateProduct = asyncHandler(async (req, res) => {
 
 // @dsc     Review Product
 // route    PATCH /api/products/:id
-// @access  Private (admin only)
+// @access  Private
 export const reviewProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { rating, comment } = req.body;
@@ -158,7 +159,7 @@ export const reviewProduct = asyncHandler(async (req, res) => {
     _id: id,
     'reviews.userId': user._id
   });
-  
+
   if (product) {
     res.status(400);
     throw new Error('Product already reviewed by this user')
@@ -188,6 +189,53 @@ export const reviewProduct = asyncHandler(async (req, res) => {
     res.status(201).json({
       success: true,
       message: `Review added successfully`,
+      results: updateProduct
+    });
+  } else {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+});
+
+
+export const AddImage = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { image } = req.body;
+
+  if (!image) {
+    res.status(400);
+    throw new Error('Missing information');
+  }
+
+  //Finds and check if the user already reviewed
+  // const product = await Product.findOne({
+  //   _id: id,
+  // });
+
+  // if (product) {
+  //   res.status(400);
+  //   throw new Error('Product already reviewed by this user')
+  // }
+
+  const updateProduct = await Product.findByIdAndUpdate(
+    id,
+    {
+      $push: {
+        image
+      }
+    },
+    { new: true, runValidators: true }
+  );
+  if (updateProduct) {
+    // product.reviews.userId = user._id || product.reviews.userId;
+    // product.reviews.rating = rating || product.reviews.rating;
+    // product.reviews.comment = comment || product.reviews.comment;
+
+    // const updatedProduct = await product.save();
+
+    res.status(201).json({
+      success: true,
+      message: `Image added successfully`,
       results: updateProduct
     });
   } else {

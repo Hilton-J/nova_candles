@@ -5,6 +5,7 @@ import LandingPage from "./pages/LandingPage";
 import About from "./components/About";
 import Login from "./components/Login";
 import Shop from "./components/Shop";
+import ViewProduct from "./components/ViewProduct";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route index element={<LandingPage />} />
         <Route path='/about' element={<About />} />
         <Route path='/shop' element={<Shop />} />
+        <Route path='/products/:id' element={<ViewProduct />} />
       </Route>
     </Routes>
   );
