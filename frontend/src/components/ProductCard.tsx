@@ -6,7 +6,7 @@ const ProductCard = (props: IProduct) => {
   return (
     <Link
       to={`/products/${props.productName}/${props.size}`}
-      className='border border-black/20 grid grid-rows-subgrid row-span-3 gap-0 hover:shadow '
+      className='border border-black/20 grid grid-rows-subgrid row-span-2 gap-2 hover:shadow capitalize '
     >
       <img
         src={
@@ -17,11 +17,13 @@ const ProductCard = (props: IProduct) => {
         alt={props.productName}
         className='size-full object-cover'
       />
-      <div className='flex justify-between'>
-        {props.productName}
-        <span>R{props.price.toFixed(2)}</span>
+      <div className="flex flex-col gap-2 px-2 pb-2">
+        <div className='flex justify-between'>
+          {props.productName}
+          <span className='font-bold'>R{props.price.toFixed(2)}</span>
+        </div>
+        {props.size}
       </div>
-      {props.size}
     </Link>
   );
 };

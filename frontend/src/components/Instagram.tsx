@@ -23,7 +23,10 @@ const Instagram = () => {
         </span>
       </p>
       <div className='grid grid-cols-4 mt-10 gap-10'>
-        <img src={image4} alt='Intagram post' className='size-full' />
+        <Link to={"https://www.instagram.com/p/C6MM-aQtu67/"} target="_blank">
+          <img src={image4} alt='Intagram post' className='size-full' />
+        </Link>
+
         <img src={image1} alt='Intagram post' className='size-full' />
         <img src={image2} alt='Intagram post' className='size-full' />
         <img src={image3} alt='Intagram post' className='size-full' />
