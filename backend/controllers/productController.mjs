@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Product from '../models/productModel.mjs';
+import mongoose from "mongoose";
 
 // @dsc     Add Product
 // route    POST /api/products
@@ -61,7 +62,32 @@ export const getAllProducts = asyncHandler(async (req, res) => {
 export const getProductById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const product = await Product.findById(id);
+  let product;
+  if (mongoose.isValidObjectId(id)) {
+    product = await Product.findById({ _id: id });
+  } else {
+    product = await Product.find({ productName: id });
+  }
+
+  if (product) {
+    res.status(201).json(product);
+  } else {
+    res.status(404);
+    throw new Error('Resource not found');
+  }
+});
+
+// @dsc     Get Product By Name and Size
+// route    GET /api/products/:name/:size
+// @access  Public
+export const getProductByNameAndSize = asyncHandler(async (req, res) => {
+  const { name, size } = req.params;
+
+  const product = await Product.findOne({
+    productName: name,
+    size
+  });
+
   if (product) {
     res.status(201).json(product);
   } else {

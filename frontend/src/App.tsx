@@ -16,7 +16,8 @@ function App() {
         <Route index element={<LandingPage />} />
         <Route path='/about' element={<About />} />
         <Route path='/shop' element={<Shop />} />
-        <Route path='/products/:id' element={<ViewProduct />} />
+        {/* <Route path='/products/:id' element={<ViewProduct />} /> */}
+        <Route path='/products/:id/:size' element={<ViewProduct />} />
       </Route>
     </Routes>
   );
