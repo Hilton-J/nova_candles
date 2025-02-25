@@ -15,7 +15,7 @@ const ViewProduct = () => {
   );
 
   useEffect(() => {
-    setProductSize(size);
+    // setProductSize(size);
     if (product?.images.length) setSelectedImage(product?.images[0]);
   }, [size, product]);
 
