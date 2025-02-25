@@ -8,7 +8,7 @@ const ViewProduct = () => {
   const { id, size } = useParams<{ id: string; size: string }>();
   const [productSize, setProductSize] = useState<string | undefined>(size);
   const { data, isLoading } = useGetProductByIdQuery(id || "");
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
 
   const product = data?.find(
     (item: IProduct) => item.size.toLowerCase() === productSize?.toLowerCase()
