@@ -7,8 +7,11 @@ const itemsSchema = {
 
 const cartSchema = mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  items: { itemsSchema },
-  total: { type: Number, required: true }
-}, { timestamps: true }
+  items: [itemsSchema],
+  totalPrice: { type: Number, required: true }
+},
+  { timestamps: true })
 
-)
+const cart = mongoose.model('Cart', cartSchema);
+
+export default cart;

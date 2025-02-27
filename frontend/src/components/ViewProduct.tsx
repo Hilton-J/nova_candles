@@ -21,6 +21,8 @@ const ViewProduct = () => {
     if (product?.images.length) setSelectedImage(product?.images[0]);
   }, [size, product]);
 
+  // const handleAddToCart = 
+
   return (
     <>
       {isLoading ? (

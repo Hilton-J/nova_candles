@@ -63,9 +63,6 @@ export const getAllOrders = asyncHandler(async (req, res) => {
 //@access  Private
 export const getOrdersByCustomer = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  // const { id } = req.params;
-  console.log(_id);
-
 
   const page = Number(req.query.page) || 1;
   const limit = 20;

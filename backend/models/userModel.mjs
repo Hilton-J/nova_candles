@@ -27,7 +27,6 @@ const userSchema = mongoose.Schema({
   },
   shipToAddress: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true }],
   isActive: { type: Boolean, default: true },
-  cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true }]
 }, {
   timestamps: true
 });
