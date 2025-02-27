@@ -86,7 +86,6 @@ export interface IUser {
   password: string;
   role: string;
   shipToAddress: IAddress[];
-  cart: string[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -96,7 +95,7 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface Cart {
+export interface ICart {
   _id: string;
   user: string;
   items: CartItem[];

@@ -9,13 +9,17 @@ export const addToCart = asyncHandler(async (req, res) => {
   const { productId, quantity } = req.body;
   const userId = req.user._id;
 
-  const cart = await Cart.findOne({ user: userId });
   const product = await Product.findById(productId);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not founda')
+  }
 
+  const cart = await Cart.findOne({ user: userId });
 
   //Check if the user has an existing cart
   if (cart) {
-    const existingItem = await cart.items.find(
+    const existingItem = cart.items.find(
       item => item.productId.toString() === productId
     );
 
@@ -23,7 +27,7 @@ export const addToCart = asyncHandler(async (req, res) => {
     if (existingItem) {
       existingItem.quantity += Number(quantity);
     } else {
-      await cart.items.push({
+      cart.items.push({
         productId,
         quantity
       })
@@ -34,13 +38,30 @@ export const addToCart = asyncHandler(async (req, res) => {
     }, 0);
 
     await cart.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Cart updated',
+      results: cart
+    })
   } else {
     const totalPrice = product.price * quantity;
     const createCart = await Cart.create({
       user: userId,
-      items: { productId, quantity },
+      items: [{ productId, quantity }],
       totalPrice
     });
+
+    if (createCart) {
+      res.status(201).json({
+        success: true,
+        message: 'Cart Created',
+        results: createCart
+      })
+    } else {
+      res.status(500);
+      throw new Error('Error creating cart');
+    }
   }
 });
 
@@ -50,10 +71,26 @@ export const addToCart = asyncHandler(async (req, res) => {
 export const getUserCart = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
-  const userCart = await Cart.findOne({ user: userId })
+  const userCart = Cart.findOne({ user: userId })
     .populate({ path: 'items.productId', select: 'productName price' });
 
   if (userCart) {
+    res.status(201).json(userCart);
+  } else {
+    res.status(404);
+    throw Error('No cart for this user')
+  }
+});
+
+// @desc    DELETE User's Cart
+// route    DELETE /api/cart
+// @access  Private
+export const removeCart = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const cart = await Cart.findOneAndDelete({ user: userId });
+
+  if (cart) {
     res.status(201).json(userCart);
   } else {
     res.status(404);
