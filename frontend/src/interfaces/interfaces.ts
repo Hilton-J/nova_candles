@@ -99,7 +99,7 @@ export interface ICart {
   _id: string;
   user: string;
   items: CartItem[];
-  total: number;
+  totalPrice: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -108,4 +108,8 @@ export interface IMutationResponse<T = void> {
   success: boolean;
   message: string;
   results?: T;
+}
+
+export interface OutletContext  {
+  setOpenLoginModal: (isOpen: boolean) => void;
 }

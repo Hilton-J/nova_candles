@@ -1,9 +1,12 @@
 import { NavLink } from "react-router";
-import { HiOutlineShoppingBag } from "react-icons/hi2";
+import { HiOutlineShoppingBag, HiOutlineUser } from "react-icons/hi2";
+import {OutletContext} from '../interfaces/interfaces'
 
-const NavBar = () => {
+const NavBar = ({ setOpenLoginModal }: OutletContext) => {
   const activeNavLink = (isActive: boolean) =>
     isActive ? "text-accent" : "text-black";
+
+  console.log(typeof setOpenLoginModal);
 
   return (
     <div className='flex justify-between items-center w-[90%]'>
@@ -35,8 +38,12 @@ const NavBar = () => {
         >
           SHOP
         </NavLink>
-        <span className='hover:text-accent text-sm xl:text-xl 2xl:text-2xl'>
-          <HiOutlineShoppingBag />
+        <span className='flex gap-3 text-sm xl:text-xl 2xl:text-2xl'>
+          <HiOutlineUser
+            className='hover:text-accent'
+            onClick={() => setOpenLoginModal(true)}
+          />
+          <HiOutlineShoppingBag className='hover:text-accent' />
         </span>
       </div>
     </div>

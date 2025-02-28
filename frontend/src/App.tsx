@@ -3,7 +3,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import About from "./components/About";
-import Login from "./components/Login";
+// import Login from "./components/LoginModal";
 import Shop from "./components/Shop";
 import ViewProduct from "./components/ViewProduct";
 import { useEffect } from "react";
@@ -24,7 +24,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path='/admin' element={<AdminLayout />}></Route>
-        <Route path='/login' element={<Login />} />
+        {/* <Route path='/login' element={<Login />} /> */}
         <Route path='/' element={<MainLayout />}>
           <Route index element={<LandingPage />} />
           <Route path='/about' element={<About />} />
