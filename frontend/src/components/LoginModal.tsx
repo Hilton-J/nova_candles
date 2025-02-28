@@ -31,18 +31,18 @@ const LoginModal = ({ setOpenLoginModal }: OutletContext) => {
 
   return (
     <div
-      className='fixed z-50 inset-0 flex justify-center items-center bg-black/50'
+      className='fixed z-50 inset-0 flex justify-center items-center bg-black/70'
       // onClick={() => setOpenLoginModal(false)}
     >
-      <div className='bg-white w-[30%] h-[50%]'>
-        <h1>Login</h1>
-        <form onSubmit={handleSubmit} className='border'>
+      <div className='bg-white/90 w-[30%] h-[50%] p-5 space-y-2'>
+        <h1 className='text-3xl'>Login</h1>
+        <form onSubmit={handleSubmit} className='space-y-5'>
           <div className=''>
             <label className='block' htmlFor='email'>
               Email Address
             </label>
             <input
-              className='w-full border-b border-black/20 hover:border-black/50 hover:bg-black/10'
+              className='w-full border-b border-black/20 hover:border-black/50 hover:bg-black/10 outline-none p-2'
               type='email'
               id='email'
               name='email'
@@ -50,12 +50,12 @@ const LoginModal = ({ setOpenLoginModal }: OutletContext) => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div>
+          <div className=''>
             <label className='block' htmlFor='password'>
               Password
             </label>
             <input
-              className='w-full border-b border-black/20 hover:border-black/50 hover:bg-black/10'
+              className='w-full border-b border-black/20 hover:border-black/50 hover:bg-black/10 outline-none p-2'
               type='password'
               id='passsword'
               name='email'
@@ -63,6 +63,7 @@ const LoginModal = ({ setOpenLoginModal }: OutletContext) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <a>Forgot Password?</a>
           <div>
             <button
               type='submit'

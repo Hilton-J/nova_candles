@@ -6,11 +6,10 @@
 @theme {
   --font-rufina: "Rufina";
   --color-accent: #844001;
-  --color-primary: #FFEDD6;
+  --color-primary: #ffedd6;
   --color-secondary: #fff8ef;
   --font-cinzel: "Cinzel Decorative";
   --font-playfair: "Playfair Display";
-  
 }
 
 @layer base {
