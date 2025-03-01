@@ -1,6 +1,5 @@
 import {
   ICart,
-  ApiResponce,
   IMutationResponse,
 } from "../interfaces/interfaces";
 import { apiSlice } from "./apiSlice";
@@ -18,7 +17,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
 
-    getUserCart: builder.query<ApiResponce<ICart>, void>({
+    getUserCart: builder.query<ICart, void>({
       query: () => `${CART_URL}`,
       providesTags: ["Cart"],
     }),

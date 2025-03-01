@@ -5,6 +5,7 @@ import { AppDispatch } from "../store";
 import { useLoginMutation } from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
+import { RiCloseFill } from "react-icons/ri";
 
 const LoginModal = ({ setOpenLoginModal }: OutletContext) => {
   const [email, setEmail] = useState<string>("");
@@ -34,7 +35,8 @@ const LoginModal = ({ setOpenLoginModal }: OutletContext) => {
       className='fixed z-50 inset-0 flex justify-center items-center bg-black/70'
       // onClick={() => setOpenLoginModal(false)}
     >
-      <div className='bg-white/90 w-[30%] h-[50%] p-5 space-y-2'>
+      <div className='bg-white/90 w-[30%] h-[50%] p-5 space-y-2 relative'>
+        <RiCloseFill className="absolute right-2 top-2 text-2xl hover:text-accent" onClick={() => setOpenLoginModal(false)}/>
         <h1 className='text-3xl'>Login</h1>
         <form onSubmit={handleSubmit} className='space-y-5'>
           <div className=''>

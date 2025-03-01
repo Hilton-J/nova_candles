@@ -1,12 +1,17 @@
 import { NavLink } from "react-router";
 import { HiOutlineShoppingBag, HiOutlineUser } from "react-icons/hi2";
-import {OutletContext} from '../interfaces/interfaces'
+import { OutletContext } from "../interfaces/interfaces";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { useGetUserCartQuery } from "../slices/cartApiSlice";
 
 const NavBar = ({ setOpenLoginModal }: OutletContext) => {
+  const { data, isLoading } = useGetUserCartQuery();
   const activeNavLink = (isActive: boolean) =>
     isActive ? "text-accent" : "text-black";
+  const { userInfo } = useSelector((state: RootState) => state.auth);
 
-  console.log(typeof setOpenLoginModal);
+  console.log(data?.items.length);
 
   return (
     <div className='flex justify-between items-center w-[90%]'>
@@ -39,11 +44,25 @@ const NavBar = ({ setOpenLoginModal }: OutletContext) => {
           SHOP
         </NavLink>
         <span className='flex gap-3 text-sm xl:text-xl 2xl:text-2xl'>
-          <HiOutlineUser
-            className='hover:text-accent'
-            onClick={() => setOpenLoginModal(true)}
-          />
-          <HiOutlineShoppingBag className='hover:text-accent' />
+          {userInfo ? (
+            <HiOutlineUser
+              className='hover:text-accent cursor-pointer'
+              onClick={() => setOpenLoginModal(true)}
+            />
+          ) : (
+            <p
+              className='hover:text-accent cursor-pointer'
+              onClick={() => setOpenLoginModal(true)}
+            >
+              LOGIN
+            </p>
+          )}
+          <div className='relative'>
+            <HiOutlineShoppingBag className='hover:text-accent cursor-pointer' />
+            <span className='flex items-center justify-center leading-none absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-accent min-size-4 size-4 text-white text-xs rounded-full font-sans'>
+              {data && isLoading ? 0 : data?.items.length}
+            </span>
+          </div>
         </span>
       </div>
     </div>

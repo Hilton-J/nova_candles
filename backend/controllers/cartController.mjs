@@ -120,7 +120,7 @@ export const getUserCart = asyncHandler(async (req, res) => {
     .populate({ path: 'items.productId', select: 'productName price images' });
 
   if (userCart) {
-    res.status(201).json({ userCart });
+    res.status(201).json(userCart);
   } else {
     res.status(404);
     throw Error('No cart for this user')

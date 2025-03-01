@@ -19,11 +19,9 @@ const ViewProduct = () => {
     id || ""
   );
   const [addCart, { isLoading }] = useAddToCartMutation();
-
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
-
   const product = data?.find(
     (item: IProduct) => item.size.toLowerCase() === productSize?.toLowerCase()
   );
