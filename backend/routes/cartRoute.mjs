@@ -9,6 +9,6 @@ router.route('/')
   .get(protect, authorizeRoles('customer'), getUserCart)
   .delete(protect, removeCart);
 router.post('/add', protect, authorizeRoles('customer'), addToCart);
-router.delete('/:id', protect, authorizeRoles('customer'), removeCartItem);
+router.delete('/:productId', protect, authorizeRoles('customer'), removeCartItem);
 
 export default router;

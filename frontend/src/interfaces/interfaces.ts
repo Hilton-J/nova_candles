@@ -93,6 +93,7 @@ export interface IUser {
 export interface CartItem {
   productId: Partial<IProduct>;
   quantity: number;
+  price: number;
 }
 
 export interface ICart {

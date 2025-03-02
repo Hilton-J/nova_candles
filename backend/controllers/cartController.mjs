@@ -5,65 +5,6 @@ import asyncHandler from 'express-async-handler';
 // @desc    Add to Cart
 // route    POST /api/cart/add
 // @access  Private
-// export const addToCart = asyncHandler(async (req, res) => {
-//   const { productId, quantity } = req.body;
-//   const userId = req.user._id;
-
-//   const product = await Product.findById(productId);
-//   if (!product) {
-//     res.status(404);
-//     throw new Error('Product not found')
-//   }
-
-//   const cart = await Cart.findOne({ user: userId });
-
-//   //Check if the user has an existing cart
-//   if (cart) {
-//     const existingItem = cart.items.find(
-//       item => item.productId.toString() === productId
-//     );
-
-//     //Check if the item existing in the cart. If not, add into the cart
-//     if (existingItem) {
-//       existingItem.quantity += Number(quantity);
-//     } else {
-//       cart.items.push({
-//         productId,
-//         quantity
-//       })
-//     }
-
-//     cart.totalPrice = cart.items.reduce((acc, item) => {
-//       return acc + (product.price * item.quantity);
-//     }, 0);
-
-//     await cart.save();
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'Cart updated',
-//       results: cart
-//     })
-//   } else {
-//     const totalPrice = product.price * quantity;
-//     const createCart = await Cart.create({
-//       user: userId,
-//       items: [{ productId, quantity }],
-//       totalPrice
-//     });
-
-//     if (createCart) {
-//       res.status(201).json({
-//         success: true,
-//         message: 'Cart Created',
-//         results: createCart
-//       })
-//     } else {
-//       res.status(500);
-//       throw new Error('Error creating cart');
-//     }
-//   }
-// });
 export const addToCart = asyncHandler(async (req, res) => {
   const { productId, quantity } = req.body;
   const userId = req.user._id;
@@ -74,40 +15,81 @@ export const addToCart = asyncHandler(async (req, res) => {
     throw new Error("Product not found");
   }
 
-  // Update existing cart or create a new one
-  const updatedCart = await Cart.findOneAndUpdate(
-    { user: userId, "items.productId": productId }, // Check if cart exists and product is already in cart
-    {
-      $inc: { "items.$.quantity": quantity, totalPrice: product.price * quantity }, // Increment quantity if found
-    },
-    { new: true }
-  );
+  const cart = await Cart.findOne({ user: userId });
 
-  if (!updatedCart) {
-    // If product was not in cart, add it to items array
-    const newCart = await Cart.findOneAndUpdate(
-      { user: userId },
-      {
-        $push: { items: { productId, quantity } }, // Add new product to cart
-        $inc: { totalPrice: product.price * quantity },
-        $setOnInsert: { user: userId }, // Set user if cart is newly created
-      },
-      { upsert: true, new: true }
-    );
+  if (cart) {
+    // Check if the product already exists in the cart
+    const existingItem = cart.items.find(item => item.productId.toString() === productId);
 
-    return res.status(201).json({
-      success: true,
-      message: "Cart Created",
-      results: newCart,
+    if (existingItem) {
+      // Update the quantity and recalculate totalPrice
+      existingItem.quantity += Number(quantity);
+    } else {
+      // Add new product with price
+      cart.items.push({ productId, quantity, price: product.price });
+    }
+
+    // Recalculate totalPrice
+    cart.totalPrice = cart.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+    await cart.save();
+
+    return res.status(200).json({ success: true, message: "Cart updated", cart });
+  } else {
+    // Create a new cart
+    const newCart = await Cart.create({
+      user: userId,
+      items: [{ productId, quantity, price: product.price }],
+      totalPrice: product.price * quantity
     });
-  }
 
-  return res.status(201).json({
-    success: true,
-    message: "Cart updated",
-    results: updatedCart,
-  });
+    return res.status(201).json({ success: true, message: "Cart created", cart: newCart });
+  }
 });
+
+// export const addToCart = asyncHandler(async (req, res) => {
+//   const { productId, quantity } = req.body;
+//   const userId = req.user._id;
+
+//   const product = await Product.findById(productId);
+//   if (!product) {
+//     res.status(404);
+//     throw new Error("Product not found");
+//   }
+
+//   // Update existing cart or create a new one
+//   const updatedCart = await Cart.findOneAndUpdate(
+//     { user: userId, "items.productId": productId }, // Check if cart exists and product is already in cart
+//     {
+//       $inc: { "items.$.quantity": quantity, totalPrice: product.price * quantity }, // Increment quantity if found
+//     },
+//     { new: true }
+//   );
+
+//   if (!updatedCart) {
+//     // If product was not in cart, add it to items array
+//     const newCart = await Cart.findOneAndUpdate(
+//       { user: userId },
+//       {
+//         $push: { items: { productId, quantity, price: product.price } }, // Add new product to cart
+//         $inc: { totalPrice: product.price * quantity },
+//         $setOnInsert: { user: userId }, // Set user if cart is newly created
+//       },
+//       { upsert: true, new: true }
+//     );
+
+//     return res.status(201).json({
+//       success: true,
+//       message: "Cart Created",
+//       results: newCart,
+//     });
+//   }
+
+//   return res.status(201).json({
+//     success: true,
+//     message: "Cart updated",
+//     results: updatedCart,
+//   });
+// });
 
 
 // @desc    GET User's Cart
@@ -117,7 +99,7 @@ export const getUserCart = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
   const userCart = await Cart.findOne({ user: userId })
-    .populate({ path: 'items.productId', select: 'productName price images' });
+    .populate({ path: 'items.productId', select: 'productName images' });
 
   if (userCart) {
     res.status(201).json(userCart);
@@ -144,23 +126,27 @@ export const removeCart = asyncHandler(async (req, res) => {
 });
 
 // @desc    DELETE Item in cart Cart
-// route    DELETE /api/cart/:id
+// route    DELETE /api/cart/:productId
 // @access  Private
 export const removeCartItem = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { id } = req.params;
+  const { productId } = req.params;
 
   const cart = await Cart.findOne({ user: userId });
-
   if (!cart) {
     res.status(404);
-    throw new Error('Cart not found');
+    throw new Error("Cart not found");
   }
 
-  cart.items = cart.items.filter(item => item._id.toString() !== id);
-  cart.totalPrice = cart.items.reduce((acc, item) => acc + (item.productId.price || 0) * item.quantity, 0);
+  cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+
+  // Recalculate total price
+  cart.totalPrice = cart.items.reduce(
+    (acc, item) => acc + (item.price || 0) * item.quantity,
+    0
+  );
 
   await cart.save();
-  return { success: true, cart };
+  res.status(200).json({ success: true, message: "Item removed", results: cart });
 });
 

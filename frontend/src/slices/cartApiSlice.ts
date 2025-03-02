@@ -1,14 +1,14 @@
-import {
-  ICart,
-  IMutationResponse,
-} from "../interfaces/interfaces";
+import { ICart, IMutationResponse } from "../interfaces/interfaces";
 import { apiSlice } from "./apiSlice";
 
 const CART_URL = "/api/cart";
 
 const cartApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    addToCart: builder.mutation<IMutationResponse<ICart>, {productId: string, quantity:number}>({
+    addToCart: builder.mutation<
+      IMutationResponse<ICart>,
+      { productId: string; quantity: number }
+    >({
       query: (data) => ({
         url: `${CART_URL}/add`,
         method: "POST",
@@ -21,7 +21,19 @@ const cartApiSlice = apiSlice.injectEndpoints({
       query: () => `${CART_URL}`,
       providesTags: ["Cart"],
     }),
+
+    removeCartItem: builder.mutation<IMutationResponse<ICart>, string>({
+      query: (productId) => ({
+        url: `${CART_URL}/${productId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
   }),
 });
 
-export const { useAddToCartMutation, useGetUserCartQuery } = cartApiSlice;
+export const {
+  useAddToCartMutation,
+  useGetUserCartQuery,
+  useRemoveCartItemMutation,
+} = cartApiSlice;

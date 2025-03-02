@@ -2,8 +2,24 @@ import Drawer from "react-modern-drawer";
 import { CartProps } from "../interfaces/interfaces";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Link } from "react-router";
+import { useRemoveCartItemMutation } from "../slices/cartApiSlice";
+import { toast } from "react-toastify";
 
 const Cart = ({ openCart, toggleDrawer, cart }: CartProps) => {
+  const [removeItem, { isLoading }] = useRemoveCartItemMutation();
+  const handlesRemoveItem = async (productId: string) => {
+    try {
+      await removeItem(productId).unwrap();
+      toast.success("Item removed");
+    } catch (err) {
+      if (err && typeof err === "object" && "data" in err) {
+        toast.error((err as { data: { message: string } }).data.message);
+      } else {
+        toast.error(`An unexpected error occurred: ${err}`);
+      }
+    }
+  };
+
   return (
     <Drawer
       open={openCart}
@@ -37,13 +53,16 @@ const Cart = ({ openCart, toggleDrawer, cart }: CartProps) => {
                       {item.productId?.productName}
                     </p>
                   </Link>
-                  <RiDeleteBin5Line className='text-red-500 cursor-pointer hover:text-red-700' />
+                  <RiDeleteBin5Line
+                    className='text-red-500 cursor-pointer hover:text-red-700 '
+                    onClick={() => handlesRemoveItem(item.productId._id || "")}
+                  />
                 </div>
 
                 <div className='flex justify-between text-gray-600'>
                   <p>Qty: {item.quantity}</p>
                   <p className='font-semibold'>
-                    R{(item.productId?.price || 0) * item.quantity}
+                    R{(item.price || 0) * item.quantity}
                   </p>
                 </div>
               </div>
