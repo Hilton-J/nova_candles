@@ -2,11 +2,31 @@ import Drawer from "react-modern-drawer";
 import { CartProps } from "../interfaces/interfaces";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Link } from "react-router";
-import { useRemoveCartItemMutation } from "../slices/cartApiSlice";
+import {
+  useRemoveCartItemMutation,
+  useUpdateCartItemMutation,
+} from "../slices/cartApiSlice";
 import { toast } from "react-toastify";
 
 const Cart = ({ openCart, toggleDrawer, cart }: CartProps) => {
-  const [removeItem, { isLoading }] = useRemoveCartItemMutation();
+  const [removeItem] = useRemoveCartItemMutation();
+  const [updateCartItem] = useUpdateCartItemMutation();
+
+  // Handle Quantity Update
+  //TODO: Utalise this method
+  const handleQuantityChange = async (
+    productId: string,
+    newQuantity: number
+  ) => {
+    if (newQuantity < 1) return; // Prevent zero or negative quantities
+    try {
+      await updateCartItem({ productId, quantity: newQuantity }).unwrap();
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
+    }
+  };
+
+  // Handle Remove Item
   const handlesRemoveItem = async (productId: string) => {
     try {
       await removeItem(productId).unwrap();

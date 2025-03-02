@@ -29,6 +29,18 @@ const cartApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Cart"],
     }),
+
+    updateCartItem: builder.mutation<
+      IMutationResponse<ICart>,
+      { productId?: string; quantity: number }
+    >({
+      query: (data) => ({
+        url: `${CART_URL}/update`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Cart"],
+    }),
   }),
 });
 
@@ -36,4 +48,5 @@ export const {
   useAddToCartMutation,
   useGetUserCartQuery,
   useRemoveCartItemMutation,
+  useUpdateCartItemMutation,
 } = cartApiSlice;
