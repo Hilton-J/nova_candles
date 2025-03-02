@@ -91,7 +91,7 @@ export interface IUser {
 }
 
 export interface CartItem {
-  productId: string;
+  productId: Partial<IProduct>;
   quantity: number;
 }
 
@@ -110,6 +110,12 @@ export interface IMutationResponse<T = void> {
   results?: T;
 }
 
-export interface OutletContext  {
+export interface OutletContext {
   setOpenLoginModal: (isOpen: boolean) => void;
+}
+
+export interface CartProps {
+  openCart: boolean;
+  toggleDrawer: () => void;
+  cart?: ICart;
 }

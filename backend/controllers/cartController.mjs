@@ -143,3 +143,24 @@ export const removeCart = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    DELETE Item in cart Cart
+// route    DELETE /api/cart/:id
+// @access  Private
+export const removeCartItem = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const { id } = req.params;
+
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    res.status(404);
+    throw new Error('Cart not found');
+  }
+
+  cart.items = cart.items.filter(item => item._id.toString() !== id);
+  cart.totalPrice = cart.items.reduce((acc, item) => acc + (item.productId.price || 0) * item.quantity, 0);
+
+  await cart.save();
+  return { success: true, cart };
+});
+
