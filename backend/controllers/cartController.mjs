@@ -150,3 +150,31 @@ export const removeCartItem = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: "Item removed", results: cart });
 });
 
+// @desc    UPDATE Item quantity
+// route    PATCH /api/cart/update
+// @access  Private
+export const updateItemQuantity = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const { productId, quantity } = req.body;
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+    res.status(404);
+    throw new Error("Cart not found");
+  }
+
+  const existingItem = cart.items.find(item => item.productId.toString() === productId);
+
+  if (!existingItem) {
+    res.status(404);
+    throw new Error('Item not found');
+  }
+
+  existingItem.quantity = quantity;
+  // Recalculate totalPrice
+  cart.totalPrice = cart.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+  await cart.save();
+
+  return res.status(200).json({ success: true, message: "Quamtity updated", cart });
+});
+

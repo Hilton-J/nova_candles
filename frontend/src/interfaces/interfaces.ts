@@ -116,7 +116,7 @@ export interface OutletContext {
 }
 
 export interface CartProps {
-  openCart: boolean;
+  openCart?: boolean;
   toggleDrawer: () => void;
   cart?: ICart;
 }

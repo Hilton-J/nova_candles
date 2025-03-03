@@ -25,7 +25,7 @@ const MainLayout = () => {
       {openLoginModal && (
         <LoginModal setOpenLoginModal={setOpenLoginModal} />
       )}
-      <ToastContainer />
+      <ToastContainer className='z-50' />
     </>
   );
 };

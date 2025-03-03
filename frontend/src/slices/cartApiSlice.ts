@@ -30,7 +30,7 @@ const cartApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
 
-    updateCartItem: builder.mutation<
+    updateItemQuantity: builder.mutation<
       IMutationResponse<ICart>,
       { productId?: string; quantity: number }
     >({
@@ -48,5 +48,5 @@ export const {
   useAddToCartMutation,
   useGetUserCartQuery,
   useRemoveCartItemMutation,
-  useUpdateCartItemMutation,
+  useUpdateItemQuantityMutation,
 } = cartApiSlice;

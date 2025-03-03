@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { HiOutlineShoppingBag, HiOutlineUser } from "react-icons/hi2";
 import { OutletContext } from "../interfaces/interfaces";
 import { useSelector } from "react-redux";
@@ -10,11 +10,15 @@ import { useState } from "react";
 const NavBar = ({ setOpenLoginModal }: OutletContext) => {
   const { data, isLoading } = useGetUserCartQuery();
   const [openCart, setOpenCart] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const activeNavLink = (isActive: boolean) =>
     isActive ? "text-accent" : "text-black";
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const toggleDrawer = () => {
     setOpenCart((prevState) => !prevState);
+  };
+  const toggleProfile = () => {
+    setOpenProfile((prevState) => !prevState);
   };
 
   return (
@@ -52,7 +56,8 @@ const NavBar = ({ setOpenLoginModal }: OutletContext) => {
             {userInfo ? (
               <HiOutlineUser
                 className='hover:text-accent cursor-pointer'
-                onClick={() => setOpenLoginModal(true)}
+                onClick={toggleProfile}
+                // onMouseLeave={() => setOpenProfile(false)}
               />
             ) : (
               <p
@@ -62,6 +67,12 @@ const NavBar = ({ setOpenLoginModal }: OutletContext) => {
                 LOGIN
               </p>
             )}
+            {openProfile && (
+                <div className='absolute bg-secondary w-30 p-2 border border-black/20 top-0 right-0 -translate-x-10 translate-y-10 z-50'>
+                  <Link to={"/profile"}>Profile</Link>
+                  <button className='block'>Logout</button>
+                </div>
+              )}
             <div className='relative'>
               <HiOutlineShoppingBag
                 className='hover:text-accent cursor-pointer'
@@ -72,11 +83,17 @@ const NavBar = ({ setOpenLoginModal }: OutletContext) => {
                   {data && isLoading ? 0 : data?.items.length}
                 </span>
               )}
+              
             </div>
           </span>
         </div>
       </div>
-      <Cart openCart={openCart} toggleDrawer={toggleDrawer} cart={data} />
+
+      {openCart && (
+        <div className='size-full bg-black/55 fixed top-0 transform translate-x-0 transition-transform duration-700'>
+          <Cart toggleDrawer={toggleDrawer} cart={data} />
+        </div>
+      )}
     </>
   );
 };
