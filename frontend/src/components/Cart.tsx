@@ -129,7 +129,7 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
         <span className='flex justify-between'>
           Total:{" "}
           <p className='font-bold'>
-            R{cart?.totalPrice.toFixed(2) || Number(0).toFixed(2)}
+            {cart ? <>R{cart?.totalPrice.toFixed(2)}</> : '-'}
           </p>
         </span>
         <button

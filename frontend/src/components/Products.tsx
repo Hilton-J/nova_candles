@@ -16,7 +16,7 @@ const Products = () => {
       </h1>
       <Link
         to={"/shop"}
-        className='border border-black/20 bg-accent hover:bg-secondary hover:text-black text-white py-2 px-5 cursor-pointer ml-auto'
+        className='border border-black/20 bg-accent hover:bg-secondary hover:text-black text-white py-2 px-5 cursor-pointer ml-auto '
       >
         <button>Shop</button>
       </Link>

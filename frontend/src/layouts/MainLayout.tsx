@@ -11,7 +11,7 @@ const MainLayout = () => {
   return (
     <>
       <section className='flex flex-col items-center gap-10 md:gap-15 xl:gap-20 max-w-[1920px]'>
-        <header className='py-2 xl:py-4 2xl:py-5 w-full flex justify-center border-b border-b-black/20'>
+        <header className='py-2 xl:py-2 w-full flex justify-center border-b border-b-black/20'>
           <NavBar setOpenLoginModal={setOpenLoginModal} />
         </header>
 
