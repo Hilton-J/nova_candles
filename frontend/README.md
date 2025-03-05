@@ -55,5 +55,6 @@ export default tseslint.config({
 - React-router: npm i react-router
 - React-icons: npm i react-icons
 - Redux: npm i @reduxjs/toolkit react-redux
-- React Spinner: npm i react-spinners --save
-- React Toastify: npm i --save react-toastify
+- React Spinner: npm i react-spinners
+- React Toastify: npm i react-toastify
+- Zod: npm i z

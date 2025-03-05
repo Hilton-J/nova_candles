@@ -46,9 +46,19 @@ userSchema.pre('save', async function (next) {
   }
 });
 
+// Function to 
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+userSchema.methods.omitField = function (fields) {
+  const user = this.toObject();
+  const fieldsToOmit = Array.isArray(fields) ? fields : [fields];
+
+  fieldsToOmit.forEach((field) => { delete user[field]; });
+
+  return user;
+}
 
 const User = mongoose.model('User', userSchema);
 
