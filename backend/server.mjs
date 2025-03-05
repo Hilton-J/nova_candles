@@ -1,5 +1,5 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { connectDB } from './config/db.mjs';
 import cookieParser from 'cookie-parser';
 import { errorHandler, notFound } from './middleware/errorMiddleware.mjs';
@@ -8,10 +8,9 @@ import productRoutes from './routes/productRoute.mjs';
 import orderRoutes from './routes/orderRoute.mjs';
 import paymentRoutes from './routes/paymentRoute.mjs';
 import cartRoutes from './routes/cartRoute.mjs';
+import { PORT } from './constants/env.const.mjs';
 
-dotenv.config();
 const app = express();
-const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,9 +25,9 @@ app.use('/api/cart', cartRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(PORT, () => {
   connectDB();
-  console.log(`Server running on http://localhost:${port}`)
+  console.log(`Server running on http://localhost:${PORT}`)
 })
 
 //6MNxxYy_

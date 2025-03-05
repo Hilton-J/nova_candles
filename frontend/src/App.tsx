@@ -23,7 +23,8 @@ function App() {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path='/admin' element={<AdminLayout />}></Route>
+        <Route path='/admin' element={<AdminLayout />}>
+        </Route>
         {/* <Route path='/login' element={<Login />} /> */}
         <Route path='/' element={<MainLayout />}>
           <Route index element={<LandingPage />} />
