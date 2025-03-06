@@ -14,18 +14,17 @@ const addressSchema = mongoose.Schema({
 });
 
 const userSchema = mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  cellPhoneNo: { type: Number, required: true },
-  password: { type: String, required: true },
+  firstName: { type: String, required: [true, 'Please enter name'] },
+  lastName: { type: String, required: [true, 'Please enter last name'] },
+  email: { type: String, required: [true, 'Please enter email'], unique: true, trim: true, lowercase: true },
+  cellPhoneNo: { type: Number, required: [true, 'Please enter cellphone number'] },
+  password: { type: String, required: [true, 'Enter Password'] },
   role: {
     type: String,
     enum: ['customer', 'admin'],
     default: 'customer',
-    required: true
   },
-  shipToAddress: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true }],
+  shipToAddress: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address' }],
   isActive: { type: Boolean, default: true },
 }, {
   timestamps: true

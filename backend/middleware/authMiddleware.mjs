@@ -1,24 +1,34 @@
 import jwt from 'jsonwebtoken'
 import asynchandler from 'express-async-handler'
 import User from '../models/userModel.mjs'
+import { JWT_SECRET } from '../constants/env.const.mjs';
+import {
+  FORBIDDEN,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
+  UNAUTHORIZED,
+} from '../constants/http.code.mjs'
+import HttpError from '../utils/httpError.mjs';
 
 const protect = asynchandler(async (req, res, next) => {
-  let token;
+  const accessToken = req.cookies.accessToken;
+  if (!accessToken)
+    return next(new HttpError('Not Authorized, invalid accessToken', UNAUTHORIZED));
 
-  token = req.cookies.jwt;
+  const decoded = jwt.decode(accessToken);
+  if (!decoded || !decoded.id)
+    return next(new HttpError('Not authorized, invalid token structure', UNAUTHORIZED));
 
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select('-password');
-      next();
-    } catch (error) {
-      res.status(401);
-      throw new Error('Not Authorized, invalid token');
-    }
-  } else {
-    res.status(401);
-    throw new Error('Not authorized, no token');
+  const user = await User.findById(decoded.id).select('-password');
+  if (!user)
+    return next(new HttpError('Not authorized, user not found', NOT_FOUND))
+
+  try {
+    jwt.verify(accessToken, JWT_SECRET);
+    req.user = user;
+    next();
+  } catch (error) {
+    next(new HttpError('Not Authorized, invalid token', UNAUTHORIZED));
   }
 });
 
@@ -27,8 +37,7 @@ const authorizeRoles = (...roles) => {
     if (req.user && roles.includes(req.user.role)) {
       next();
     } else {
-      res.status(403);
-      throw new Error('Not authorized');
+      next(new HttpError('Not authorized', FORBIDDEN));
     }
   }
 };
