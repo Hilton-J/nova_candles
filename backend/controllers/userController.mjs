@@ -87,7 +87,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
 // route    POST /api/users/logout
 // @access  Public
 export const logout = asyncHandler(async (req, res) => {
-  res.cookie('jwt', ' ', {
+  res.cookie('accessToken', ' ', {
     httpOnly: true,
     expires: new Date(0)
   });
