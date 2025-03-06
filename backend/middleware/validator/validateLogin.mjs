@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { loginSchema } from "../../schemas/authSchema.js";
+import { loginSchema } from "../../schemas/authSchema.mjs";
 
 /**
  * Middleware to validate the login request body.
