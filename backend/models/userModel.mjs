@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import { string } from 'zod';
 
 const addressSchema = mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
@@ -26,6 +27,8 @@ const userSchema = mongoose.Schema({
   },
   shipToAddress: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address' }],
   isActive: { type: Boolean, default: true },
+  jwt_secrete: { type: String, required: true },
+  refreshToken: { type: String, default: null }
 }, {
   timestamps: true
 });

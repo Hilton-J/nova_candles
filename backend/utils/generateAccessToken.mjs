@@ -11,11 +11,12 @@ const generateAccessToken = (user) => {
     issuer: "novacandles.com",
     audience: "API V1",
   };
+  
   return jwt.sign(
     {
       id: user._id,
     },
-    JWT_SECRET,
+    user.jwt_secrete,
     jwtOptions
   );
 };

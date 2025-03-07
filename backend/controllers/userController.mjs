@@ -1,28 +1,20 @@
 import asyncHandler from "express-async-handler";
 import User from '../models/userModel.mjs'
 import generateToken from '../utils/generateToken.mjs'
+import { loginUser } from "../service/authService.mjs";
+import { CONFLICT, CREATED, OK } from "../constants/http.code.mjs";
+import { clearAuthCookies } from "../utils/authCookie.mjs";
 
 // @dsc     Auth user/set token
 // route    POST /api/users/login
 // @access  Public
-export const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+export const login = asyncHandler(async (req, res, next) => {
 
-  if (user && (await user.matchPassword(password))) {
-    generateToken(res, user);
-    res.status(201).json({
-      _id: user._id,
-      fistName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.role,
-      cart: user.cart
-    });
-  } else {
-    res.status(400);
-    throw new Error('Invalid email or password');
-  }
+  const user = await loginUser(req.body);
+  await generateToken(res, user);
+  const data = new User(user).omitField(['jwt_secrete', 'password']);
+
+  res.status(OK).json(data);
 });
 
 // @dsc     Register a new user
@@ -33,9 +25,10 @@ export const registerUser = asyncHandler(async (req, res) => {
   const userExist = await User.findOne({ email });
 
   if (userExist) {
-    res.status(400);
-    throw new Error('User already exists')
+    throw new HttpError('Email already exists', CONFLICT)
   }
+
+  const jwt_secrete = crypto.randomBytes(32).toString('hex');
 
   const user = await User.create({
     firstName,
@@ -43,7 +36,8 @@ export const registerUser = asyncHandler(async (req, res) => {
     email,
     cellPhoneNo,
     role,
-    password
+    password,
+    jwt_secrete
   });
 
   if (user) {
@@ -87,11 +81,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
 // route    POST /api/users/logout
 // @access  Public
 export const logout = asyncHandler(async (req, res) => {
-  res.cookie('accessToken', ' ', {
-    httpOnly: true,
-    expires: new Date(0)
-  });
-
+  clearAuthCookies(res);
   res.status(200).json({ success: true, message: 'User logged out' });
 });
 

@@ -83,7 +83,7 @@ export interface IUser {
   lastName: string;
   email: string;
   cellPhoneNo: string;
-  password: string;
+  password?: string;
   role: string;
   shipToAddress: IAddress[];
   createdAt?: string;

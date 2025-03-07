@@ -57,4 +57,5 @@ export default tseslint.config({
 - Redux: npm i @reduxjs/toolkit react-redux
 - React Spinner: npm i react-spinners
 - React Toastify: npm i react-toastify
-- Zod: npm i z
+- Zod: npm i zod
+- Crypto: npm i crypto
