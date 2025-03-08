@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import User from '../models/userModel.mjs'
 import generateToken from '../utils/generateToken.mjs'
-import { loginUser } from "../service/authService.mjs";
+import { loginUser, registerUser } from "../service/authService.mjs";
 import { CONFLICT, CREATED, OK } from "../constants/http.code.mjs";
 import { clearAuthCookies } from "../utils/authCookie.mjs";
 
@@ -9,7 +9,6 @@ import { clearAuthCookies } from "../utils/authCookie.mjs";
 // route    POST /api/users/login
 // @access  Public
 export const login = asyncHandler(async (req, res, next) => {
-
   const user = await loginUser(req.body);
   await generateToken(res, user);
   const data = new User(user).omitField(['jwt_secrete', 'password']);
@@ -20,33 +19,11 @@ export const login = asyncHandler(async (req, res, next) => {
 // @dsc     Register a new user
 // route    POST /api/users/register
 // @access  Public
-export const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, cellPhoneNo, role, password } = req.body;
-  const userExist = await User.findOne({ email });
-
-  if (userExist) {
-    throw new HttpError('Email already exists', CONFLICT)
-  }
-
-  const jwt_secrete = crypto.randomBytes(32).toString('hex');
-
-  const user = await User.create({
-    firstName,
-    lastName,
-    email,
-    cellPhoneNo,
-    role,
-    password,
-    jwt_secrete
-  });
-
-  if (user) {
-    generateToken(res, user._id);
-    res.status(201).json({ success: true, message: `Welcome, ${firstName} ${lastName}!` });
-  } else {
-    res.status(400);
-    throw new Error('Invalid user data');
-  }
+export const registerHandler = asyncHandler(async (req, res, next) => {
+  const user = await registerUser(req.body);
+  await generateToken(res, user);
+  const data = new User(user).omitField(["jwt_secret", "password"]);
+  res.status(CREATED).json({ status: 'User successfullyregitered', data })
 });
 
 // @dsc     Get all users

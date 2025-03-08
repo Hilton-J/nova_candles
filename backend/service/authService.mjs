@@ -19,3 +19,35 @@ export const loginUser = async (credentials) => {
   return user;
 }
 
+/**
+ * Registers a new user.
+ * @param {Object} userData - The user data for registration.
+ * @returns {Promise<Object>} - The created user object.
+ */
+export const registerUser = async (userData) => {
+  const { firstName, lastName, email, cellPhoneNo, role, password, confirmPassword } = userData;
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists)
+    return next(new HttpError('Email already exists', CONFLICT));
+
+  if (confirmPassword !== password)
+    return next(new HttpError("Passwords don't match", UNAUTHORIZED));
+
+  const jwt_secrete = crypto.randomBytes(32).toString('hex');
+
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    cellPhoneNo,
+    role,
+    password,
+    jwt_secrete
+  });
+
+  return user;
+}
+
+
