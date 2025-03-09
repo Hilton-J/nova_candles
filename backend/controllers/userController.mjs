@@ -4,6 +4,7 @@ import generateToken from '../utils/generateToken.mjs'
 import { loginUser, registerUser } from "../service/authService.mjs";
 import { CONFLICT, CREATED, OK } from "../constants/http.code.mjs";
 import { clearAuthCookies } from "../utils/authCookie.mjs";
+import { getAllDocs } from "../service/crudHandlerFactory.mjs";
 
 // @dsc     Auth user/set token
 // route    POST /api/users/login
@@ -29,30 +30,31 @@ export const registerHandler = asyncHandler(async (req, res, next) => {
 // @dsc     Get all users
 // route    POST /api/users
 // @access  Private
-export const getAllUsers = asyncHandler(async (req, res) => {
-  const page = Number(req.query.page) || 1;
-  const limit = 20;
-  const skip = (page - 1) * limit;
+export const getAllUsers = getAllDocs(User);
+// export const getAllUsers = asyncHandler(async (req, res) => {
+//   const page = Number(req.query.page) || 1;
+//   const limit = 20;
+//   const skip = (page - 1) * limit;
 
-  const users = await User.find({})
-    .select('-password')
-    .skip(skip)
-    .limit(limit);
+//   const users = await User.find({})
+//     .select('-password')
+//     .skip(skip)
+//     .limit(limit);
 
-  const totalResults = await User.countDocuments();
+//   const totalResults = await User.countDocuments();
 
-  if (users.length > 0) {
-    res.status(201).json({
-      page,
-      results: users,
-      totalPages: Math.ceil(totalResults / limit),
-      totalResults
-    });
-  } else {
-    res.status(400);
-    throw new Error('No users found');
-  }
-});
+//   if (users.length > 0) {
+//     res.status(201).json({
+//       page,
+//       results: users,
+//       totalPages: Math.ceil(totalResults / limit),
+//       totalResults
+//     });
+//   } else {
+//     res.status(204);
+//     throw new Error('No users found');
+//   }
+// });
 
 // @dsc     User logout
 // route    POST /api/users/logout

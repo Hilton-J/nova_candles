@@ -11,7 +11,7 @@ import {
 import HttpError from '../utils/httpError.mjs';
 
 const protect = asynchandler(async (req, res, next) => {
-  const accessToken = req.cookies.accessToken;
+  const accessToken = req.cookies.jwt_token;
   if (!accessToken)
     return next(new HttpError('Not Authorized, invalid accessToken', UNAUTHORIZED));
 
@@ -23,8 +23,14 @@ const protect = asynchandler(async (req, res, next) => {
   if (!user)
     return next(new HttpError('Not authorized, user not found', NOT_FOUND))
 
+  const currentJwtSecret = user.jwt_secrete;
+
+  if (!currentJwtSecret) {
+    next(new HttpError("Server error: User jwt_secret missing", INTERNAL_SERVER_ERROR));
+  }
+
   try {
-    jwt.verify(accessToken, JWT_SECRET);
+    jwt.verify(accessToken, currentJwtSecret);
     req.user = user;
     next();
   } catch (error) {

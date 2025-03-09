@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
-import HttpError from "../utils/httpError.js";
-import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.codes.js";
+import HttpError from "../utils/httpError.mjs";
+import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.code.mjs";
+import { model } from "mongoose";
 
 //works
 const deleteOneDoc = (Model) =>
@@ -55,14 +56,28 @@ const getOneDoc = (Model) =>
 //works
 const getAllDocs = (Model) =>
   asyncHandler(async (req, res, next) => {
-    const doc = await Model.find();
+    const page = Number(req.query.page) || 1;
+    const limit = 20;
+    const skip = (page - 1) * limit;
+
+    let query = Model.find().skip(skip).limit(limit);
+    if (Model.modelName === "User") {
+      query = query.select("-password -jwt_secrete"); // Exclude fields using Mongoose's select()
+    }
+
+    const doc = await query;
+
+    const totalResults = await Model.countDocuments();
+
+    if (doc.length <= 0) {
+      return next(new HttpError('No data found', NO_CONTENT));
+    }
 
     res.status(OK).json({
-      status: "success",
-      result: doc.length,
-      data: {
-        data: doc,
-      },
+      page,
+      results: doc,
+      totalPages: Math.ceil(totalResults / limit),
+      totalResults
     });
   });
 
