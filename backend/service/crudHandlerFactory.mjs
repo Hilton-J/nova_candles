@@ -69,8 +69,8 @@ const getAllDocs = (Model) =>
 
     const totalResults = await Model.countDocuments();
 
-    if (doc.length <= 0) {
-      return next(new HttpError('No data found', NO_CONTENT));
+    if (!doc.length) {
+      return next(new HttpError('No data found', NOT_FOUND));
     }
 
     res.status(OK).json({

@@ -9,7 +9,7 @@ import { getAllDocs } from "../service/crudHandlerFactory.mjs";
 // @dsc     Auth user/set token
 // route    POST /api/users/login
 // @access  Public
-export const login = asyncHandler(async (req, res, next) => {
+export const login = asyncHandler(async (req, res) => {
   const user = await loginUser(req.body);
   await generateToken(res, user);
   const data = new User(user).omitField(['jwt_secrete', 'password']);
@@ -23,7 +23,7 @@ export const login = asyncHandler(async (req, res, next) => {
 export const registerHandler = asyncHandler(async (req, res, next) => {
   const user = await registerUser(req.body);
   await generateToken(res, user);
-  const data = new User(user).omitField(["jwt_secret", "password"]);
+  const data = new User(user).omitField(["jwt_secrete", "password"]);
   res.status(CREATED).json({ status: 'User successfullyregitered', data })
 });
 

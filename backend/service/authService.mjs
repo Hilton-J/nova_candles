@@ -14,7 +14,7 @@ export const loginUser = async (credentials) => {
   const user = await User.findOne({ email });
 
   if (!user || !(await user.matchPassword(password)))
-    return next(new HttpError('Invalid email or password', UNAUTHORIZED));
+    throw new HttpError('Invalid email or password', UNAUTHORIZED);
 
   return user;
 }
@@ -30,10 +30,10 @@ export const registerUser = async (userData) => {
   const userExists = await User.findOne({ email });
 
   if (userExists)
-    return next(new HttpError('Email already exists', CONFLICT));
+    throw new HttpError('Email already exists', CONFLICT);
 
   if (confirmPassword !== password)
-    return next(new HttpError("Passwords don't match", UNAUTHORIZED));
+    throw new HttpError("Passwords don't match", UNAUTHORIZED);
 
   const jwt_secrete = crypto.randomBytes(32).toString('hex');
 

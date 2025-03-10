@@ -61,7 +61,7 @@ export const errorHandler = (err, req, res, next) => { // For errors in our rout
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
     statusCode = NOT_FOUND;
     message = 'Invalid ID format';
-  }
+  }0
 
   res.status(INTERNAL_SERVER_ERROR).json({
     message: 'Internal Server Error',
