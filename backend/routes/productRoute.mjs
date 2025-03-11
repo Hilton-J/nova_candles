@@ -1,7 +1,7 @@
 import express from 'express';
 import { createProduct, deactivateProduct, deleteProduct, getAllProducts, getProductById, getProductByNameAndSize, reviewProduct, updateProduct } from '../controllers/productController.mjs';
 import { authorizeRoles, protect } from '../middleware/authMiddleware.mjs';
-import validateCreateProduct from '../middleware/validator/validateAddProduct.mjs';
+import {validateCreateProduct, validateUpdateProduct} from '../middleware/validators/productValidator.mjs';
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.post('/add', protect, authorizeRoles('admin'), validateCreateProduct, cre
 router.patch('/review/:id', protect, authorizeRoles('customer'), reviewProduct);
 router.route('/:id')
   .get(getProductById)
-  .put(protect, authorizeRoles('admin'), updateProduct)
+  .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProduct)
   .delete(protect, authorizeRoles('admin'), deleteProduct)
   .patch(protect, authorizeRoles('admin'), deactivateProduct);
 // router.get('/:name/:size', getProductByNameAndSize);

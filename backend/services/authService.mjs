@@ -1,6 +1,6 @@
 import User from '../models/userModel.mjs';
 import HttpError from '../utils/httpError.mjs';
-import { UNAUTHORIZED, CONFLICT } from '../constants/http.code.mjs';
+import { UNAUTHORIZED, CONFLICT } from '../constants/http.codes.mjs';
 import crypto from 'crypto';
 
 /**

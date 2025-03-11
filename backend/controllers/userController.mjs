@@ -1,10 +1,10 @@
 import asyncHandler from "express-async-handler";
 import User from '../models/userModel.mjs'
 import generateToken from '../utils/generateToken.mjs'
-import { loginUser, registerUser } from "../service/authService.mjs";
-import { CONFLICT, CREATED, OK } from "../constants/http.code.mjs";
+import { loginUser, registerUser } from "../services/authService.mjs";
+import { CONFLICT, CREATED, OK } from "../constants/http.codes.mjs";
 import { clearAuthCookies } from "../utils/authCookie.mjs";
-import { getAllDocs } from "../service/crudHandlerFactory.mjs";
+import { getAllDocs } from "../services/crudHandlerFactory.mjs";
 
 // @dsc     Auth user/set token
 // route    POST /api/users/login
@@ -61,7 +61,7 @@ export const getAllUsers = getAllDocs(User);
 // @access  Public
 export const logout = asyncHandler(async (req, res) => {
   clearAuthCookies(res);
-  res.status(200).json({ success: true, message: 'User logged out' });
+  res.status(OK).json({ success: true, message: 'User logged out' });
 });
 
 // @dsc     Get User

@@ -1,8 +1,8 @@
 import express from 'express';
 import { registerHandler, login, getAllUsers, logout, getUserById, deleteUser, updateUser } from '../controllers/userController.mjs';
 import { protect, authorizeRoles } from '../middleware/authMiddleware.mjs'
-import validateLogin from '../middleware/validator/validateLogin.mjs';
-import validateRegister from '../middleware/validator/validateRegister.mjs';
+import validateLogin from '../middleware/validators/validateLogin.mjs';
+import validateRegister from '../middleware/validators/validateRegister.mjs';
 
 const router = express.Router();
 

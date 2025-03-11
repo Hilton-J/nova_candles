@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import productSchema from "../../schemas/insertProductSchema.mjs";
+import { productSchema, updateProductSchema } from "../../schemas/productSchema.mjs";
 
 /**
  * Middleware to validate the product request body.
@@ -7,10 +7,9 @@ import productSchema from "../../schemas/insertProductSchema.mjs";
  * @param {Object} res - Express response object.
  * @param {Function} next - Express next middleware function.
  */
-const validateCreateProduct = asyncHandler(async (req, res, next) => {
+export const validateCreateProduct = asyncHandler(async (req, res, next) => {
   const result = productSchema.safeParse(req.body);
 
-  console.log('====== Result ====== ', result)
   if (!result.success) {
     return next(result.error);
   }
@@ -20,4 +19,15 @@ const validateCreateProduct = asyncHandler(async (req, res, next) => {
   next();
 });
 
-export default validateCreateProduct;
+export const validateUpdateProduct = asyncHandler(async (req, res, next) => {
+  const result = updateProductSchema.safeParse(req.body);
+
+  if (!result.success) {
+    return next(result.error);
+  }
+
+  req.body = result.data;
+
+  next();
+});
+

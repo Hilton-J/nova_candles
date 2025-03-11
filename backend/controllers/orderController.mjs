@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.mjs';
-import { getAllDocs } from '../service/crudHandlerFactory.mjs';
+import { getAllDocs } from '../services/crudHandlerFactory.mjs';
 
 //@desc    Purchase
 //route    POST /api/orders

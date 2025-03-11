@@ -1,6 +1,6 @@
 import { ZodError } from "zod";
 import { NODE_ENV } from "../constants/env.const.mjs";
-import { INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST } from "../constants/http.code.mjs";
+import { INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST } from "../constants/http.codes.mjs";
 import HttpError from "../utils/httpError.mjs";
 
 
@@ -59,9 +59,11 @@ export const errorHandler = (err, req, res, next) => { // For errors in our rout
   }
 
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
-    statusCode = NOT_FOUND;
-    message = 'Invalid ID format';
-  }0
+    res.status(BAD_REQUEST).json({
+      message: 'Invalid Id format',
+      stack: NODE_ENV === 'production' ? null : err.stack
+    })
+  }
 
   res.status(INTERNAL_SERVER_ERROR).json({
     message: 'Internal Server Error',

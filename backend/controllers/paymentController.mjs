@@ -1,6 +1,6 @@
 import Payment from '../models/paymentModel.mjs';
 import asyncHandler from 'express-async-handler';
-import { getAllDocs } from '../service/crudHandlerFactory.mjs';
+import { getAllDocs } from '../services/crudHandlerFactory.mjs';
 
 //@desc    Add payment
 //route    POST /api/payments

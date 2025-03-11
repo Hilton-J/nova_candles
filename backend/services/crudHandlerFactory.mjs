@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import HttpError from "../utils/httpError.mjs";
-import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.code.mjs";
+import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.codes.mjs";
 import { model } from "mongoose";
 
 //works

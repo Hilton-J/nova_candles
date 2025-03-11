@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Product from '../models/productModel.mjs';
 import mongoose from "mongoose";
-import { getAllDocs } from "../service/crudHandlerFactory.mjs";
+import { getAllDocs } from "../services/crudHandlerFactory.mjs";
 
 // @dsc     Add Product
 // route    POST /api/products
@@ -105,6 +105,8 @@ export const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const product = await Product.findById({ _id: id });
 
+  const product1 = await Product.findByIdAndUpdate(id, { $push: {} })
+
   if (product) {
     product.productName = req.body.productName || product.productName;
     product.description = req.body.description || product.description;
@@ -112,7 +114,12 @@ export const updateProduct = asyncHandler(async (req, res) => {
     product.size = req.body.size || product.size;
     product.stock = req.body.stock || product.stock;
     product.type = req.body.type || product.type;
-    product.images.push(req.body.images || product.images);
+    product.images.push(req.body.images);
+
+    if (req.body.images) {
+      product.images.push(req.body.images);
+    }
+    //product.images.push(req.body.images || product.images);
 
     const updatedProduct = await product.save();
 

@@ -7,7 +7,7 @@ import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   UNAUTHORIZED,
-} from '../constants/http.code.mjs'
+} from '../constants/http.codes.mjs'
 import HttpError from '../utils/httpError.mjs';
 
 const protect = asynchandler(async (req, res, next) => {
