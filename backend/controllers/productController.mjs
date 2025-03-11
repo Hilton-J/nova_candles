@@ -103,9 +103,7 @@ export const getProductByNameAndSize = asyncHandler(async (req, res) => {
 // @access  Private (admin only)
 export const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const product = await Product.findById({ _id: id });
-
-  const product1 = await Product.findByIdAndUpdate(id, { $push: {} })
+  const product = await Product.findById(id);
 
   if (product) {
     product.productName = req.body.productName || product.productName;

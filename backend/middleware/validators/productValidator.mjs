@@ -15,7 +15,6 @@ export const validateCreateProduct = asyncHandler(async (req, res, next) => {
   }
 
   req.body = result.data;
-
   next();
 });
 
@@ -27,7 +26,6 @@ export const validateUpdateProduct = asyncHandler(async (req, res, next) => {
   }
 
   req.body = result.data;
-
   next();
 });
 
