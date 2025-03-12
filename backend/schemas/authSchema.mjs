@@ -16,7 +16,6 @@ export const registerSchema = loginSchema.extend({
   firstName: z.string(),
   lastName: z.string(),
   cellPhoneNo: z.string(),
-
 })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Password do not match',
