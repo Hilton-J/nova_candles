@@ -1,5 +1,6 @@
 {
   "window.zoomLevel": 0,
   "terminal.integrated.mouseWheelZoom": true,
-  "editor.mouseWheelZoom": true
+  "editor.mouseWheelZoom": true,
+  "postman.settings.dotenv-detection-notification-visibility": false
 }

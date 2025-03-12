@@ -1,19 +1,17 @@
 import mongoose from 'mongoose';
 import { z } from 'zod';
 
-export const reviewSchema = z.object({
-  userId: z.string()
-    .refine((id) => mongoose.Types.ObjectId.isValid(id)),
-  rating: z.enum([1, 2, 3, 4, 5]),
-  date: z.date()
-}).optional();
+export const reviewProductSchema = z.object({
+  comment: z.string().optional(),
+  rating: z.coerce.number().gte(1).lte(5)
+});
 
 export const productSchema = z.object({
   productName: z.string().min(1),
   description: z.string().min(1),
-  price: z.string().transform((number) => Number(number)),
+  price: z.coerce.number(),
   size: z.string(),
-  stock: z.string().transform((number) => Number(number)),
+  stock: z.coerce.number(),
   type: z.string(),
   images: z.array(z.string()).optional(),
 });
@@ -21,9 +19,9 @@ export const productSchema = z.object({
 export const updateProductSchema = z.object({
   productName: z.string().min(1).optional(),
   description: z.string().min(1).optional(),
-  price: z.string().transform((number) => Number(number)).optional(),
+  price: z.coerce.number().optional(),
   size: z.string().optional(),
-  stock: z.string().transform((number) => Number(number)).optional(),
+  stock: z.coerce.number().optional(),
   type: z.string().optional(),
   images: z.string().optional(),
 });

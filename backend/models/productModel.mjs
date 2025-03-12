@@ -1,13 +1,5 @@
 import mongoose from 'mongoose'
 
-const reviewSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  rating: { type: [Number], enum: [1, 2, 3, 4, 5], required: true },
-  comment: String
-}, {
-  timestamps: true
-});
-
 const productSchema = new mongoose.Schema({
   productName: { type: String, required: true },
   description: { type: String, required: true },
