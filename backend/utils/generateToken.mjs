@@ -3,6 +3,8 @@ import { JWT_SECRET, NODE_ENV } from '../constants/env.const.mjs';
 import { after30Days, after90Days } from '../constants/date.const.mjs';
 import generateAccessToken from './generateAccessToken.mjs';
 import generateRefreshToken from './generateRefreshToken.mjs';
+import HttpError from './httpError.mjs';
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from '../constants/http.codes.mjs';
 
 const generateToken = async (res, user) => {
   try {
@@ -23,7 +25,7 @@ const generateToken = async (res, user) => {
     return { accessToken, refreshToken };
   } catch (error) {
     console.error("Error generating tokens", error);
-    throw new Error('Failed to generate tokens');
+    throw new Error(`Failed to generate tokens ${error}`);
   }
 };
 

@@ -12,22 +12,6 @@ export const notFound = (req, res, next) => { // For routes that don't exist
   next(error);
 };
 
-// export const errorHandler = (err, req, res, next) => { // For errors in our routes
-//   // console.error(err);
-//   let statusCode = res.statusCode === 200 ? err.statusCode : res.statusCode;
-//   let message = err.message;
-
-//   if (err.name === 'CastError' && err.kind === 'ObjectId') {
-//     statusCode = 404;
-//     message = 'Invalid ID format';
-//   }
-
-//   res.status(statusCode).json({
-//     statusCode,
-//     message,
-//     stack: NODE_ENV === 'production' ? null : err.stack
-//   });
-// };
 const handleZodError = (err) => {
   const errors = err.issues.map((issue) => ({
     path: issue.path.join("."),

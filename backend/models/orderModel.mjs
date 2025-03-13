@@ -1,13 +1,16 @@
 import mongoose from 'mongoose';
+import { itemsSchema } from './cartModel.mjs';
 
 const orderSchema = new mongoose.Schema({
   orderNumber: { type: String, unique: true },
   orderDate: { type: Date, default: Date.now },
-  quantity: { type: Number, required: true },
-  items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true }],
+  items: [itemsSchema],
   totalPrice: { type: Number, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  deliveryAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true }
+  deliveryAddress: { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true },
+  billingAddress: {
+    type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true
+  }
 }, {
   timestamps: true
 });
