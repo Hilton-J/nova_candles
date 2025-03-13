@@ -6,14 +6,13 @@ import { getAllDocs } from '../services/crudHandlerFactory.mjs';
 //route    POST /api/orders
 //@access  Private
 export const placeOrder = asyncHandler(async (req, res) => {
-  const { orderNumber, quantity, items, totalAmount, deliveryAddress } = req.body;
+  const { quantity, items, totalPrice, deliveryAddress } = req.body;
 
   const userId = req.user._id;
   const order = await Order.create({
-    orderNumber,
     quantity,
     items,
-    totalAmount,
+    totalPrice,
     userId,
     deliveryAddress
   });

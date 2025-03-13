@@ -1,8 +1,8 @@
 import { FcCellPhone } from 'react-icons/fc';
 import { z } from 'zod';
 
-export const emailSchema = z.string().email('Invalid email');
-const passwordSchema = z.string().min(3, 'Password must be at least 3 characters');
+export const emailSchema = z.string().email('Invalid email').trim();
+const passwordSchema = z.string().trim().min(3, 'Password must be at least 3 characters');
 
 export const loginSchema = z.object({
   email: emailSchema,
@@ -11,11 +11,11 @@ export const loginSchema = z.object({
 
 
 export const registerSchema = loginSchema.extend({
+  firstName: z.string().trim(),
+  lastName: z.string().trim(),
+  cellPhoneNo: z.string().trim(),
   confirmPassword: passwordSchema,
   role: z.enum(['customer', 'admin']).default('customer'),
-  firstName: z.string(),
-  lastName: z.string(),
-  cellPhoneNo: z.string(),
 })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Password do not match',
