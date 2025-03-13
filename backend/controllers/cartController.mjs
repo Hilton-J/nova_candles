@@ -46,52 +46,6 @@ export const addToCart = asyncHandler(async (req, res) => {
   }
 });
 
-// export const addToCart = asyncHandler(async (req, res) => {
-//   const { productId, quantity } = req.body;
-//   const userId = req.user._id;
-
-//   const product = await Product.findById(productId);
-//   if (!product) {
-//     res.status(404);
-//     throw new Error("Product not found");
-//   }
-
-//   // Update existing cart or create a new one
-//   const updatedCart = await Cart.findOneAndUpdate(
-//     { user: userId, "items.productId": productId }, // Check if cart exists and product is already in cart
-//     {
-//       $inc: { "items.$.quantity": quantity, totalPrice: product.price * quantity }, // Increment quantity if found
-//     },
-//     { new: true }
-//   );
-
-//   if (!updatedCart) {
-//     // If product was not in cart, add it to items array
-//     const newCart = await Cart.findOneAndUpdate(
-//       { user: userId },
-//       {
-//         $push: { items: { productId, quantity, price: product.price } }, // Add new product to cart
-//         $inc: { totalPrice: product.price * quantity },
-//         $setOnInsert: { user: userId }, // Set user if cart is newly created
-//       },
-//       { upsert: true, new: true }
-//     );
-
-//     return res.status(201).json({
-//       success: true,
-//       message: "Cart Created",
-//       results: newCart,
-//     });
-//   }
-
-//   return res.status(201).json({
-//     success: true,
-//     message: "Cart updated",
-//     results: updatedCart,
-//   });
-// });
-
-
 // @desc    GET User's Cart
 // route    Get /api/cart
 // @access  Private

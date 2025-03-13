@@ -44,14 +44,7 @@ export const logout = asyncHandler(async (req, res) => {
 // route    GET /api/users/:id
 // @access  Private
 export const getUserById = asyncHandler(async (req, res) => {
-  const user = {
-    _id: req.user._id,
-    fistName: req.user.firstName,
-    lastName: req.user.lastName,
-    email: req.user.email,
-    role: req.user.role,
-    cart: req.user.cart
-  };
+  const user = req.user
 
   res.status(201).json(user);
 });
@@ -67,7 +60,7 @@ export const updateUser = asyncHandler(async (req, res) => {
     user.firstName = req.body.firstName || user.firstName;
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
-    user.cellPhoneNo = req.body.cellPhoneNo || user.cellPhoneNo;
+    user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
     user.shipToAddress = req.body.shipToAddress || user.shipToAddress;
 
     if (req.body.password || req.body.confirmPassword === req.body.password) {

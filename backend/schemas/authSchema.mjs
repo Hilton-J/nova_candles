@@ -13,7 +13,7 @@ export const loginSchema = z.object({
 export const registerSchema = loginSchema.extend({
   firstName: z.string().trim(),
   lastName: z.string().trim(),
-  cellPhoneNo: z.string().trim(),
+  phoneNumber: z.string().trim(),
   confirmPassword: passwordSchema,
   role: z.enum(['customer', 'admin']).default('customer'),
 })

@@ -31,7 +31,7 @@ const protect = asynchandler(async (req, res, next) => {
 
   try {
     jwt.verify(accessToken, currentJwtSecret);
-    req.user = user;
+    req.user = user.omitField('jwt_secrete');
     next();
   } catch (error) {
     next(new HttpError('Not Authorized, invalid token', UNAUTHORIZED));

@@ -1,10 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, NODE_ENV } from '../constants/env.const.mjs';
+import { NODE_ENV } from '../constants/env.const.mjs';
 import { after30Days, after90Days } from '../constants/date.const.mjs';
 import generateAccessToken from './generateAccessToken.mjs';
 import generateRefreshToken from './generateRefreshToken.mjs';
-import HttpError from './httpError.mjs';
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from '../constants/http.codes.mjs';
 
 const generateToken = async (res, user) => {
   try {
