@@ -1,4 +1,5 @@
-import { z } from 'zod'
+import { z } from 'zod';
+
 export const updateUserSchema = loginSchema.extend({
   firstName: z.string().optional(),
   lastName: z.string().optional(),

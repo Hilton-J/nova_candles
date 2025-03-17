@@ -23,6 +23,9 @@ export const updateProductSchema = z.object({
   stock: z.coerce.number().optional(),
   type: z.string().optional(),
   images: z.string().optional(),
+  isActive: z.string().optional() //z.coerce.boolean() will not work because it does not behave the way is expected
 });
+
+
 
 // export default productSchema;

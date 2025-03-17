@@ -1,160 +1,15 @@
-import asyncHandler from "express-async-handler";
 import Product from '../models/productModel.mjs';
-import mongoose from "mongoose";
-import { getAllDocs } from "../services/crudHandlerFactory.mjs";
+import { deleteOneDoc, getAllDocs, updateOneDoc } from "../services/crudHandlerFactory.mjs";
+import { addReviewHandler, createHandler, getByIdOrNameHandler } from "../services/productService.mjs";
 
-// @dsc     Add Product
-// route    POST /api/products
-// @access  Private
-export const createProduct = asyncHandler(async (req, res) => {
-  const { productName, description, price, size, stock, type, images } = req.body;
-
-  const product = await Product.create({
-    productName,
-    description,
-    price,
-    size,
-    stock,
-    type,
-    images
-  });
-
-  if (product) {
-    res.status(201).json({
-      success: true,
-      message: 'Product added successfully'
-    })
-  } else {
-    res.status(400);
-    throw new Error('Invalid procuct data')
-  }
-});
-
-// @dsc     Get product
-// route    GET /api/products
-// @access  Public
+export const createProduct = createHandler(Product);
 export const getAllProducts = getAllDocs(Product);
-// export const getAllProducts = asyncHandler(async (req, res) => {
-//   const page = Number(req.query.page) || 1;
-//   const limit = 20;
-//   const skip = (page - 1) * limit;
+export const getProductById = getByIdOrNameHandler(Product);
+export const deleteProduct = deleteOneDoc(Product);
+export const updateProduct = updateOneDoc(Product);
+export const reviewProduct = addReviewHandler(Product);
 
-//   const products = await Product.find({})
-//     .skip(skip)
-//     .limit(limit);
-
-//   const totalResults = await Product.countDocuments();
-
-//   if (products.length > 0) {
-//     res.status(201).json({
-//       page,
-//       results: products,
-//       totalPages: Math.ceil(totalResults / limit),
-//       totalResults
-//     });
-//   } else {
-//     res.status(400);
-//     throw new Error('No products found');
-//   }
-// });
-
-// @dsc     Get Product by ID
-// route    GET /api/products/:id
-// @access  Public
-export const getProductById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  let product;
-  if (mongoose.isValidObjectId(id)) {
-    product = await Product.findById({ _id: id });
-  } else {
-    product = await Product.find({ productName: id });
-  }
-
-  if (product) {
-    res.status(201).json(product);
-  } else {
-    res.status(404);
-    throw new Error('Resource not found');
-  }
-});
-
-// @dsc     Get Product By Name and Size
-// route    GET /api/products/:name/:size
-// @access  Public
-export const getProductByNameAndSize = asyncHandler(async (req, res) => {
-  const { name, size } = req.params;
-
-  const product = await Product.findOne({
-    productName: name,
-    size
-  });
-
-  if (product) {
-    res.status(201).json(product);
-  } else {
-    res.status(404);
-    throw new Error('Resource not found');
-  }
-});
-
-// @dsc     Update Product
-// route    PUT /api/products/add
-// @access  Private (admin only)
-export const updateProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const product = await Product.findById(id);
-
-  if (product) {
-    product.productName = req.body.productName || product.productName;
-    product.description = req.body.description || product.description;
-    product.price = req.body.price || product.price;
-    product.size = req.body.size || product.size;
-    product.stock = req.body.stock || product.stock;
-    product.type = req.body.type || product.type;
-    product.images.push(req.body.images);
-
-    if (req.body.images) {
-      product.images.push(req.body.images);
-    }
-    //product.images.push(req.body.images || product.images);
-
-    const updatedProduct = await product.save();
-
-    res.status(201).json({
-      success: true,
-      message: `Product updated successfully`,
-      results: updatedProduct
-    });
-  } else {
-    res.status(404);
-    throw new Error('Product not found');
-  }
-});
-
-// @dsc     Delete Product
-// route    DELETE /api/products/:id
-// @access  Private (admin only)
-export const deleteProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  const product = await Product.findByIdAndDelete(id);
-
-  if (product) {
-    res.status(201).json({
-      success: true,
-      message: 'Product deleted successfully'
-    });
-  } else {
-    res.status(404);
-    throw new Error('Product not found')
-  }
-});
-
-// @dsc     Deactivate Product
-// route    PATCH /api/products/:id
-// @access  Private (admin only)
-export const deactivateProduct = asyncHandler(async (req, res) => {
+/*export const deactivateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const product = await Product.findById({ _id: id });
 
@@ -163,73 +18,15 @@ export const deactivateProduct = asyncHandler(async (req, res) => {
 
     const updatedProduct = await product.save();
 
-    res.status(201).json({
+    res.status(OK).json({
       success: true,
       message: `Product updated successfully`,
       results: updatedProduct
     });
   } else {
-    res.status(404);
-    throw new Error('Product not found');
+    throw new HttpError('Product not found', NOT_FOUND);
   }
 });
-
-// @dsc     Review Product
-// route    PATCH /api/products/:id
-// @access  Private
-export const reviewProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { rating, comment } = req.body;
-  const user = req.user;
-
-  if (!rating || !comment) {
-    res.status(400);
-    throw new Error('Missing information');
-  }
-
-  //Finds and check if the user already reviewed
-  const product = await Product.findOne({
-    _id: id,
-    'reviews.userId': user._id
-  });
-
-  if (product) {
-    res.status(400);
-    throw new Error('Product already reviewed by this user')
-  }
-
-  const updateProduct = await Product.findByIdAndUpdate(
-    id,
-    {
-      $push: {
-        reviews: {
-          userId: user._id,
-          rating,
-          comment,
-          date: new Date()
-        }
-      }
-    },
-    { new: true, runValidators: true }
-  );
-  if (updateProduct) {
-    // product.reviews.userId = user._id || product.reviews.userId;
-    // product.reviews.rating = rating || product.reviews.rating;
-    // product.reviews.comment = comment || product.reviews.comment;
-
-    // const updatedProduct = await product.save();
-
-    res.status(201).json({
-      success: true,
-      message: `Review added successfully`,
-      results: updateProduct
-    });
-  } else {
-    res.status(404);
-    throw new Error('Product not found');
-  }
-});
-
 
 export const AddImage = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -240,16 +37,6 @@ export const AddImage = asyncHandler(async (req, res) => {
     throw new Error('Missing information');
   }
 
-  //Finds and check if the user already reviewed
-  // const product = await Product.findOne({
-  //   _id: id,
-  // });
-
-  // if (product) {
-  //   res.status(400);
-  //   throw new Error('Product already reviewed by this user')
-  // }
-
   const updateProduct = await Product.findByIdAndUpdate(
     id,
     {
@@ -259,20 +46,16 @@ export const AddImage = asyncHandler(async (req, res) => {
     },
     { new: true, runValidators: true }
   );
-  if (updateProduct) {
-    // product.reviews.userId = user._id || product.reviews.userId;
-    // product.reviews.rating = rating || product.reviews.rating;
-    // product.reviews.comment = comment || product.reviews.comment;
 
-    // const updatedProduct = await product.save();
 
-    res.status(201).json({
-      success: true,
-      message: `Image added successfully`,
-      results: updateProduct
-    });
-  } else {
-    res.status(404);
-    throw new Error('Product not found');
+  if (!updateProduct) {
+    throw new HttpError('Product not found', NOT_FOUND);
   }
+
+  res.status(201).json({
+    success: true,
+    message: `Image added successfully`,
+    results: updateProduct
+  });
 });
+*/

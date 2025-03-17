@@ -1,5 +1,5 @@
 import express from 'express';
-import { createProduct, deactivateProduct, deleteProduct, getAllProducts, getProductById, getProductByNameAndSize, reviewProduct, updateProduct } from '../controllers/productController.mjs';
+import { createProduct, deleteProduct, getAllProducts, getProductById, reviewProduct, updateProduct } from '../controllers/productController.mjs';
 import { authorizeRoles, protect } from '../middleware/authMiddleware.mjs';
 import { validateCreateProduct, validateReviewProduct, validateUpdateProduct } from '../middleware/validators/productValidator.mjs';
 
@@ -11,8 +11,6 @@ router.patch('/review/:id', protect, authorizeRoles('customer'), validateReviewP
 router.route('/:id')
   .get(getProductById)
   .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProduct)
-  .delete(protect, authorizeRoles('admin'), deleteProduct)
-  .patch(protect, authorizeRoles('admin'), deactivateProduct);
-// router.get('/:name/:size', getProductByNameAndSize);
+  .delete(protect, authorizeRoles('admin'), deleteProduct);
 
 export default router;

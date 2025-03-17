@@ -2,9 +2,13 @@ import asyncHandler from "express-async-handler";
 import User from '../models/userModel.mjs'
 import generateToken from '../utils/generateToken.mjs'
 import { loginUser, registerUser } from "../services/authService.mjs";
-import { CONFLICT, CREATED, OK } from "../constants/http.codes.mjs";
+import { CREATED, OK } from "../constants/http.codes.mjs";
 import { clearAuthCookies } from "../utils/authCookie.mjs";
-import { getAllDocs } from "../services/crudHandlerFactory.mjs";
+import { deleteOneDoc, getAllDocs } from "../services/crudHandlerFactory.mjs";
+
+
+export const deleteUser = deleteOneDoc(User);
+export const getAllUsers = getAllDocs(User);
 
 // @dsc     Auth user/set token
 // route    POST /api/users/login
@@ -13,7 +17,6 @@ export const login = asyncHandler(async (req, res) => {
   const user = await loginUser(req.body);
   await generateToken(res, user);
   const data = new User(user).omitField(['jwt_secrete', 'password']);
-
   res.status(OK).json(data);
 });
 
@@ -26,11 +29,6 @@ export const registerHandler = asyncHandler(async (req, res, next) => {
   const data = new User(user).omitField(["jwt_secrete", "password"]);
   res.status(CREATED).json({ status: 'User successfullyregitered', data })
 });
-
-// @dsc     Get all users
-// route    POST /api/users
-// @access  Private
-export const getAllUsers = getAllDocs(User);
 
 // @dsc     User logout
 // route    POST /api/users/logout
@@ -45,16 +43,15 @@ export const logout = asyncHandler(async (req, res) => {
 // @access  Private
 export const getUserById = asyncHandler(async (req, res) => {
   const user = req.user
-
   res.status(201).json(user);
 });
+
 
 // @dsc     Update user
 // route    PUT /api/users/profile
 // @access  Private
 export const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');
-
 
   if (user) {
     user.firstName = req.body.firstName || user.firstName;
@@ -80,55 +77,3 @@ export const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Delete user
-// route    DELETE /api/users/:id
-// @access  Private
-export const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  const user = await User.findByIdAndDelete(id);
-
-  if (user) {
-    res.status(200).json({
-      success: true,
-      message: `${user.firstName} ${user.lastName} deleted successfully`
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});
-
-// @desc    Add to Cart
-// route    PATCH /api/users/cart/:id
-// @access  Private
-export const addCart = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const userId = req.user._id;
-
-  const cart = await User.findOne({ 'cart': id });
-  if (cart) {
-    res.status(409);
-    throw new Error("Product already exist");
-  }
-
-  const updateCart = await User.findByIdAndUpdate(
-    userId,
-    {
-      $push: {
-        cart: id
-      }
-    },
-    { new: true, runValidators: true }
-  )
-
-  if (updateCart) {
-    res.status(201).json({
-      success: true,
-      message: 'Product added to cart successfully'
-    });
-  } else {
-    res.status(404);
-    throw new Error('User not found');
-  }
-});

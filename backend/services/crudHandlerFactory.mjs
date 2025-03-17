@@ -9,11 +9,12 @@ const deleteOneDoc = (Model) =>
     const document = await Model.findByIdAndDelete(req.params.id);
 
     if (!document) {
-      return next(new HttpError("No document found with that ID", NOT_FOUND));
+      return next(new HttpError(`No ${Model.modelName} found with that ID`, NOT_FOUND));
     }
 
     res.status(OK).json({
-      status: "doc deleted successfully",
+      success: true,
+      message: `${Model.modelName} deleted successfully`
     });
   });
 
@@ -26,14 +27,13 @@ const updateOneDoc = (Model) =>
     });
 
     if (!document) {
-      return next(new HttpError("No document found with that ID", NOT_FOUND));
+      return next(new HttpError(`No ${Model.modelName} found with that ID`, NOT_FOUND));
     }
 
     res.status(OK).json({
-      status: "doc updated successfully",
-      data: {
-        data: document,
-      },
+      success: true,
+      message: `${Model.modelName} updated successfully`,
+      results: document
     });
   });
 

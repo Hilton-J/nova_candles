@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.mjs';
-import { getAllDocs } from '../services/crudHandlerFactory.mjs';
+import { deleteOneDoc, getAllDocs } from '../services/crudHandlerFactory.mjs';
 import { BAD_REQUEST, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 
 //@desc    Purchase
@@ -29,9 +29,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc    Get All orders
-//route    GET /api/orders
-//@access  Private
 export const getAllOrders = getAllDocs(Order);
 
 //@desc    Get orders by Customer
@@ -47,7 +44,6 @@ export const getOrdersByCustomer = asyncHandler(async (req, res) => {
   const orders = await Order.find({ userId: _id })
     .populate({ path: 'items', select: 'productName description price size' })
     .populate({ path: 'userId', select: 'firstName LastName email' })
-    // .populate({ path: 'deliveryAddress', select: 'recipientName recipientCellNumber streetAddress complex suburb city province pastalCode' })
     .skip(skip).
     limit(limit);
 
@@ -66,21 +62,4 @@ export const getOrdersByCustomer = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc    Delete Order
-//route    DELETE /api/orders/:id
-//@access  Private
-export const deleteOrder = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  const order = await Order.findByIdAndDelete(id);
-
-  if (order) {
-    res.status(OK).json({
-      success: true,
-      message: 'Order deleted successfully'
-    })
-  } else {
-    res.status(NOT_FOUND);
-    throw new Error('Order not found');
-  }
-});
+export const deleteOrder = deleteOneDoc(Order);
