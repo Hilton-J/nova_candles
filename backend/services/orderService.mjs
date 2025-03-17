@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler';
-import Order from '../models/orderModel.mjs';
 import HttpError from '../utils/httpError.mjs';
 import { BAD_REQUEST, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 

@@ -83,7 +83,6 @@ export const addReviewHandler = (Model) => asyncHandler(async (req, res, next) =
   });
 });
 
-//BUG: Image not pushing
 export const addImageHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findByIdAndUpdate(
     req.params.id,
