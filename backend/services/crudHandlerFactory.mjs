@@ -24,6 +24,7 @@ const updateOneDoc = (Model) =>
     const document = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
+      timestamps: true
     });
 
     if (!document) {

@@ -1,13 +1,10 @@
 import asyncHandler from 'express-async-handler';
-import Product from '../models/productModel.mjs';
 import HttpError from '../utils/httpError.mjs';
 import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import mongoose from 'mongoose';
 
 
 export const createHandler = (Model) => asyncHandler(async (req, res, next) => {
-  // const { productName, description, price, size, stock, type, images } = req.body;
-
   const existingProduct = await Model.findOne({ productName: req.body.productName, size: req.body.size });
 
   if (existingProduct) {
