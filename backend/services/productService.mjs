@@ -4,7 +4,7 @@ import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from '../constants/http
 import mongoose from 'mongoose';
 
 
-export const createHandler = (Model) => asyncHandler(async (req, res, next) => {
+export const productCreateHandler = (Model) => asyncHandler(async (req, res, next) => {
   const existingProduct = await Model.findOne({ productName: req.body.productName, size: req.body.size });
 
   if (existingProduct) {
@@ -83,6 +83,25 @@ export const addReviewHandler = (Model) => asyncHandler(async (req, res, next) =
   });
 });
 
-export const deactivateHandler = asyncHandler(async(req,res,next) => {
-  
+//BUG: Image not pushing
+export const addImageHandler = (Model) => asyncHandler(async (req, res, next) => {
+  const document = await Model.findByIdAndUpdate(
+    req.params.id,
+    {
+      $push: {
+        images: req.body.images
+      }
+    },
+    { new: true, runValidators: true, timestamps: true }
+  );
+
+  if (!document) {
+    return next(new HttpError('Product not found', NOT_FOUND));
+  }
+
+  res.status(OK).json({
+    success: true,
+    message: `Image added successfully`,
+    results: document
+  });
 })

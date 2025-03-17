@@ -4,7 +4,7 @@ import { authorizeRoles, protect } from '../middleware/authMiddleware.mjs';
 
 const router = express.Router();
 
-router.post('/', protect, addPayment);
+router.post('/', protect, authorizeRoles('customer'), addPayment);
 router.get('/', protect, authorizeRoles('admin'), getPayments);
 
 export default router;

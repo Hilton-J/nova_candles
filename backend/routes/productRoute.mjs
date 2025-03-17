@@ -1,7 +1,7 @@
 import express from 'express';
-import { createProduct, deleteProduct, getAllProducts, getProductById, reviewProduct, updateProduct } from '../controllers/productController.mjs';
+import { AddImage, createProduct, deleteProduct, getAllProducts, getProductById, reviewProduct, updateProduct } from '../controllers/productController.mjs';
 import { authorizeRoles, protect } from '../middleware/authMiddleware.mjs';
-import { validateCreateProduct, validateReviewProduct, validateUpdateProduct } from '../middleware/validators/productValidator.mjs';
+import { validateCreateProduct, validateImage, validateReviewProduct, validateUpdateProduct } from '../middleware/validators/productValidator.mjs';
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ router.patch('/review/:id', protect, authorizeRoles('customer'), validateReviewP
 router.route('/:id')
   .get(getProductById)
   .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProduct)
-  .delete(protect, authorizeRoles('admin'), deleteProduct);
+  .delete(protect, authorizeRoles('admin'), deleteProduct)
+  .patch(protect, authorizeRoles('admin'), AddImage); //BUG:Image validation is not working
 
 export default router;
