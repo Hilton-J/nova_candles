@@ -3,7 +3,6 @@ import HttpError from "../utils/httpError.mjs";
 import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.codes.mjs";
 import { model } from "mongoose";
 
-//works
 const deleteOneDoc = (Model) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findByIdAndDelete(req.params.id);
@@ -18,7 +17,6 @@ const deleteOneDoc = (Model) =>
     });
   });
 
-//to be finished.
 const updateOneDoc = (Model) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findByIdAndUpdate(req.params.id, req.body, {
@@ -38,7 +36,6 @@ const updateOneDoc = (Model) =>
     });
   });
 
-//works
 const getOneDoc = (Model) =>
   asyncHandler(async (req, res, next) => {
     const doc = await Model.findById(req.params.id);
@@ -54,7 +51,6 @@ const getOneDoc = (Model) =>
     });
   });
 
-//works
 const getAllDocs = (Model) =>
   asyncHandler(async (req, res, next) => {
     const page = Number(req.query.page) || 1;

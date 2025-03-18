@@ -25,8 +25,9 @@ export const updateProductSchema = z.object({
   isActive: z.string().optional() //z.coerce.boolean() will not work because it does not behave the way is expected
 });
 
-export const imageScheme = z.coerce.string().base64().optional();
+const base64ImageRegex = /^data:image\/(png|jpeg|jpg|gif|webp);base64,[A-Za-z0-9+/=]+$/;
 
-
-
-// export default productSchema;
+export const imageScheme = z.object({
+  images: z.string().regex(base64ImageRegex, 'Invalid base64 image')
+})
+  .strict();

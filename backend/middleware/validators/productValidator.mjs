@@ -49,5 +49,5 @@ export const validateImage = asyncHandler(async (req, res, next) => {
 
   req.body = result.data;
   next();
-})
+});
 
