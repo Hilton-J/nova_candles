@@ -1,22 +1,23 @@
-import jwt from 'jsonwebtoken'
-import asynchandler from 'express-async-handler'
-import User from '../models/userModel.mjs'
+import asynchandler from 'express-async-handler';
+import HttpError from '../utils/httpError.mjs';
+import User from '../models/userModel.mjs';
 import {
   FORBIDDEN,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   UNAUTHORIZED,
-} from '../constants/http.codes.mjs'
-import HttpError from '../utils/httpError.mjs';
+} from '../constants/http.codes.mjs';
+import jwt from 'jsonwebtoken';
 
-const protect = asynchandler(async (req, res, next) => {
+export const protect = asynchandler(async (req, res, next) => {
   const accessToken = req.cookies.jwt_token;
   if (!accessToken)
     return next(new HttpError('Not Authorized, invalid accessToken', UNAUTHORIZED));
 
   const decoded = jwt.decode(accessToken);
-  if (!decoded || !decoded.id)
+  if (!decoded || !decoded.id) {
     return next(new HttpError('Not authorized, invalid token structure', UNAUTHORIZED));
+  }
 
   const user = await User.findById(decoded.id).select('-password');
   if (!user)
@@ -37,7 +38,7 @@ const protect = asynchandler(async (req, res, next) => {
   }
 });
 
-const authorizeRoles = (...roles) => {
+export const authorizeRoles = (...roles) => {
   return (req, res, next) => {
     if (req.user && roles.includes(req.user.role)) {
       next();
@@ -46,5 +47,3 @@ const authorizeRoles = (...roles) => {
     }
   }
 };
-
-export { protect, authorizeRoles }

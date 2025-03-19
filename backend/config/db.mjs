@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
 import { MONGO_URI } from '../constants/env.const.mjs'
 
-// dotenv.config();
-
 export const connectDB = async () => {
   try {
     const conn = await mongoose.connect(MONGO_URI);

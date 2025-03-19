@@ -1,53 +1,7 @@
-import asyncHandler from "express-async-handler";
 import { imageScheme, productSchema, reviewProductSchema, updateProductSchema } from "../../schemas/productSchema.mjs";
+import validator from "./functionValidator.mjs";
 
-/**
- * Middleware to validate the product request body.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- * @param {Function} next - Express next middleware function.
- */
-export const validateCreateProduct = asyncHandler(async (req, res, next) => {
-  const result = productSchema.safeParse(req.body);
-
-  if (!result.success) {
-    return next(result.error);
-  }
-
-  req.body = result.data;
-  next();
-});
-
-export const validateUpdateProduct = asyncHandler(async (req, res, next) => {
-  const result = updateProductSchema.safeParse(req.body);
-
-  if (!result.success) {
-    return next(result.error);
-  }
-
-  req.body = result.data;
-  next();
-});
-
-export const validateReviewProduct = asyncHandler(async (req, res, next) => {
-  const result = reviewProductSchema.safeParse(req.body);
-
-  if (!result.success) {
-    return next(result.error);
-  }
-
-  req.body = result.data;
-  next();
-});
-
-export const validateImage = asyncHandler(async (req, res, next) => {
-  const result = imageScheme.safeParse(req.body);
-
-  if (!result.success) {
-    return next(result.error);
-  }
-
-  req.body = result.data;
-  next();
-});
-
+export const validateUpdateProduct = validator(updateProductSchema);
+export const validateReviewProduct = validator(reviewProductSchema);
+export const validateCreateProduct = validator(productSchema);
+export const validateImage = validator(imageScheme);

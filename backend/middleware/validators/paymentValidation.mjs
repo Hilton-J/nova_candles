@@ -1,15 +1,5 @@
-import asyncHandler from 'express-async-handler';
 import paymentSchema from '../../schemas/paymentSchema.mjs';
+import validator from './functionValidator.mjs';
 
-const validatePayment = asyncHandler(async (req, res, next) => {
-  const result = paymentSchema.safeParse(req.body);
-
-  if (!result.success) {
-    return next(result.error);
-  }
-
-  req.body = result.data;
-  next();
-});
-
+const validatePayment = validator(paymentSchema);
 export default validatePayment;

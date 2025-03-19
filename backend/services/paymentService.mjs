@@ -1,5 +1,5 @@
-import asyncHandler from 'express-async-handler';
 import { BAD_REQUEST, CONFLICT, CREATED } from '../constants/http.codes.mjs';
+import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
 
 export const paymentAddHandler = (Model) => asyncHandler(async (req, res, next) => {

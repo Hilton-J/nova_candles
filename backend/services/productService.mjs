@@ -1,6 +1,6 @@
+import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
-import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import mongoose from 'mongoose';
 
 
@@ -23,31 +23,27 @@ export const productCreateHandler = (Model) => asyncHandler(async (req, res, nex
   })
 });
 
-export const getByNameAndSizeHandler = (Model) => asyncHandler(async (req, res, next) => {
+/*
+  export const getByNameAndSizeHandler = (Model) => asyncHandler(async (req, res, next) => {
 
-  const doc = await Model.findOne({ productName: req.query.name, size: req.params.size });
+    const doc = await Model.findOne({ productName: req.query.name, size: req.params.size });
 
-  if (!doc) {
-    return next(new HttpError('Product not found', NOT_FOUND));
-  }
+    if (!doc) {
+      return next(new HttpError('Product not found', NOT_FOUND));
+    }
 
-  res.status(OK).json(doc);
-});
+    res.status(OK).json(doc);
+  });
+*/
 
 export const getByIdOrNameHandler = (Model) => asyncHandler(async (req, res, next) => {
+  const document = await Model.findOne({ productName: req.params.id, size: req.query.size });
 
-  let doc;
-  if (mongoose.isValidObjectId(req.params.id)) {
-    doc = await Model.findById(req.params.id);
-  } else {
-    doc = await Model.find({ productName: req.params.id, size: req.query.size });
-  }
-
-  if (!doc || !doc.length) {
+  if (!document) {
     return next(new HttpError('Product not found', NOT_FOUND));
   }
 
-  res.status(OK).json(doc);
+  res.status(OK).json(document);
 });
 
 export const addReviewHandler = (Model) => asyncHandler(async (req, res, next) => {
@@ -103,4 +99,4 @@ export const addImageHandler = (Model) => asyncHandler(async (req, res, next) =>
     message: `Image added successfully`,
     results: document
   });
-})
+});

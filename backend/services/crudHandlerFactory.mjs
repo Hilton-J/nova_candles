@@ -1,9 +1,8 @@
+import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.codes.mjs";
 import asyncHandler from "express-async-handler";
 import HttpError from "../utils/httpError.mjs";
-import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.codes.mjs";
-import { model } from "mongoose";
 
-const deleteOneDoc = (Model) =>
+export const deleteOneDoc = (Model) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findByIdAndDelete(req.params.id);
 
@@ -17,7 +16,7 @@ const deleteOneDoc = (Model) =>
     });
   });
 
-const updateOneDoc = (Model) =>
+export const updateOneDoc = (Model) =>
   asyncHandler(async (req, res, next) => {
     const document = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -36,7 +35,7 @@ const updateOneDoc = (Model) =>
     });
   });
 
-const getOneDoc = (Model) =>
+export const getOneDoc = (Model) =>
   asyncHandler(async (req, res, next) => {
     const doc = await Model.findById(req.params.id);
 
@@ -51,7 +50,7 @@ const getOneDoc = (Model) =>
     });
   });
 
-const getAllDocs = (Model) =>
+export const getAllDocs = (Model) =>
   asyncHandler(async (req, res, next) => {
     const page = Number(req.query.page) || 1;
     const limit = 20;
@@ -77,5 +76,3 @@ const getAllDocs = (Model) =>
       totalResults
     });
   });
-
-export { getAllDocs, updateOneDoc, deleteOneDoc, getOneDoc };

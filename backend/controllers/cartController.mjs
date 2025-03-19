@@ -4,6 +4,6 @@ import { cartAddHandler, cartGetHandler, cartRemoveHandler, cartRemoveItemHandle
 
 export const getUserCart = cartGetHandler(Cart);
 export const removeCart = cartRemoveHandler(Cart);
+export const addToCart = cartAddHandler(Cart, Product);
 export const removeCartItem = cartRemoveItemHandler(Cart);
 export const updateItemQuantity = cartUpdateQuantityHandler(Cart);
-export const addToCart = cartAddHandler(Cart, Product);

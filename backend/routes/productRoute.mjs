@@ -12,6 +12,6 @@ router.route('/:id')
   .get(getProductById)
   .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProduct)
   .delete(protect, authorizeRoles('admin'), deleteProduct)
-  .patch(protect, authorizeRoles('admin'), validateImage, AddImage); //BUG: Image validation is not working
+  .patch(protect, authorizeRoles('admin'), validateImage, AddImage);
 
 export default router;

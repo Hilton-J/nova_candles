@@ -1,6 +1,6 @@
+import { BAD_REQUEST, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
-import { BAD_REQUEST, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 
 export const getByCustomerHandler = (Model) => asyncHandler(async (req, res, next) => {
   const page = Number(req.query.page) || 1;

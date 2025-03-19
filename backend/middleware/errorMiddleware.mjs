@@ -1,13 +1,10 @@
-import { ZodError } from "zod";
-import { NODE_ENV } from "../constants/env.const.mjs";
 import { INTERNAL_SERVER_ERROR, NOT_FOUND, BAD_REQUEST } from "../constants/http.codes.mjs";
+import { NODE_ENV } from "../constants/env.const.mjs";
 import HttpError from "../utils/httpError.mjs";
+import { ZodError } from "zod";
 
 
-export const notFound = (req, res, next) => { // For routes that don't exist
-  // const error = new Error(`Not Found - ${req.originalUrl}`);
-  // res.status(NOT_FOUND);
-
+export const notFound = (req, res, next) => {
   const error = new HttpError(`Not Found - ${req.originalUrl}`, NOT_FOUND);
   next(error);
 };

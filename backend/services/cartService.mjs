@@ -1,6 +1,6 @@
+import { CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
-import { CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 
 export const cartGetHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findOne({ userId: req.user._id })
@@ -108,4 +108,4 @@ export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, 
 
     return res.status(CREATED).json({ success: true, message: "Cart created", cart: newCart });
   }
-})
+});
