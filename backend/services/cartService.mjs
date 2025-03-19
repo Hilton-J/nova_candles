@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
-import { NOT_FOUND, OK } from '../constants/http.codes.mjs';
+import { CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 
 export const cartGetHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findOne({ userId: req.user._id })
@@ -54,9 +54,58 @@ export const cartUpdateQuantityHandler = (Model) => asyncHandler(async (req, res
     return next(new HttpError('Cart not found', NOT_FOUND))
   }
 
-  document.totalPrice = document.items.reduce((acc, item) => acc + Number(item.quantity * item.price), 0);
+  document.totalPrice = document.items.reduce((acc, item) =>
+    acc + Number(item.quantity * item.price), 0
+  );
 
   await document.save();
 
   return res.status(OK).json({ success: true, message: "Quantity updated", document });
 });
+
+export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, res, next) => {
+  const { _id } = req.user;
+
+  const product = await ProductModel.findById(req.body.productId);
+  if (!product) {
+    return next(new HttpError('Product not found', NOT_FOUND))
+  }
+
+  const cart = await Model.findOne({ userId: _id });
+
+  if (cart) {
+    // Check if the product already exists in the cart
+    const existingItem = cart.items.find(item => item.productId.toString() === req.body.productId);
+
+    if (existingItem) {
+      // Update the quantity and recalculate totalPrice
+      existingItem.quantity += Number(req.body.quantity);
+    } else {
+      // Add new product with price
+      cart.items.push({
+        productId: req.body.productId,
+        quantity: req.body.quantity,
+        price: product.price
+      });
+    }
+
+    // Recalculate totalPrice
+    cart.totalPrice = cart.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+    await cart.save();
+
+    return res.status(OK).json({ success: true, message: "Cart updated", cart });
+  } else {
+    // Create a new cart
+    const newCart = await Model.create({
+      userId: _id,
+      items: [{
+        productId: req.body.productId,
+        quantity: req.body.quantity,
+        price: product.price
+      }],
+      totalPrice: product.price * req.body.quantity
+    });
+
+    return res.status(CREATED).json({ success: true, message: "Cart created", cart: newCart });
+  }
+})
