@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import asynchandler from 'express-async-handler'
 import User from '../models/userModel.mjs'
-import { JWT_SECRET } from '../constants/env.const.mjs';
 import {
   FORBIDDEN,
   INTERNAL_SERVER_ERROR,

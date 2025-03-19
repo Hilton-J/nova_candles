@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
-import { string } from 'zod';
 
 const addressSchema = mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
@@ -36,13 +35,13 @@ const userSchema = mongoose.Schema({
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-
   try {
     //bcrypt.genSalt(10): Generates a salt (a random string) with 10 rounds of complexity.
     //await: Since genSalt() returns a Promise, await ensures the function waits for it to complete.
     //✅ Why? Salt ensures that even if two users have the same password, their hashes will be different.
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
+
     next();
   } catch (error) {
     next(error);
@@ -61,7 +60,9 @@ userSchema.methods.omitField = function (fields) {
   fieldsToOmit.forEach((field) => { delete user[field]; });
 
   return user;
-}
+};
+
+
 
 const User = mongoose.model('User', userSchema);
 
