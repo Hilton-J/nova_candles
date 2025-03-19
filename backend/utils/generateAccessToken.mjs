@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../constants/env.const.mjs';
 
 /**
  * Generates a short-lived access token.

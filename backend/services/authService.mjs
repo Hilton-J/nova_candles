@@ -3,11 +3,6 @@ import HttpError from '../utils/httpError.mjs';
 import User from '../models/userModel.mjs';
 import crypto from 'crypto';
 
-/**
- * Logs in a user.
- * @param {Object} credentials - The login credentials.
- * @returns {Promise<Object>} - The logged-in user object.
- */
 export const loginUser = async (credentials) => {
   const { email, password } = credentials;
 
@@ -17,13 +12,8 @@ export const loginUser = async (credentials) => {
     throw new HttpError('Invalid email or password', UNAUTHORIZED);
 
   return user;
-}
+};
 
-/**
- * Registers a new user.
- * @param {Object} userData - The user data for registration.
- * @returns {Promise<Object>} - The created user object.
- */
 export const registerUser = async (userData) => {
   const { firstName, lastName, email, cellPhoneNo, role, password, confirmPassword } = userData;
 
@@ -48,4 +38,4 @@ export const registerUser = async (userData) => {
   });
 
   return user;
-}
+};

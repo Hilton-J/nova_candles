@@ -48,7 +48,6 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-// Function to 
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
@@ -61,8 +60,6 @@ userSchema.methods.omitField = function (fields) {
 
   return user;
 };
-
-
 
 const User = mongoose.model('User', userSchema);
 

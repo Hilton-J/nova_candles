@@ -2,10 +2,10 @@ import asynchandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
 import User from '../models/userModel.mjs';
 import {
-  FORBIDDEN,
-  INTERNAL_SERVER_ERROR,
   NOT_FOUND,
+  FORBIDDEN,
   UNAUTHORIZED,
+  INTERNAL_SERVER_ERROR,
 } from '../constants/http.codes.mjs';
 import jwt from 'jsonwebtoken';
 

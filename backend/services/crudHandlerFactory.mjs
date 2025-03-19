@@ -1,4 +1,4 @@
-import { NOT_FOUND, OK, NO_CONTENT } from "../constants/http.codes.mjs";
+import { NOT_FOUND, OK } from "../constants/http.codes.mjs";
 import asyncHandler from "express-async-handler";
 import HttpError from "../utils/httpError.mjs";
 
@@ -58,7 +58,7 @@ export const getAllDocs = (Model) =>
 
     let query = Model.find().skip(skip).limit(limit);
     if (Model.modelName === "User") {
-      query = query.select("-password -jwt_secrete"); // Exclude fields using Mongoose's select()
+      query = query.select("-password -jwt_secrete");
     }
 
     const doc = await query;

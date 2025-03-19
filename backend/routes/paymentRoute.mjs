@@ -1,7 +1,7 @@
 import express from 'express';
-import { addPayment, getPayments } from '../controllers/paymentController.mjs';
 import { authorizeRoles, protect } from '../middleware/authMiddleware.mjs';
 import validatePayment from '../middleware/validators/paymentValidation.mjs';
+import { addPayment, getPayments } from '../controllers/paymentController.mjs';
 
 const router = express.Router();
 

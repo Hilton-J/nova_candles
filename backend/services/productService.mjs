@@ -1,8 +1,6 @@
 import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
-import mongoose from 'mongoose';
-
 
 export const productCreateHandler = (Model) => asyncHandler(async (req, res, next) => {
   const existingProduct = await Model.findOne({ productName: req.body.productName, size: req.body.size });
@@ -11,32 +9,20 @@ export const productCreateHandler = (Model) => asyncHandler(async (req, res, nex
     return next(new HttpError('Product already exists', CONFLICT))
   }
 
-  const doc = await Model.create(req.body);
+  const document = await Model.create(req.body);
 
-  if (!doc) {
+  if (!document) {
     return next(new HttpError('Invalid product data', BAD_REQUEST));
   }
 
   res.status(CREATED).json({
     success: true,
     message: 'Product added successfully'
-  })
+  });
 });
 
-/*
-  export const getByNameAndSizeHandler = (Model) => asyncHandler(async (req, res, next) => {
+export const getByNameAndSizeHandler = (Model) => asyncHandler(async (req, res, next) => {
 
-    const doc = await Model.findOne({ productName: req.query.name, size: req.params.size });
-
-    if (!doc) {
-      return next(new HttpError('Product not found', NOT_FOUND));
-    }
-
-    res.status(OK).json(doc);
-  });
-*/
-
-export const getByIdOrNameHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findOne({ productName: req.params.id, size: req.query.size });
 
   if (!document) {

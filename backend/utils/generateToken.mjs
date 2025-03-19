@@ -1,8 +1,7 @@
-import jwt from 'jsonwebtoken';
 import { NODE_ENV } from '../constants/env.const.mjs';
-import { after30Days, after90Days } from '../constants/date.const.mjs';
 import generateAccessToken from './generateAccessToken.mjs';
 import generateRefreshToken from './generateRefreshToken.mjs';
+import { after30Days, after90Days } from '../constants/date.const.mjs';
 
 const generateToken = async (res, user) => {
   try {
@@ -20,7 +19,7 @@ const generateToken = async (res, user) => {
       console.error("Headers already sent; cannot set cookies.");
     }
 
-    return { accessToken, refreshToken };
+    return;
   } catch (error) {
     console.error("Error generating tokens", error);
     throw new Error(`Failed to generate tokens ${error}`);

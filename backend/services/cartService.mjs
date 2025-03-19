@@ -60,7 +60,11 @@ export const cartUpdateQuantityHandler = (Model) => asyncHandler(async (req, res
 
   await document.save();
 
-  return res.status(OK).json({ success: true, message: "Quantity updated", document });
+  return res.status(OK).json({
+    success: true,
+    message: "Quantity updated",
+    results: document
+  });
 });
 
 export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, res, next) => {
@@ -93,7 +97,11 @@ export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, 
     cart.totalPrice = cart.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
     await cart.save();
 
-    return res.status(OK).json({ success: true, message: "Cart updated", cart });
+    return res.status(OK).json({
+      success: true,
+      message: "Cart updated",
+      results: cart
+    });
   } else {
     // Create a new cart
     const newCart = await Model.create({
@@ -106,6 +114,9 @@ export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, 
       totalPrice: product.price * req.body.quantity
     });
 
-    return res.status(CREATED).json({ success: true, message: "Cart created", cart: newCart });
+    return res.status(CREATED).json({
+      success: true,
+      message: "Cart added successfully"
+    });
   }
 });

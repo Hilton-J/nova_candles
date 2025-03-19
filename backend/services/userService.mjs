@@ -1,5 +1,5 @@
-import asyncHandler from 'express-async-handler';
 import { NOT_FOUND, OK } from "../constants/http.codes.mjs";
+import asyncHandler from 'express-async-handler';
 
 export const updateUserHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findByIdAndUpdate(req.user._id, req.body, {
@@ -23,4 +23,4 @@ export const updateUserHandler = (Model) => asyncHandler(async (req, res, next) 
 
 export const getProfileHandler = () => asyncHandler(async (req, res) => {
   res.status(OK).json(req.user);
-})
+});
