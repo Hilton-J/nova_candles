@@ -1,6 +1,7 @@
 import { CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
+import Cart from '../models/cartModel.mjs';
 
 export const cartGetHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findOne({ userId: req.user._id })
@@ -12,6 +13,8 @@ export const cartGetHandler = (Model) => asyncHandler(async (req, res, next) => 
 
   res.status(OK).json(document);
 });
+
+
 
 export const cartRemoveHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findOneAndDelete({ userId: req.user._id });
@@ -40,32 +43,22 @@ export const cartRemoveItemHandler = (Model) => asyncHandler(async (req, res, ne
 
   await document.save();
 
-  res.status(OK).json({ success: true, message: "Item removed", results: cart });
+  res.status(OK).json({ success: true, message: "Item removed", results: document });
 });
 
-export const cartUpdateQuantityHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const document = await Model.findOneAndUpdate(
-    { userId: req.user._id, 'items.productId': req.body.productId },
-    { $set: { 'items.$.quantity': req.body.quantity } },
+export const cartUpdateQuantityHandler = async (data, user) => {
+  const cart = await Cart.findOneAndUpdate(
+    { userId: user._id, 'items.productId': data.productId },
+    { $set: { 'items.$.quantity': data.quantity } },
     { new: true, runValidators: true, timestamps: true }
   );
 
-  if (!document) {
+  if (!cart) {
     return next(new HttpError('Cart not found', NOT_FOUND))
   }
 
-  document.totalPrice = document.items.reduce((acc, item) =>
-    acc + Number(item.quantity * item.price), 0
-  );
-
-  await document.save();
-
-  return res.status(OK).json({
-    success: true,
-    message: "Quantity updated",
-    results: document
-  });
-});
+  return cart;
+};
 
 export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, res, next) => {
   const { _id } = req.user;
@@ -75,18 +68,18 @@ export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, 
     return next(new HttpError('Product not found', NOT_FOUND))
   }
 
-  const cart = await Model.findOne({ userId: _id });
+  const document = await Model.findOne({ userId: _id });
 
-  if (cart) {
+  if (document) {
     // Check if the product already exists in the cart
-    const existingItem = cart.items.find(item => item.productId.toString() === req.body.productId);
+    const existingItem = document.items.find(item => item.productId.toString() === req.body.productId);
 
     if (existingItem) {
       // Update the quantity and recalculate totalPrice
       existingItem.quantity += Number(req.body.quantity);
     } else {
       // Add new product with price
-      cart.items.push({
+      document.items.push({
         productId: req.body.productId,
         quantity: req.body.quantity,
         price: product.price
@@ -94,13 +87,13 @@ export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, 
     }
 
     // Recalculate totalPrice
-    cart.totalPrice = cart.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
-    await cart.save();
+    document.totalPrice = document.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
+    await document.save();
 
     return res.status(OK).json({
       success: true,
       message: "Cart updated",
-      results: cart
+      results: document
     });
   } else {
     // Create a new cart
