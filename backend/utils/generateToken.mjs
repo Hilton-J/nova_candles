@@ -35,7 +35,7 @@ const accessCookieOptions = () => ({
   httpOnly: true,
   secure: NODE_ENV === 'production',
   sameSite: 'strict', //This prevents CSRF (Cross Site ERequest Forgery) attachs
-  maxAge: after30Days(), //Will expire after 30 day
+  expires: after30Days(), //Will expire after 30 day
   path: '/api'
 });
 

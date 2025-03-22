@@ -5,7 +5,7 @@ export const updateUserSchema = loginSchema.extend({
   lastName: z.string().optional(),
   email: emailSchema.optional(),
   password: passwordSchema.optional(),
-  cellPhoneNo: z.string().optional(),
+  phoneNumber: z.string().optional(),
   confirmPassword: passwordSchema.optional(),
 })
   .refine((data) => data.password === data.confirmPassword, {

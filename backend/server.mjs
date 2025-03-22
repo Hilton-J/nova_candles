@@ -1,6 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
-import { connectDB } from './config/db.mjs';
+import connectDB from './config/db.mjs';
 import cookieParser from 'cookie-parser';
 import { errorHandler, notFound } from './middleware/errorMiddleware.mjs';
 import userRoutes from './routes/userRoute.mjs';
@@ -25,8 +25,8 @@ app.use('/api/cart', cartRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  connectDB();
+app.listen(PORT, async () => {
+  await connectDB();
   console.log(`Server running on http://localhost:${PORT}`)
 })
 
