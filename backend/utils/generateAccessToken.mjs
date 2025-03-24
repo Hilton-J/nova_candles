@@ -15,7 +15,7 @@ const generateAccessToken = (user) => {
     {
       id: user._id,
     },
-    user.jwt_secrete,
+    user.jwt_secret,
     jwtOptions
   );
 };

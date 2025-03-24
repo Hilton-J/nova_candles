@@ -23,7 +23,7 @@ export const protect = asynchandler(async (req, res, next) => {
   if (!user)
     return next(new HttpError('Not authorized, user not found', NOT_FOUND))
 
-  const currentJwtSecret = user.jwt_secrete;
+  const currentJwtSecret = user.jwt_secret;
 
   if (!currentJwtSecret) {
     next(new HttpError("Server error: User jwt_secret missing", INTERNAL_SERVER_ERROR));

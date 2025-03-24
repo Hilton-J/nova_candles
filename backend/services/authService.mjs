@@ -25,7 +25,7 @@ export const registerUser = async (userData) => {
   if (confirmPassword !== password)
     throw new HttpError("Passwords don't match", UNAUTHORIZED);
 
-  const jwt_secrete = crypto.randomBytes(32).toString('hex');
+  const jwt_secret = crypto.randomBytes(32).toString('hex');
 
   const user = await User.create({
     firstName,
@@ -34,7 +34,7 @@ export const registerUser = async (userData) => {
     cellPhoneNo,
     role,
     password,
-    jwt_secrete
+    jwt_secret
   });
 
   return user;
