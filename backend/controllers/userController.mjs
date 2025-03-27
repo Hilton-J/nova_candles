@@ -15,7 +15,7 @@ export const updateUser = updateUserHandler(User);
 export const login = asyncHandler(async (req, res) => {
   const user = await loginUser(req.body);
   await generateToken(res, user);
-  const data = new User(user).omitField(['jwt_secrete', 'password']);
+  const data = new User(user).omitField(['jwt_secret', 'password']);
   res.status(OK).json(data);
 });
 
@@ -27,6 +27,6 @@ export const logout = asyncHandler(async (req, res) => {
 export const registerHandler = asyncHandler(async (req, res, next) => {
   const user = await registerUser(req.body);
   await generateToken(res, user);
-  const data = new User(user).omitField(["jwt_secrete", "password"]);
+  const data = new User(user).omitField(["jwt_secret", "password"]);
   res.status(CREATED).json({ status: 'User successfullyregitered', data })
 });

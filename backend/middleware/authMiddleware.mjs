@@ -11,6 +11,7 @@ import jwt from 'jsonwebtoken';
 
 export const protect = asynchandler(async (req, res, next) => {
   const accessToken = req.cookies.jwt_token;
+
   if (!accessToken)
     return next(new HttpError('Not Authorized, invalid accessToken', UNAUTHORIZED));
 
@@ -20,21 +21,21 @@ export const protect = asynchandler(async (req, res, next) => {
   }
 
   const user = await User.findById(decoded.id).select('-password');
-  if (!user)
-    return next(new HttpError('Not authorized, user not found', NOT_FOUND))
+  if (!user) {
+    return next(new HttpError('Not authorized, user not found', NOT_FOUND));
+  }
 
   const currentJwtSecret = user.jwt_secret;
-
   if (!currentJwtSecret) {
     next(new HttpError("Server error: User jwt_secret missing", INTERNAL_SERVER_ERROR));
   }
 
   try {
     jwt.verify(accessToken, currentJwtSecret);
-    req.user = user.omitField('jwt_secrete');
+    req.user = user.omitField('jwt_secret');
     next();
   } catch (error) {
-    next(new HttpError('Not Authorized, invalid token', UNAUTHORIZED));
+    next(new HttpError(`Not Authorized, invalid token ====== ${error}`, UNAUTHORIZED));
   }
 });
 

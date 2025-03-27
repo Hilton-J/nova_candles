@@ -14,8 +14,6 @@ export const cartGetHandler = (Model) => asyncHandler(async (req, res, next) => 
   res.status(OK).json(document);
 });
 
-
-
 export const cartRemoveHandler = (Model) => asyncHandler(async (req, res, next) => {
   const document = await Model.findOneAndDelete({ userId: req.user._id });
 
@@ -97,7 +95,7 @@ export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, 
     });
   } else {
     // Create a new cart
-    const newCart = await Model.create({
+    await Model.create({
       userId: _id,
       items: [{
         productId: req.body.productId,

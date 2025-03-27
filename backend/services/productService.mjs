@@ -46,8 +46,7 @@ export const addReviewHandler = (Model) => asyncHandler(async (req, res, next) =
         reviews: {
           userId: req.user._id,
           rating: req.body.rating,
-          comment: req.body.comment,
-          date: new Date()
+          comment: req.body.comment
         }
       }
     },

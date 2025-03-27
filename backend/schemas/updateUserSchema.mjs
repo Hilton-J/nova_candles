@@ -1,14 +1,11 @@
 import { z } from 'zod';
 
-export const updateUserSchema = loginSchema.extend({
+export const updateUserSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  email: emailSchema.optional(),
-  password: passwordSchema.optional(),
+  email: z.string().email('Invalid email').trim().optional(),
+  password: z.string().trim().min(3, 'Password must be at least 3 characters').optional(),
   phoneNumber: z.string().optional(),
-  confirmPassword: passwordSchema.optional(),
+  isActive: z.boolean().optional()
 })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Password do not match',
-    path: ['confirmPassword'],
-  });
+  .strict();
