@@ -11,13 +11,14 @@ const generateToken = async (res, user) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    if (!res.headersSent) {
-      res.cookie('jwt_token', accessToken, accessCookieOptions);
-      res.cookie('refreshToken', refreshToken, refreshCookieOptions);
-    }
-    else {
+    if (res.headersSent) {
       console.error("Headers already sent; cannot set cookies.");
     }
+
+    res.cookie('jwt_token', accessToken, accessCookieOptions);
+    res.cookie('refreshToken', refreshToken, refreshCookieOptions);
+
+    console.log("AuthMiddleware line 36", res.cookie);
 
     return;
   } catch (error) {
