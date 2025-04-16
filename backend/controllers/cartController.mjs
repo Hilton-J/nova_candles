@@ -1,23 +1,40 @@
 import asyncHandler from 'express-async-handler';
-import Cart from '../models/cartModel.mjs';
-import Product from '../models/productModel.mjs';
-import { cartAddHandler, cartGetHandler, cartRemoveHandler, cartRemoveItemHandler, cartUpdateQuantityHandler } from '../services/cartService.mjs';
 import { OK } from '../constants/http.codes.mjs';
+import { getUserCartHandler, cartRemoveHandler, cartRemoveItemHandler, cartUpdateQuantityHandler, addCartHandler } from '../services/cartService.mjs';
 
-export const getUserCart = cartGetHandler(Cart);
-export const removeCart = cartRemoveHandler(Cart);
-export const addToCart = cartAddHandler(Cart, Product);
-export const removeCartItem = cartRemoveItemHandler(Cart);
+export const getUserCart = asyncHandler(async (req, res) => {
+  const userCart = await getUserCartHandler(req.user._id);
 
+  res.status(OK).json(userCart);
+});
+
+export const removeCart = asyncHandler(async (req, res) => {
+  const document = await cartRemoveHandler(req.user._id);
+  res.status(OK).json(document);
+});
+
+export const addToCart = asyncHandler(async (req, res) => {
+  const { document, statusCode } = await addCartHandler(req.body, req.user._id);
+
+  res.status(statusCode).json({
+    success: true,
+    message: "Cart created/updated",
+    results: document,
+  })
+});
+
+export const removeCartItem = asyncHandler(async (req, res, next) => {
+  const document = await cartRemoveItemHandler(req.params.productId, req.user._id);
+
+  res.status(OK).json({
+    success: true,
+    message: "Item removed",
+    results: document
+  });
+});
 
 export const updateItemQuantity = asyncHandler(async (req, res) => {
-  const cart = await cartUpdateQuantityHandler(req.body, req.user);
-
-  // Recalculate totalPrice
-  cart.totalPrice = cart.items.reduce((acc, item) =>
-    acc + Number(item.quantity * item.price), 0
-  );
-  await cart.save();
+  const cart = await cartUpdateQuantityHandler(req.body, req.user._id);
 
   return res.status(OK).json({
     success: true,

@@ -1,6 +1,7 @@
 import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
+import Product from '../models/productModel.mjs';
 
 export const productCreateHandler = (Model) => asyncHandler(async (req, res, next) => {
   const existingProduct = await Model.findOne({ productName: req.body.productName, size: req.body.size });
@@ -32,21 +33,21 @@ export const getByNameAndSizeHandler = (Model) => asyncHandler(async (req, res, 
   res.status(OK).json(document);
 });
 
-export const addReviewHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const document = await Model.findOne({ _id: req.params.id, 'reviews.userId': req.user._id });
+export const addReviewHandler = async (productId, reviewData) => {
+  const document = await Product.findOne({ _id: productId, 'reviews.userId': reviewData.userId });
 
   if (document) {
     throw new HttpError('Product already reviewed by this user', CONFLICT);
   }
 
-  const updateDocument = await Model.findByIdAndUpdate(
-    req.params.id,
+  const updateDocument = await Product.findByIdAndUpdate(
+    productId,
     {
       $push: {
         reviews: {
-          userId: req.user._id,
-          rating: req.body.rating,
-          comment: req.body.comment
+          userId: reviewData.userId,
+          rating: reviewData.rating,
+          comment: reviewData.comment
         }
       }
     },
@@ -54,34 +55,22 @@ export const addReviewHandler = (Model) => asyncHandler(async (req, res, next) =
   );
 
   if (!updateDocument) {
-    return next(new HttpError('Product not found', NOT_FOUND));
+    throw new HttpError('Product not found', NOT_FOUND);
   }
 
-  res.status(OK).json({
-    success: true,
-    message: `Review added successfully`,
-    results: updateDocument
-  });
-});
+  return updateDocument;
+};
 
-export const addImageHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const document = await Model.findByIdAndUpdate(
-    req.params.id,
-    {
-      $push: {
-        images: req.body.images
-      }
-    },
+export const addImageHandler = async (productId, images) => {
+  const document = await Product.findByIdAndUpdate(
+    productId,
+    { $push: { images } },
     { new: true, runValidators: true, timestamps: true }
   );
 
   if (!document) {
-    return next(new HttpError('Product not found', NOT_FOUND));
+    throw new HttpError('Product not found', NOT_FOUND);
   }
 
-  res.status(OK).json({
-    success: true,
-    message: `Image added successfully`,
-    results: document
-  });
-});
+  return document;
+};

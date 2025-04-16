@@ -2,16 +2,14 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
 const addressSchema = mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   recipientName: { type: String },
-  recipientCellNumber: { type: String },
+  recipientLastName: { type: String },
+  recipientPhoneNumber: { type: String },
   streetAddress: { type: String },
-  complex: { type: String },
-  suburb: { type: String },
+  apartment: { type: String },
   city: { type: String },
   province: { type: String },
   postalCode: { type: String },
-  phoneNumber: { type: String }
 });
 
 const userSchema = mongoose.Schema({
@@ -25,7 +23,7 @@ const userSchema = mongoose.Schema({
     enum: ['customer', 'admin'],
     default: 'customer',
   },
-  shipToAddress: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Address' }],
+  shipToAddress: [addressSchema],
   isActive: { type: Boolean, default: true },
   jwt_secret: { type: String, required: true },
   refreshToken: { type: String, default: null }

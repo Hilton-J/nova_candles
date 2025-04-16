@@ -1,38 +1,39 @@
-import { CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
-import asyncHandler from 'express-async-handler';
-import HttpError from '../utils/httpError.mjs';
 import Cart from '../models/cartModel.mjs';
+import HttpError from '../utils/httpError.mjs';
+import asyncHandler from 'express-async-handler';
+import Product from '../models/productModel.mjs';
+import { CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 
-export const cartGetHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const document = await Model.findOne({ userId: req.user._id })
+export const getUserCartHandler = async (userId) => {
+  const document = await Cart.findOne({ userId })
     .populate({ path: 'items.productId', select: 'productName images' });
 
   if (!document) {
-    return next(new HttpError('Cart not found', NOT_FOUND));
+    throw new HttpError('Cart not found', NOT_FOUND);
   }
 
-  res.status(OK).json(document);
-});
+  return document;
+};
 
-export const cartRemoveHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const document = await Model.findOneAndDelete({ userId: req.user._id });
+export const cartRemoveHandler = async (userId) => {
+  const document = await Cart.findOneAndDelete({ userId });
 
   if (!document) {
-    return next(new HttpError('Cart not found', NOT_FOUND));
+    throw new HttpError('Cart not found', NOT_FOUND);
   }
 
-  res.status(OK).json(document);
-});
+  return document
+};
 
-export const cartRemoveItemHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const document = await Model.findOneAndUpdate(
-    { userId: req.user._id, 'items.productId': req.params.productId },
-    { $pull: { items: { productId: req.params.productId } } },
+export const cartRemoveItemHandler = async (productId, userId) => {
+  const document = await Cart.findOneAndUpdate(
+    { userId, 'items.productId': productId },
+    { $pull: { items: { productId } } },
     { new: true, runValidators: true, timestamps: true }
   );
 
   if (!document) {
-    return next(new HttpError('Cart not found', NOT_FOUND));
+    throw new HttpError('Cart not found', NOT_FOUND);
   }
 
   // Recalculate totalPrice
@@ -41,45 +42,51 @@ export const cartRemoveItemHandler = (Model) => asyncHandler(async (req, res, ne
 
   await document.save();
 
-  res.status(OK).json({ success: true, message: "Item removed", results: document });
-});
+  return document;
+};
 
 export const cartUpdateQuantityHandler = async (data, user) => {
   const cart = await Cart.findOneAndUpdate(
-    { userId: user._id, 'items.productId': data.productId },
+    { user, 'items.productId': data.productId },
     { $set: { 'items.$.quantity': data.quantity } },
     { new: true, runValidators: true, timestamps: true }
   );
 
   if (!cart) {
-    return next(new HttpError('Cart not found', NOT_FOUND))
+    throw new HttpError('Cart not found', NOT_FOUND);
   }
+
+  cart.totalPrice = cart.items.reduce((acc, item) =>
+    acc + Number(item.quantity * item.price), 0
+  );
+
+  await cart.save();
 
   return cart;
 };
 
-export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, res, next) => {
-  const { _id } = req.user;
+export const addCartHandler = async (itemData, userId) => asyncHandler(async (req, res, next) => {
+  let statusCode;
 
-  const product = await ProductModel.findById(req.body.productId);
+  const product = await Product.findById(itemData.productId);
   if (!product) {
-    return next(new HttpError('Product not found', NOT_FOUND))
+    throw new HttpError('Product not found', NOT_FOUND);
   }
 
-  const document = await Model.findOne({ userId: _id });
+  const document = await Cart.findOne({ userId });
 
   if (document) {
     // Check if the product already exists in the cart
-    const existingItem = document.items.find(item => item.productId.toString() === req.body.productId);
+    const existingItem = document.items.find(item => item.productId.toString() === itemData.productId);
 
     if (existingItem) {
       // Update the quantity and recalculate totalPrice
-      existingItem.quantity += Number(req.body.quantity);
+      existingItem.quantity += Number(itemData.quantity);
     } else {
       // Add new product with price
       document.items.push({
-        productId: req.body.productId,
-        quantity: req.body.quantity,
+        productId: itemData.productId,
+        quantity: itemData.quantity,
         price: product.price
       });
     }
@@ -87,27 +94,22 @@ export const cartAddHandler = (Model, ProductModel) => asyncHandler(async (req, 
     // Recalculate totalPrice
     document.totalPrice = document.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
     await document.save();
+    statusCode = OK;
 
-    return res.status(OK).json({
-      success: true,
-      message: "Cart updated",
-      results: document
-    });
+    return { document, statusCode }
   } else {
     // Create a new cart
-    await Model.create({
-      userId: _id,
+    await Cart.create({
+      userId,
       items: [{
-        productId: req.body.productId,
-        quantity: req.body.quantity,
+        productId: itemData.productId,
+        quantity: itemData.quantity,
         price: product.price
       }],
-      totalPrice: product.price * req.body.quantity
+      totalPrice: product.price * itemData.quantity
     });
+    statusCode = CREATED;
 
-    return res.status(CREATED).json({
-      success: true,
-      message: "Cart added successfully"
-    });
+    return { document, statusCode }
   }
 });

@@ -41,6 +41,7 @@ export const registerHandler = asyncHandler(async (req, res, next) => {
   res.status(CREATED).json({ status: 'User successfully regitered', data })
 });
 
+//TODO: Zod validate required
 export const addAddressHandler = asyncHandler(async (req, res) => {
   const document = await addAddress(req.user._id, req.body);
   const user = new User(document).omitField(['jwt_secret', 'password']);

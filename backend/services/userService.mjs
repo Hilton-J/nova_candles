@@ -15,6 +15,7 @@ export const updateUserHandler = async (user, userData) => {
   return document;
 };
 
+//TODO: Zod validate required
 export const addAddress = async (user, addressData) => {
   const document = await User.findByIdAndUpdate(
     user,
