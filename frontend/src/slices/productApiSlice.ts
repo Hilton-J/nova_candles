@@ -23,16 +23,16 @@ export const productApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Product"],
     }),
 
-    getProductById: builder.query<IProduct[], string>({
-      query: (id) => `${PRODUCT_URL}/${id}`,
-      providesTags: ["Product"],
-    }),
+    // getProductById: builder.query<IProduct[], string>({
+    //   query: (id) => `${PRODUCT_URL}/${id}`,
+    //   providesTags: ["Product"],
+    // }),
 
     getProductByNameAndSize: builder.query<
       IProduct,
       { name?: string; size?: string }
     >({
-      query: ({ name, size }) => `${PRODUCT_URL}/${name}/${size}`,
+      query: ({ name, size }) => `${PRODUCT_URL}/${name}?size=${size}`,
       providesTags: ["Product"],
     }),
 
@@ -85,7 +85,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 export const {
   useCreateProductMutation,
   useGetAllProductQuery,
-  useGetProductByIdQuery,
+  // useGetProductByIdQuery,
   useUpdateProductMutation,
   useDeleteProductMutation,
   useDeactivateProductMutation,

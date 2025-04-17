@@ -16,8 +16,10 @@ const router = express.Router();
 router.get('/', getAllProductsHandler);
 router.post('/add', protect, authorizeRoles('admin'), validateCreateProduct, createProductHandler);
 router.patch('/review/:id', protect, authorizeRoles('customer'), validateReviewProduct, reviewProductHandler);
+
+router.get('/:name', getProductByNameAndSizeHandler);
+
 router.route('/:id')
-  .get(getProductByNameAndSizeHandler)
   .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProductHandler)
   .delete(protect, authorizeRoles('admin'), deleteProductHandler)
   .patch(protect, authorizeRoles('admin'), validateImage, AddImageHandler);

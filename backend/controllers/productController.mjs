@@ -40,7 +40,7 @@ export const createProductHandler = asyncHandler(async (req, res) => {
 });
 
 export const getProductByNameAndSizeHandler = asyncHandler(async (req, res) => {
-  const product = getByNameAndSize(req.params.id, req.query.size);
+  const product = await getByNameAndSize(req.params.name, req.query.size);
 
   res.status(OK).json(product);
 }) 

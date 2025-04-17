@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useGetProductByIdQuery } from "../slices/productApiSlice";
+import { useGetProductByNameAndSizeQuery } from "../slices/productApiSlice";
 import Loader from "./Loader";
 import { IProduct } from "../interfaces/interfaces";
 import { useEffect, useState } from "react";
@@ -15,13 +15,20 @@ const ViewProduct = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const { id, size } = useParams<{ id: string; size: string }>();
   const [productSize, setProductSize] = useState<string | undefined>(size);
-  const { data, isLoading: isProductLoading } = useGetProductByIdQuery(
-    id || ""
+  const { data, isLoading: isProductLoading } = useGetProductByNameAndSizeQuery(
+    {
+      name: id || "",
+      size,
+    }
   );
+
+  console.log(data);
+
   const [addCart, { isLoading }] = useAddToCartMutation();
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
+
   const product = data?.find(
     (item: IProduct) => item.size.toLowerCase() === productSize?.toLowerCase()
   );
@@ -124,7 +131,9 @@ const ViewProduct = () => {
             <p className='w-[90%]'>{product?.description}</p>
             <button
               className={`${
-                isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-secondary hover:text-black"
+                isLoading
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer hover:bg-secondary hover:text-black"
               } mt-3 bg-accent text-white border border-black/20 py-1 px-3 mr-auto h-fit`}
               onClick={handleAddToCart}
             >

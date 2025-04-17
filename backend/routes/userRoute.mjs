@@ -11,12 +11,13 @@ router.post('/logout', logout);
 router.post('/login', validateLogin, login);
 router.post('/register', validateRegister, registerHandler);
 
-router.route('/profile')
-  .get(protect, getUserById)
-  .put(protect, validateUpdateUser, updateUser);
+router.put('/profile', protect, validateUpdateUser, updateUser);
 
 router.get('/', protect, authorizeRoles('admin'), getAllUsers);
-router.delete('/:id', protect, deleteUser);
+
+router.route('/:id')
+  .delete(protect, authorizeRoles('admin'), deleteUser)
+  .get(protect, authorizeRoles('admin'), getUserById);
 
 router.put(
   '/address/add',

@@ -18,9 +18,9 @@ export const createProduct = async (productData) => {
   return document;
 };
 
-export const getByNameAndSize = async (productName, size) => {
+export const getByNameAndSize = async (name, size) => {
 
-  const document = await Product.findOne({ productName, size });
+  const document = await Product.findOne({ productName: name, size });
 
   if (!document) {
     throw new HttpError('Product not found', NOT_FOUND);
