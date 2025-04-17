@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
-const addressSchema = mongoose.Schema({
+const addressSchema = new mongoose.Schema({
   recipientName: { type: String },
   recipientLastName: { type: String },
   recipientPhoneNumber: { type: String },
@@ -12,7 +12,7 @@ const addressSchema = mongoose.Schema({
   postalCode: { type: String },
 });
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   firstName: { type: String, required: [true, 'Please enter name'] },
   lastName: { type: String, required: [true, 'Please enter last name'] },
   email: { type: String, required: [true, 'Please enter email'], unique: true, trim: true, lowercase: true },

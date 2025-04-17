@@ -31,11 +31,11 @@ export const reviewProductHandler = asyncHandler(async (req, res) => {
 });
 
 export const createProductHandler = asyncHandler(async (req, res) => {
-  const product = await createProduct(req.body);
+  await createProduct(req.body);
 
   res.status(CREATED).json({
-    status: 'Product added successfully',
-    product
+    success: true,
+    message: `Product created successfully`,
   });
 });
 

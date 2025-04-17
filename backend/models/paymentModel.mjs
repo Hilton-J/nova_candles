@@ -10,6 +10,6 @@ const paymentSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
 }, { timestamps: true });
 
-const payment = mongoose.model('Payment', paymentSchema);
+const Payment = mongoose.model('Payment', paymentSchema);
 
-export default payment;
+export default Payment;

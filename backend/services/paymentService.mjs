@@ -1,22 +1,19 @@
-import { BAD_REQUEST, CONFLICT, CREATED } from '../constants/http.codes.mjs';
-import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
+import Payment from '../models/paymentModel.mjs';
+import { BAD_REQUEST, CONFLICT } from '../constants/http.codes.mjs';
 
-export const paymentAddHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const alreadyPaid = await Model.find({ userId: req.user._id, orderId: req.body.orderId });
+export const addPayment = async (userId, paymentData) => {
+  const alreadyPaid = await Payment.find({ userId, orderId: paymentData.orderId });
 
   if (alreadyPaid) {
-    return next(new HttpError('Payment already processed', CONFLICT));
+    throw new HttpError('Payment already processed', CONFLICT);
   }
 
-  const document = await Model.create({ ...req.body, userId: req.user._id });
+  const document = await Payment.create({ ...paymentData, userId });
 
   if (!document) {
-    return next(new HttpError(`Payment data`, BAD_REQUEST));
+    throw new HttpError(`Payment data`, BAD_REQUEST);
   }
 
-  res.status(CREATED).json({
-    success: true,
-    message: 'Payment processed'
-  });
-});
+  return document;
+};
