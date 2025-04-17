@@ -1,25 +1,25 @@
 import express from 'express';
 import {
-  AddImage,
-  createProduct,
-  deleteProduct,
-  reviewProduct,
-  updateProduct,
-  getAllProducts,
-  getProductByNameAndSize
+  AddImageHandler,
+  createProductHandler,
+  deleteProductHandler,
+  reviewProductHandler,
+  updateProductHandler,
+  getAllProductsHandler,
+  getProductByNameAndSizeHandler
 } from '../controllers/productController.mjs';
 import { authorizeRoles, protect } from '../middleware/authMiddleware.mjs';
 import { validateCreateProduct, validateImage, validateReviewProduct, validateUpdateProduct } from '../middleware/validators/productValidator.mjs';
 
 const router = express.Router();
 
-router.get('/', getAllProducts);
-router.post('/add', protect, authorizeRoles('admin'), validateCreateProduct, createProduct);
-router.patch('/review/:id', protect, authorizeRoles('customer'), validateReviewProduct, reviewProduct);
+router.get('/', getAllProductsHandler);
+router.post('/add', protect, authorizeRoles('admin'), validateCreateProduct, createProductHandler);
+router.patch('/review/:id', protect, authorizeRoles('customer'), validateReviewProduct, reviewProductHandler);
 router.route('/:id')
-  .get(getProductByNameAndSize)
-  .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProduct)
-  .delete(protect, authorizeRoles('admin'), deleteProduct)
-  .patch(protect, authorizeRoles('admin'), validateImage, AddImage);
+  .get(getProductByNameAndSizeHandler)
+  .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProductHandler)
+  .delete(protect, authorizeRoles('admin'), deleteProductHandler)
+  .patch(protect, authorizeRoles('admin'), validateImage, AddImageHandler);
 
 export default router;

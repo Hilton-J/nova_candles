@@ -1,15 +1,15 @@
 import Product from '../models/productModel.mjs';
 import asyncHandler from 'express-async-handler';
 import { deleteOneDoc, getAllDocs, updateOneDoc } from "../services/crudHandlerFactory.mjs";
-import { addReviewHandler, productCreateHandler, getByNameAndSizeHandler, addImageHandler } from "../services/productService.mjs";
-import { OK } from '../constants/http.codes.mjs';
+import { addReview, createProduct, getByNameAndSize, addImage } from "../services/productService.mjs";
+import { CREATED, OK } from '../constants/http.codes.mjs';
 
-export const getAllProducts = getAllDocs(Product);
-export const deleteProduct = deleteOneDoc(Product);
-export const updateProduct = updateOneDoc(Product);
+export const getAllProductsHandler = getAllDocs(Product);
+export const deleteProductHandler = deleteOneDoc(Product);
+export const updateProductHandler = updateOneDoc(Product);
 
-export const AddImage = asyncHandler(async (req, res) => {
-  const product = await addImageHandler(req.params.id, req.body.images);
+export const AddImageHandler = asyncHandler(async (req, res) => {
+  const product = await addImage(req.params.id, req.body.images);
 
   res.status(OK).json({
     success: true,
@@ -18,10 +18,10 @@ export const AddImage = asyncHandler(async (req, res) => {
   });
 });
 
-export const reviewProduct = asyncHandler(async (req, res) => {
+export const reviewProductHandler = asyncHandler(async (req, res) => {
   const { _id } = req.user;
 
-  const product = await addReviewHandler(req.params.id, { ...req.body, userId: _id });
+  const product = await addReview(req.params.id, { ...req.body, userId: _id });
 
   res.status(OK).json({
     success: true,
@@ -30,5 +30,17 @@ export const reviewProduct = asyncHandler(async (req, res) => {
   });
 });
 
-export const createProduct = productCreateHandler(Product);
-export const getProductByNameAndSize = getByNameAndSizeHandler(Product);
+export const createProductHandler = asyncHandler(async (req, res) => {
+  const product = await createProduct(req.body);
+
+  res.status(CREATED).json({
+    status: 'Product added successfully',
+    product
+  });
+});
+
+export const getProductByNameAndSizeHandler = asyncHandler(async (req, res) => {
+  const product = getByNameAndSize(req.params.id, req.query.size);
+
+  res.status(OK).json(product);
+}) 

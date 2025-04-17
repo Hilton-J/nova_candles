@@ -1,39 +1,35 @@
-import { BAD_REQUEST, CONFLICT, CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
-import asyncHandler from 'express-async-handler';
 import HttpError from '../utils/httpError.mjs';
 import Product from '../models/productModel.mjs';
+import { BAD_REQUEST, CONFLICT, NOT_FOUND } from '../constants/http.codes.mjs';
 
-export const productCreateHandler = (Model) => asyncHandler(async (req, res, next) => {
-  const existingProduct = await Model.findOne({ productName: req.body.productName, size: req.body.size });
+export const createProduct = async (productData) => {
+  const existingProduct = await Product.findOne({ productName: productData.productName, size: productData.size });
 
   if (existingProduct) {
-    return next(new HttpError('Product already exists', CONFLICT))
+    throw new HttpError('Product already exists', CONFLICT);
   }
 
-  const document = await Model.create(req.body);
+  const document = await Product.create(productData);
 
   if (!document) {
     return next(new HttpError('Invalid product data', BAD_REQUEST));
   }
 
-  res.status(CREATED).json({
-    success: true,
-    message: 'Product added successfully'
-  });
-});
+  return document;
+};
 
-export const getByNameAndSizeHandler = (Model) => asyncHandler(async (req, res, next) => {
+export const getByNameAndSize = async (productName, size) => {
 
-  const document = await Model.findOne({ productName: req.params.id, size: req.query.size });
+  const document = await Product.findOne({ productName, size });
 
   if (!document) {
-    return next(new HttpError('Product not found', NOT_FOUND));
+    throw new HttpError('Product not found', NOT_FOUND);
   }
 
-  res.status(OK).json(document);
-});
+  return document;
+};
 
-export const addReviewHandler = async (productId, reviewData) => {
+export const addReview = async (productId, reviewData) => {
   const document = await Product.findOne({ _id: productId, 'reviews.userId': reviewData.userId });
 
   if (document) {
@@ -61,7 +57,7 @@ export const addReviewHandler = async (productId, reviewData) => {
   return updateDocument;
 };
 
-export const addImageHandler = async (productId, images) => {
+export const addImage = async (productId, images) => {
   const document = await Product.findByIdAndUpdate(
     productId,
     { $push: { images } },
