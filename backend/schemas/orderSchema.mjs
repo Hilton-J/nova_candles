@@ -1,5 +1,5 @@
-import { itemSchema } from './cartSchema.mjs';
 import { z } from 'zod';
+import { itemSchema } from './cartSchema.mjs';
 
 export const orderSchema = z.object({
   deliveryAddress: z.string(),

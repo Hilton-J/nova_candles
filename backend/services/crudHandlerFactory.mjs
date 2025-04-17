@@ -1,6 +1,6 @@
-import { NOT_FOUND, OK } from "../constants/http.codes.mjs";
-import asyncHandler from "express-async-handler";
 import HttpError from "../utils/httpError.mjs";
+import asyncHandler from "express-async-handler";
+import { NOT_FOUND, OK } from "../constants/http.codes.mjs";
 
 export const deleteOneDoc = (Model) =>
   asyncHandler(async (req, res, next) => {

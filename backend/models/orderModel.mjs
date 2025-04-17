@@ -16,7 +16,8 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.pre('save', async function (next) {
-  if (!this.orderNumber) { //Checks if orderNumber already set
+  if (!this.orderNumber) {
+    //Checks if orderNumber already set
     const currentYear = new Date().getFullYear(); //Get the current year
     const lastOrder = await mongoose.model('Order').findOne({ orderNumber: new RegExp(`^${currentYear}_`) })
       .sort({ orderNumber: -1 }) // Sort in descending order
@@ -35,6 +36,6 @@ orderSchema.pre('save', async function (next) {
   next();
 });
 
-const order = mongoose.model('Order', orderSchema);
+const Order = mongoose.model('Order', orderSchema);
 
-export default order;
+export default Order;

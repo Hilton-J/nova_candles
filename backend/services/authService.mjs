@@ -1,7 +1,7 @@
-import { UNAUTHORIZED, CONFLICT } from '../constants/http.codes.mjs';
-import HttpError from '../utils/httpError.mjs';
-import User from '../models/userModel.mjs';
 import crypto from 'crypto';
+import User from '../models/userModel.mjs';
+import HttpError from '../utils/httpError.mjs';
+import { UNAUTHORIZED, CONFLICT } from '../constants/http.codes.mjs';
 
 export const loginUser = async (credentials) => {
   const { email, password } = credentials;

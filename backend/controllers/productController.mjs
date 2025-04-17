@@ -1,8 +1,8 @@
 import Product from '../models/productModel.mjs';
 import asyncHandler from 'express-async-handler';
+import { CREATED, OK } from '../constants/http.codes.mjs';
 import { deleteOneDoc, getAllDocs, updateOneDoc } from "../services/crudHandlerFactory.mjs";
 import { addReview, createProduct, getByNameAndSize, addImage } from "../services/productService.mjs";
-import { CREATED, OK } from '../constants/http.codes.mjs';
 
 export const getAllProductsHandler = getAllDocs(Product);
 export const deleteProductHandler = deleteOneDoc(Product);

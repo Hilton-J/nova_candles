@@ -1,13 +1,13 @@
-import asynchandler from 'express-async-handler';
-import HttpError from '../utils/httpError.mjs';
-import User from '../models/userModel.mjs';
+import jwt from 'jsonwebtoken';
 import {
   NOT_FOUND,
   FORBIDDEN,
   UNAUTHORIZED,
   INTERNAL_SERVER_ERROR,
 } from '../constants/http.codes.mjs';
-import jwt from 'jsonwebtoken';
+import User from '../models/userModel.mjs';
+import HttpError from '../utils/httpError.mjs';
+import asynchandler from 'express-async-handler';
 
 export const protect = asynchandler(async (req, res, next) => {
   const accessToken = req.cookies.jwt_token;

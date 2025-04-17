@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 
 const addressSchema = new mongoose.Schema({
   recipientName: { type: String },
