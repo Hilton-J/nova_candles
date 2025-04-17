@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const updateUserSchema = z.object({
+const updateUserSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().email('Invalid email').trim().optional(),
@@ -9,3 +9,5 @@ export const updateUserSchema = z.object({
   isActive: z.boolean().optional()
 })
   .strict();
+
+export default updateUserSchema;
