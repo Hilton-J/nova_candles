@@ -3,7 +3,7 @@ import Product from '../models/productModel.mjs';
 import { BAD_REQUEST, CONFLICT, NOT_FOUND } from '../constants/http.codes.mjs';
 
 export const createProduct = async (productData) => {
-  const existingProduct = await Product.findOne({ productName: productData.productName, size: productData.size });
+  const existingProduct = await Product.findOne({ productName: productData.productName });
 
   if (existingProduct) {
     throw new HttpError('Product already exists', CONFLICT);
