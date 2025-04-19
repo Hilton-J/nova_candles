@@ -43,11 +43,7 @@ export const getOneDoc = (Model) =>
       return next(new HttpError("No document found with that ID", NOT_FOUND));
     }
 
-    res.status(OK).json({
-      status: "success",
-      id: req.params.id,
-      data: doc,
-    });
+    res.status(OK).json(doc);
   });
 
 export const getAllDocs = (Model) =>

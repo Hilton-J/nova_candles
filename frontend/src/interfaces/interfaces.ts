@@ -28,8 +28,12 @@ export interface IProduct {
   _id: string;
   productName: string;
   description: string;
-  price: number;
-  size: string;
+  price: {
+    small: number;
+    medium: number;
+    large: number;
+  };
+  fragrance: string;
   stock: number;
   type: string;
   images: string[];

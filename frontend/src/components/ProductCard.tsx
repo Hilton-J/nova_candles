@@ -3,6 +3,7 @@ import { IProduct } from "../interfaces/interfaces";
 // import placeHolderPoster from "../assets/images/BlackRaspberryVanilla.webp";
 
 const ProductCard = (props: IProduct) => {
+  const basePrice = props.type === "candle" ? props.price.large : 125;
   return (
     <Link
       to={`/product/${props._id}`}
@@ -23,11 +24,13 @@ const ProductCard = (props: IProduct) => {
             {props.productName}
           </h3>
           <span className='text-candleamber font-medium'>
-            ${props.price.toFixed(2)}
+            R{basePrice.toFixed(2)}
           </span>
         </div>
 
-        <p className='text-candlegray text-sm mb-3'>{props.size}</p>
+        <p className='text-candlegray text-sm mb-3 capitalize'>
+          {props.fragrance}
+        </p>
 
         <div className='mt-auto'>
           <span className='inline-block py-2 px-4 bg-secondary text-sm rounded-md hover:bg-candleamber hover:text-white transition-colors duration-300'>
@@ -36,27 +39,6 @@ const ProductCard = (props: IProduct) => {
         </div>
       </div>
     </Link>
-    // <Link
-    //   to={`/products/${props.productName}/${props.size}`}
-    //   className='border border-black/20 grid grid-rows-subgrid row-span-2 gap-2 hover:shadow capitalize '
-    // >
-    //   <img
-    //     src={
-    //       props.images && props.images.length > 0
-    //         ? props.images[0]
-    //         : placeHolderPoster
-    //     }
-    //     alt={props.productName}
-    //     className='size-full object-cover'
-    //   />
-    //   <div className="flex flex-col gap-2 px-2 pb-2">
-    //     <div className='flex justify-between'>
-    //       {props.productName}
-    //       <span className='font-bold'>R{props.price.toFixed(2)}</span>
-    //     </div>
-    //     {props.size}
-    //   </div>
-    // </Link>
   );
 };
 

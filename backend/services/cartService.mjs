@@ -87,7 +87,7 @@ export const addCartHandler = async (itemData, userId) => asyncHandler(async (re
       document.items.push({
         productId: itemData.productId,
         quantity: itemData.quantity,
-        price: product.price
+        price: itemData.price
       });
     }
 
@@ -104,9 +104,9 @@ export const addCartHandler = async (itemData, userId) => asyncHandler(async (re
       items: [{
         productId: itemData.productId,
         quantity: itemData.quantity,
-        price: product.price
+        price: itemData.price
       }],
-      totalPrice: product.price * itemData.quantity
+      totalPrice: itemData.price * itemData.quantity
     });
     statusCode = CREATED;
 

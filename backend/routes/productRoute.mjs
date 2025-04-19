@@ -6,7 +6,8 @@ import {
   reviewProductHandler,
   updateProductHandler,
   getAllProductsHandler,
-  getProductByNameAndSizeHandler
+  getProductByNameAndSizeHandler,
+  getProductByIdHandler
 } from '../controllers/productController.mjs';
 import { authorizeRoles, protect } from '../middleware/authMiddleware.mjs';
 import { validateCreateProduct, validateImage, validateReviewProduct, validateUpdateProduct } from '../middleware/validators/productValidator.mjs';
@@ -17,9 +18,10 @@ router.get('/', getAllProductsHandler);
 router.post('/add', protect, authorizeRoles('admin'), validateCreateProduct, createProductHandler);
 router.patch('/review/:id', protect, authorizeRoles('customer'), validateReviewProduct, reviewProductHandler);
 
-router.get('/:name', getProductByNameAndSizeHandler);
+// router.get('/:name', getProductByNameAndSizeHandler);
 
 router.route('/:id')
+  .get(getProductByIdHandler)
   .put(protect, authorizeRoles('admin'), validateUpdateProduct, updateProductHandler)
   .delete(protect, authorizeRoles('admin'), deleteProductHandler)
   .patch(protect, authorizeRoles('admin'), validateImage, AddImageHandler);

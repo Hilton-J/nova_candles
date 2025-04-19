@@ -3,9 +3,8 @@ import AdminLayout from "./layouts/AdminLayout";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import AboutPage from "./pages/AboutPage";
-// import Login from "./components/LoginModal";
 import Shop from "./components/Shop";
-import ViewProduct from "./components/ViewProduct";
+import ProductPage from "./pages/ProductPage";
 import { useEffect } from "react";
 import NotFound from "./components/NotFound";
 import ContactPage from "./pages/ContactPage";
@@ -35,7 +34,7 @@ function App() {
           <Route path='/shop' element={<Shop />} />
           <Route path='/contact' element={<ContactPage />} />
           {/* <Route path='/products/:id' element={<ViewProduct />} /> */}
-          <Route path='/products/:id/:size' element={<ViewProduct />} />
+          <Route path='/product/:id' element={<ProductPage />} />
         </Route>
 
         <Route path='*' element={<NotFound />} />
