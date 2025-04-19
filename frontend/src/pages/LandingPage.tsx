@@ -1,9 +1,8 @@
-// import Footer from "../components/Footer";
 import Hero from "../components/Hero";
-import Instagram from "../components/Instagram";
 import Products from "../components/Products";
-import Section from "../components/Section";
-import Subscribe from "../components/Subscribe";
+import Subscribe from "../components/Newsletter";
+import Section from "../components/FeatureSection";
+import AboutPreview from "../components/AboutPreview";
 
 const MainPage = () => {
   return (
@@ -11,7 +10,7 @@ const MainPage = () => {
       <Hero />
       <Section />
       <Products />
-      <Instagram />
+      <AboutPreview />
       <Subscribe />
     </>
   );

@@ -6,17 +6,26 @@
 
 @theme {
   --font-rufina: "Rufina";
+  --color-border: #e0e0e0;
   --color-accent: #844001;
   --color-primary: #ffedd6;
   --color-secondary: #fff8ef;
+  --color-candlebeige: #e2d1c3;
+  --color-candleamber: #d8973c;
+  --color-candlelight: #fdf9f3;
+  --color-candledark: #403d39;
+  --color-candlegray: #8a8782;
   --font-cinzel: "Cinzel Decorative";
   --font-playfair: "Playfair Display";
+  --foreground: #382e27;
+  --color-background: #fcfaf8;
+  --color-secondary: #e6e6e6;
 }
 
 @layer base {
   body {
-    background-color: var(--color-primary);
-    font-family: var(--font-playfair);
+    background-color: var(--color-candlelight);
+    color: var(--foreground);
     scroll-behavior: smooth;
     &::-webkit-scrollbar {
       display: none;
@@ -27,5 +36,17 @@
   }
   p {
     font-family: var(--font-playfair);
+  }
+}
+
+@layer components {
+  .container {
+    @apply w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@layer utilities {
+  .bg-hero-pattern {
+    background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
   }
 }
