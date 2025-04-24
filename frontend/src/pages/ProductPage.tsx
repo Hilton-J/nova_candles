@@ -67,7 +67,6 @@ const ProductPage = () => {
       ) : (
         <div className='container mx-auto px-4 py-12'>
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
-            
             {/* Product Images */}
             <div className='relative'>
               <div className='relative h-96 md:h-[500px] overflow-hidden rounded-lg bg-white border border-border'>
@@ -188,10 +187,10 @@ const ProductPage = () => {
                   <h3 className='text-sm font-medium text-candledark mb-3'>
                     Quantity
                   </h3>
-                  <div className='flex items-center'>
+                  <div className='flex items-center  focus:border-candleamber'>
                     <button
                       onClick={() => handleQuantityChange(quantity - 1)}
-                      className='w-10 h-10 border border-border rounded-l-md flex items-center justify-center hover:bg-secondary transition-colors'
+                      className='w-10 h-10 border border-border rounded-l-md flex items-center justify-center hover:bg-secondary transition-colors hover:border-candleamber'
                     >
                       <Minus className='h-4 w-4' />
                     </button>
@@ -203,11 +202,11 @@ const ProductPage = () => {
                       onChange={(e) =>
                         handleQuantityChange(parseInt(e.target.value) || 1)
                       }
-                      className='w-16 h-10 border-y border-border text-center focus:outline-none focus:border-candleamber'
+                      className='w-16 h-10 border-y border-y-border border-x border-x-transparent text-center focus:outline-none hover:border-candleamber'
                     />
                     <button
                       onClick={() => handleQuantityChange(quantity + 1)}
-                      className='w-10 h-10 border border-border rounded-r-md flex items-center justify-center hover:bg-secondary transition-colors'
+                      className='w-10 h-10 border border-border rounded-r-md flex items-center justify-center hover:bg-secondary transition-colors hover:border-candleamber'
                     >
                       <Plus className='h-4 w-4' />
                     </button>
@@ -218,7 +217,7 @@ const ProductPage = () => {
               {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className='w-full py-3 bg-candleamber text-white rounded-md hover:bg-opacity-90 transition-colors'
+                className='w-full py-3 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors'
               >
                 Add to Cart
               </button>

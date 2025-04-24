@@ -78,7 +78,7 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
               <div className='flex-1 flex justify-between items-center text-base'>
                 <div className='flex flex-col justify-between font-semibold'>
                   <Link
-                    to={`/products/${item.productId?.productName}/${item.productId?.size}`}
+                    to={`/products/${item.productId?.productName}/${item.price}`}
                   >
                     {item.productId?.productName}
                   </Link>

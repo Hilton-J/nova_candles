@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import NotFound from "./components/NotFound";
 import ContactPage from "./pages/ContactPage";
 import LoginPage from "./pages/LoginPage";
+import CartPage from "./pages/CartPage";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -35,6 +36,7 @@ function App() {
           <Route path='/contact' element={<ContactPage />} />
           {/* <Route path='/products/:id' element={<ViewProduct />} /> */}
           <Route path='/product/:id' element={<ProductPage />} />
+          <Route path='/cart' element={<CartPage />} />
         </Route>
 
         <Route path='*' element={<NotFound />} />

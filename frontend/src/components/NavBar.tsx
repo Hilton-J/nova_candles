@@ -7,18 +7,20 @@ import { /*AppDispatch,*/ RootState } from "../store";
 import { useGetUserCartQuery } from "../slices/cartApiSlice";
 import Cart from "./Cart";
 import { useState } from "react";
+import { skipToken } from "@reduxjs/toolkit/query/react";
 // import { useLogoutMutation } from "../slices/userApiSlice";
 // import { logout } from "../slices/authSlice";
 // import { toast } from "react-toastify";
 
 const NavBar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { data } = useGetUserCartQuery();
   const [openCart, setOpenCart] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
+  const { data: cart } = useGetUserCartQuery(userInfo ? undefined : skipToken);
   // const [openProfile, setOpenProfile] = useState(false);
   // const [logoutApiCall] = useLogoutMutation();
 
-  const { userInfo } = useSelector((state: RootState) => state.auth);
   // const dispatch = useDispatch<AppDispatch>();
 
   const toggleDrawer = () => {
@@ -122,9 +124,9 @@ const NavBar = () => {
 
             <NavLink to='/cart' className='relative p-2'>
               <ShoppingCart className='h-5 w-5 text-candledark hover:text-candleamber transition-colors' />
-              {data && data?.items.length > 0 && (
+              {cart && cart?.items.length > 0 && (
                 <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-candleamber rounded-full'>
-                  {data?.items.length}
+                  {cart?.items.length}
                 </span>
               )}
             </NavLink>
@@ -144,7 +146,7 @@ const NavBar = () => {
 
           {openCart && (
             <div className='size-full bg-black/55 fixed top-0 transform translate-x-0 transition-transform duration-700'>
-              <Cart toggleDrawer={toggleDrawer} cart={data} />
+              <Cart toggleDrawer={toggleDrawer} cart={cart} />
             </div>
           )}
         </div>
@@ -224,76 +226,6 @@ const NavBar = () => {
         )} */}
       </div>
     </nav>
-
-    //     {/* Links */}
-    //     <div className='flex items-center gap-10 text-sm xl:text-xl 2xl:text-2xl transition-all duration-700'>
-    //       <NavLink
-    //         to='/about'
-    //         className={({ isActive }) =>
-    //           `${activeNavLink(isActive)} hover:text-accent `
-    //         }
-    //       >
-    //         ABOUT
-    //       </NavLink>
-    //       <NavLink
-    //         to='/shop'
-    //         className={({ isActive }) =>
-    //           `${activeNavLink(isActive)} hover:text-accent`
-    //         }
-    //       >
-    //         SHOP
-    //       </NavLink>
-    //       <span className='flex gap-5'>
-    //         {userInfo ? (
-    //           <HiOutlineUser
-    //             className='hover:text-accent cursor-pointer'
-    //             onClick={toggleProfile}
-    //             // onMouseLeave={() => setOpenProfile(false)}
-    //           />
-    //         ) : (
-    //           <p
-    //             className='hover:text-accent cursor-pointer'
-    //             onClick={() => setOpenLoginModal(true)}
-    //           >
-    //             LOGIN
-    //           </p>
-    //         )}
-
-    //         {openProfile && (
-    //           <div className='absolute text-lg bg-secondary border border-black/20 w-30 h-26 p-3 top-0 right-0 -translate-x-34 translate-y-13 z-50 shadow-xl'>
-    //             <Link to={"/profile"} className='hover:text-accent'>
-    //               Profile
-    //             </Link>
-    //             <button
-    //               className='block hover:text-accent cursor-pointer'
-    //               onClick={logoutHandler}
-    //             >
-    //               Logout
-    //             </button>
-    //           </div>
-    //         )}
-
-    //         <div className='relative flex items-center'>
-    //           <HiOutlineShoppingBag
-    //             className='hover:text-accent cursor-pointer'
-    //             onClick={toggleDrawer}
-    //           />
-    //           {userInfo && data && (
-    //             <span className='flex items-center justify-center leading-none absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-accent min-size-4 size-4 text-white text-xs rounded-full font-sans'>
-    //               {data && isLoading ? 0 : data?.items.length}
-    //             </span>
-    //           )}
-    //         </div>
-    //       </span>
-    //     </div>
-    //   </div>
-
-    //   {openCart && (
-    //     <div className='size-full bg-black/55 fixed top-0 transform translate-x-0 transition-transform duration-700'>
-    //       <Cart toggleDrawer={toggleDrawer} cart={data} />
-    //     </div>
-    //   )}
-    // </>
   );
 };
 

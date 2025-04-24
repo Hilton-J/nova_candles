@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Instagram, Facebook, Twitter } from "lucide-react";
+import { FiInstagram } from "react-icons/fi";
 
 const Footer = () => {
   return (
@@ -83,22 +83,11 @@ const Footer = () => {
             <h3 className='font-medium text-candledark mb-4'>Connect</h3>
             <div className='flex space-x-4'>
               <a
-                href='#'
+                href='https://www.instagram.com/novasoycandles?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='
                 className='text-candlegray hover:text-candleamber transition-colors'
+                target='_blank'
               >
-                <Instagram size={20} />
-              </a>
-              <a
-                href='#'
-                className='text-candlegray hover:text-candleamber transition-colors'
-              >
-                <Facebook size={20} />
-              </a>
-              <a
-                href='#'
-                className='text-candlegray hover:text-candleamber transition-colors'
-              >
-                <Twitter size={20} />
+                <FiInstagram size={20} />
               </a>
             </div>
             <div className='mt-4'>
