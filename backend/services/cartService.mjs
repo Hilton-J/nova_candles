@@ -87,7 +87,11 @@ export const addCartHandler = async (itemData, userId) => asyncHandler(async (re
       document.items.push({
         productId: itemData.productId,
         quantity: itemData.quantity,
-        price: itemData.price
+        price: itemData.price,
+        size: itemData.size,
+        productName: itemData.productName | product.productName,
+        fragrance: itemData.fragrance | product.fragrance,
+        image: itemData.image | product.images[0],
       });
     }
 
@@ -104,7 +108,11 @@ export const addCartHandler = async (itemData, userId) => asyncHandler(async (re
       items: [{
         productId: itemData.productId,
         quantity: itemData.quantity,
-        price: itemData.price
+        price: itemData.price,
+        size: itemData.size,
+        productName: itemData.productName | product.productName,
+        fragrance: itemData.fragrance | product.fragrance,
+        image: itemData.image | product.images[0]
       }],
       totalPrice: itemData.price * itemData.quantity
     });

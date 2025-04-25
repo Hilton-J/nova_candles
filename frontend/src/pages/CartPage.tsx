@@ -51,14 +51,14 @@ const CartPage = () => {
                 {cart?.items.map((item) => {
                   const itemTotal = item.price * item.quantity;
                   return (
-                    <div key={`${item.productId}`} className='p-4'>
+                    <div key={`${item.productId._id}`} className='p-4'>
                       <div className='md:grid grid-cols-12 gap-4 items-center'>
                         {/* Product Info (Mobile & Desktop) */}
                         <div className='col-span-6'>
                           <div className='flex items-center'>
                             <img
-                              // src={item.image}
-                              // alt={item.name}
+                              src={item.productId.images?.[0]}
+                              alt={item.productId.productName}
                               className='w-20 h-20 object-cover rounded-md'
                             />
                             <div className='ml-4'>
