@@ -5,12 +5,18 @@ import { useLoginMutation } from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
 import { Lock, Mail } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import { extractErrorMessage } from "../utils/extractError";
 // import { RiCloseFill } from "react-icons/ri";
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   const dispatch = useDispatch<AppDispatch>();
 
   const [login, { isLoading }] = useLoginMutation();
@@ -21,12 +27,9 @@ const LoginPage = () => {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
       toast.success(`Logged in Successfully`);
+      navigate(from, { replace: true });
     } catch (err) {
-      if (err && typeof err === "object" && "data" in err) {
-        toast.error((err as { data: { message: string } }).data.message);
-      } else {
-        toast.error(`An unexpected error occurred: ${err}`);
-      }
+      toast.error(extractErrorMessage(err));
     }
   };
 

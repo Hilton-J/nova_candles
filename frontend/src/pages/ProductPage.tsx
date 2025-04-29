@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useGetProductByIdQuery } from "../slices/productApiSlice";
 import Loader from "../components/Loader";
 import { useState } from "react";
@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
+import { extractErrorMessage } from "../utils/extractError";
 
 type SizeOption = "small" | "medium" | "large";
 
@@ -15,7 +16,10 @@ const ProductPage = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState<SizeOption | null>("large");
+  const [selectedSize, setSelectedSize] = useState<SizeOption>("large");
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const { data: product, isLoading: isProductLoading } = useGetProductByIdQuery(
     id || ""
   );
@@ -24,19 +28,31 @@ const ProductPage = () => {
 
   const handleAddToCart = async () => {
     if (!userInfo) {
-      toast.error("Please login");
+      navigate("/login", { state: { from: location } });
       return;
     }
 
+    if (!product || !selectedSize) return;
+
+    const { _id, price, productName, fragrance, images } = product;
+
+    const cartItem = {
+      productId: _id,
+      quantity,
+      price: price[selectedSize],
+      productName,
+      fragrance,
+      size: selectedSize,
+      image: images[0],
+    };
+
+
     try {
-      await addCart({ productId: product?._id || "", quantity }).unwrap();
+      await addCart(cartItem).unwrap();
       toast.success("Product added to Cart");
     } catch (err) {
-      if (err && typeof err === "object" && "data" in err) {
-        toast.error((err as { data: { message: string } }).data.message);
-      } else {
-        toast.error(`An unexpected error occurred: ${err}`);
-      }
+      console.error(err);
+      toast.error(extractErrorMessage(err));
     }
   };
 
@@ -80,13 +96,13 @@ const ProductPage = () => {
                   <>
                     <button
                       onClick={handlePreviousImage}
-                      className='absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors'
+                      className='absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors cursor-pointer'
                     >
                       <ChevronLeft className='h-6 w-6 text-candledark' />
                     </button>
                     <button
                       onClick={handleNextImage}
-                      className='absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors'
+                      className='absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors cursor-pointer'
                     >
                       <ChevronRight className='h-6 w-6 text-candledark' />
                     </button>
@@ -148,7 +164,7 @@ const ProductPage = () => {
                             className={`px-4 py-2 border rounded-md text-sm ${
                               selectedSize === size
                                 ? "border-candleamber bg-candleamber text-white"
-                                : "border-border text-candledark hover:border-candleamber"
+                                : "border-border text-candledark hover:border-candleamber cursor-pointer"
                             } transition-colors`}
                           >
                             {size.charAt(0).toUpperCase() + size.slice(1)}
@@ -190,7 +206,7 @@ const ProductPage = () => {
                   <div className='flex items-center  focus:border-candleamber'>
                     <button
                       onClick={() => handleQuantityChange(quantity - 1)}
-                      className='w-10 h-10 border border-border rounded-l-md flex items-center justify-center hover:bg-secondary transition-colors hover:border-candleamber'
+                      className='w-10 h-10 border border-border rounded-l-md flex items-center justify-center hover:bg-secondary transition-colors  cursor-pointer'
                     >
                       <Minus className='h-4 w-4' />
                     </button>
@@ -202,11 +218,11 @@ const ProductPage = () => {
                       onChange={(e) =>
                         handleQuantityChange(parseInt(e.target.value) || 1)
                       }
-                      className='w-16 h-10 border-y border-y-border border-x border-x-transparent text-center focus:outline-none hover:border-candleamber'
+                      className='w-16 h-10 border-y border-y-border border-x border-x-transparent text-center focus:outline-none '
                     />
                     <button
                       onClick={() => handleQuantityChange(quantity + 1)}
-                      className='w-10 h-10 border border-border rounded-r-md flex items-center justify-center hover:bg-secondary transition-colors hover:border-candleamber'
+                      className='w-10 h-10 border border-border rounded-r-md flex items-center justify-center hover:bg-secondary transition-colors  cursor-pointer'
                     >
                       <Plus className='h-4 w-4' />
                     </button>

@@ -1,6 +1,5 @@
 import Cart from '../models/cartModel.mjs';
 import HttpError from '../utils/httpError.mjs';
-import asyncHandler from 'express-async-handler';
 import Product from '../models/productModel.mjs';
 import { CREATED, NOT_FOUND, OK } from '../constants/http.codes.mjs';
 
@@ -65,7 +64,7 @@ export const cartUpdateQuantityHandler = async (data, user) => {
   return cart;
 };
 
-export const addCartHandler = async (itemData, userId) => asyncHandler(async (req, res, next) => {
+export const addCartHandler = async (itemData, userId) => {
   let statusCode;
 
   const product = await Product.findById(itemData.productId);
@@ -89,15 +88,16 @@ export const addCartHandler = async (itemData, userId) => asyncHandler(async (re
         quantity: itemData.quantity,
         price: itemData.price,
         size: itemData.size,
-        productName: itemData.productName | product.productName,
-        fragrance: itemData.fragrance | product.fragrance,
-        image: itemData.image | product.images[0],
+        productName: itemData.productName,
+        fragrance: itemData.fragrance,
+        image: itemData.image,
       });
     }
 
     // Recalculate totalPrice
     document.totalPrice = document.items.reduce((acc, item) => acc + item.quantity * item.price, 0);
     await document.save();
+
     statusCode = OK;
 
     return { document, statusCode }
@@ -110,9 +110,9 @@ export const addCartHandler = async (itemData, userId) => asyncHandler(async (re
         quantity: itemData.quantity,
         price: itemData.price,
         size: itemData.size,
-        productName: itemData.productName | product.productName,
-        fragrance: itemData.fragrance | product.fragrance,
-        image: itemData.image | product.images[0]
+        productName: itemData.productName,
+        fragrance: itemData.fragrance,
+        image: itemData.image
       }],
       totalPrice: itemData.price * itemData.quantity
     });
@@ -120,4 +120,4 @@ export const addCartHandler = async (itemData, userId) => asyncHandler(async (re
 
     return { document, statusCode }
   }
-});
+};

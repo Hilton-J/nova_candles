@@ -4,10 +4,11 @@ import { useSelector } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 import { useGetUserCartQuery } from "../slices/cartApiSlice";
 import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+// import { useState } from "react";
 
 const CartPage = () => {
+  // const [quantity, setQuantity] = useState(1);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-
   const { data: cart } = useGetUserCartQuery(userInfo ? undefined : skipToken);
 
   // console.log(cart);
@@ -51,22 +52,22 @@ const CartPage = () => {
                 {cart?.items.map((item) => {
                   const itemTotal = item.price * item.quantity;
                   return (
-                    <div key={`${item.productId._id}`} className='p-4'>
+                    <div key={`${item.productId}`} className='p-4'>
                       <div className='md:grid grid-cols-12 gap-4 items-center'>
                         {/* Product Info (Mobile & Desktop) */}
                         <div className='col-span-6'>
                           <div className='flex items-center'>
                             <img
-                              src={item.productId.images?.[0]}
-                              alt={item.productId.productName}
+                              src={item.image}
+                              alt={item.productName}
                               className='w-20 h-20 object-cover rounded-md'
                             />
                             <div className='ml-4'>
-                              <h3 className='font-medium text-candledark'>
-                                {/* {item.name} */}
+                              <h3 className='capitalize font-medium text-candledark'>
+                                {item.productName}
                               </h3>
                               <p className='text-candlegray text-sm'>
-                                {/* {item.fragrance} */}
+                                {item.fragrance}
                               </p>
                               {/* {item.size && (
                                 <p className='text-candlegray text-sm'>
@@ -77,7 +78,7 @@ const CartPage = () => {
                               )} */}
                               {/* Mobile Only Price */}
                               <p className='md:hidden text-candleamber font-medium mt-2'>
-                                ${item.price.toFixed(2)}
+                                R{item.price.toFixed(2)}
                               </p>
                             </div>
                           </div>
@@ -207,7 +208,7 @@ const CartPage = () => {
                 <div className='flex justify-between'>
                   <span className='text-candlegray'>Subtotal</span>
                   <span className='font-medium text-candledark'>
-                    {/* ${totalPrice.toFixed(2)} */}
+                    R{cart.totalPrice.toFixed(2)}
                   </span>
                 </div>
                 <div className='flex justify-between'>
@@ -222,7 +223,7 @@ const CartPage = () => {
                 <div className='flex justify-between'>
                   <span className='font-medium text-candledark'>Total</span>
                   <span className='font-medium text-xl text-candledark'>
-                    {/* ${totalPrice.toFixed(2)} */}
+                    R{cart.totalPrice.toFixed(2)}
                   </span>
                 </div>
               </div>

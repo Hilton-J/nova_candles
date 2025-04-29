@@ -3,6 +3,7 @@ import { OK } from '../constants/http.codes.mjs';
 import { getUserCartHandler, cartRemoveHandler, cartRemoveItemHandler, cartUpdateQuantityHandler, addCartHandler } from '../services/cartService.mjs';
 
 export const getUserCart = asyncHandler(async (req, res) => {
+console.log(req.user);
 
   const userCart = await getUserCartHandler(req.user?._id);
 

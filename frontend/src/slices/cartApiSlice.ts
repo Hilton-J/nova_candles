@@ -7,7 +7,15 @@ const cartApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     addToCart: builder.mutation<
       IMutationResponse<ICart>,
-      { productId: string; quantity: number }
+      {
+        productId: string;
+        quantity: number;
+        price: number;
+        productName: string;
+        fragrance: string;
+        size: string;
+        image: string;
+      }
     >({
       query: (data) => ({
         url: `${CART_URL}/add`,

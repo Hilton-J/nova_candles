@@ -95,14 +95,18 @@ export interface IUser {
 }
 
 export interface CartItem {
-  productId: Partial<IProduct>;
+  productId: string;
   quantity: number;
   price: number;
+  fragrance: string;
+  productName: string;
+  size: string;
+  image: string;
 }
 
 export interface ICart {
   _id: string;
-  user: string;
+  userId: string;
   items: CartItem[];
   totalPrice: number;
   createdAt?: string;
