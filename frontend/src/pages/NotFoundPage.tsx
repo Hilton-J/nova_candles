@@ -1,12 +1,12 @@
 import { Link } from "react-router";
-import NavBar from "./NavBar";
-import Footer from "./Footer";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
-const NotFound = () => {
+const NotFoundPage = () => {
   return (
-    <>
+    <section className='h-screen flex flex-col'>
       <NavBar />
-      <div className='container mx-auto px-4 py-20 text-center'>
+      <div className='container flex-1 mx-auto px-4 py-20 text-center'>
         <h1 className='font-playfair text-6xl font-medium text-candledark mb-4'>
           404
         </h1>
@@ -21,8 +21,8 @@ const NotFound = () => {
         </Link>
       </div>
       <Footer />
-    </>
+    </section>
   );
 };
 
-export default NotFound;
+export default NotFoundPage;

@@ -1,6 +1,5 @@
 import { apiSlice } from "./apiSlice";
 import {
-  UserInfo,
   IUser,
   IMutationResponse,
   ApiResponce,
@@ -15,7 +14,7 @@ interface LoginRequest {
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<UserInfo, LoginRequest>({
+    login: builder.mutation<IUser, LoginRequest>({
       query: (data) => ({
         url: `${USERS_URL}/login`,
         method: "POST",

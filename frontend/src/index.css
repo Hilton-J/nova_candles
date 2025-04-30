@@ -2,6 +2,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rufina:wght@400;700&display=swap");
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
 /* @import "react-modern-drawer/dist/index.css"; */
 
 @theme {
@@ -15,6 +17,7 @@
   --color-candlelight: #fdf9f3;
   --color-candledark: #403d39;
   --color-candlegray: #8a8782;
+  --color-accent-foreground: #1d130f;
   --font-cinzel: "Cinzel Decorative";
   --font-playfair: "Playfair Display";
   --foreground: #382e27;

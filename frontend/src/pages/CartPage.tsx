@@ -69,13 +69,13 @@ const CartPage = () => {
                               <p className='text-candlegray text-sm'>
                                 {item.fragrance}
                               </p>
-                              {/* {item.size && (
+                              {item.size && (
                                 <p className='text-candlegray text-sm'>
                                   Size:{" "}
                                   {item.size.charAt(0).toUpperCase() +
                                     item.size.slice(1)}
                                 </p>
-                              )} */}
+                              )}
                               {/* Mobile Only Price */}
                               <p className='md:hidden text-candleamber font-medium mt-2'>
                                 R{item.price.toFixed(2)}

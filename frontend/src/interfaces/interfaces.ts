@@ -7,7 +7,7 @@ export interface UserInfo {
 }
 
 export interface AuthState {
-  userInfo: UserInfo | null;
+  userInfo: IUser | null;
 }
 
 export interface ApiResponce<T> {
@@ -86,8 +86,8 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
-  cellPhoneNo: string;
-  password?: string;
+  phoneNumber: string;
+  // password?: string;
   role: string;
   shipToAddress: IAddress[];
   createdAt?: string;
