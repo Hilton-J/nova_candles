@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className='bg-candlelight border-t border-black/20 pt-16 pb-8'>
       <div className='container mx-auto px-4'>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-8'>
+        <div className='grid grid-cols-1 md-grid-cols-4 gap-8'>
           <div className='md:col-span-1'>
             <Link
               to='/'
