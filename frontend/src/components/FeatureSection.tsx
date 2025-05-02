@@ -1,5 +1,3 @@
-// import image from "../assets/images/section.webp";
-
 import { Award, Flame, Leaf, ShieldCheck } from "lucide-react";
 
 const FeatureSection = () => {

@@ -1,13 +1,13 @@
+import { useState } from "react";
+import { RootState } from "../store";
+import { toast } from "react-toastify";
+import Loader from "../components/Loader";
+import { useSelector } from "react-redux";
+import { extractErrorMessage } from "../utils/extractError";
+import { useAddToCartMutation } from "../slices/cartApiSlice";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useGetProductByIdQuery } from "../slices/productApiSlice";
-import Loader from "../components/Loader";
-import { useState } from "react";
-import { useAddToCartMutation } from "../slices/cartApiSlice";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
 import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
-import { extractErrorMessage } from "../utils/extractError";
 
 type SizeOption = "small" | "medium" | "large";
 

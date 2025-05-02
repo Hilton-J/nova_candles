@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 // import hero from "../assets/images/hero1.jpg";
+
 const Hero = () => {
   return (
     <section className='relative bg-hero-pattern'>

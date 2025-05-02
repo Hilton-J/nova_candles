@@ -1,49 +1,21 @@
-import { NavLink } from "react-router";
-// import { HiOutlineShoppingBag, HiOutlineUser } from "react-icons/hi2";
-import { ShoppingCart, Menu, X, User } from "lucide-react";
-// import { OutletContext } from "../interfaces/interfaces";
-import { /*useDispatch,*/ useSelector } from "react-redux";
-import { /*AppDispatch,*/ RootState } from "../store";
-import { useGetUserCartQuery } from "../slices/cartApiSlice";
 import Cart from "./Cart";
 import { useState } from "react";
+import { RootState } from "../store";
+import { NavLink } from "react-router";
+import { useSelector } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query/react";
-// import { useLogoutMutation } from "../slices/userApiSlice";
-// import { logout } from "../slices/authSlice";
-// import { toast } from "react-toastify";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
+import { useGetUserCartQuery } from "../slices/cartApiSlice";
 
 const NavBar = () => {
   const [openCart, setOpenCart] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.auth);
-
   const { data: cart } = useGetUserCartQuery(userInfo ? undefined : skipToken);
-  // const [openProfile, setOpenProfile] = useState(false);
-  // const [logoutApiCall] = useLogoutMutation();
-
-  // const dispatch = useDispatch<AppDispatch>();
 
   const toggleDrawer = () => {
     setOpenCart((prevState) => !prevState);
   };
-
-  // const toggleProfile = () => {
-  //   setOpenProfile((prevState) => !prevState);
-  // };
-
-  // const logoutHandler = async () => {
-  //   setOpenProfile((prevState) => !prevState);
-  //   try {
-  //     await logoutApiCall({}).unwrap();
-  //     dispatch(logout());
-  //   } catch (error) {
-  //     if (error && typeof error === "object" && "data" in error) {
-  //       toast.error((error as { data: { message: string } }).data.message);
-  //     } else {
-  //       toast.error(`An unexpected error occurred: ${error}`);
-  //     }
-  //   }
-  // };
 
   const activeNavLink = (isActive: boolean) =>
     isActive ? "text-candleamber font-medium" : "text-candledark";

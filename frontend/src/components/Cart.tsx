@@ -1,13 +1,13 @@
-// import Drawer from "react-modern-drawer";
-import { CartProps } from "../interfaces/interfaces";
-import { RiDeleteBin5Line, RiCloseFill } from "react-icons/ri";
-import { HiOutlinePlusSm, HiOutlineMinusSm } from "react-icons/hi";
-import { Link } from "react-router";
 import {
   useRemoveCartItemMutation,
   useUpdateItemQuantityMutation,
 } from "../slices/cartApiSlice";
+import { Link } from "react-router";
 import { toast } from "react-toastify";
+// import Drawer from "react-modern-drawer";
+import { CartProps } from "../interfaces/interfaces";
+import { RiDeleteBin5Line, RiCloseFill } from "react-icons/ri";
+import { HiOutlinePlusSm, HiOutlineMinusSm } from "react-icons/hi";
 
 const Cart = ({ toggleDrawer, cart }: CartProps) => {
   const [removeItem] = useRemoveCartItemMutation();

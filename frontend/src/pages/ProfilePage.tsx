@@ -13,14 +13,14 @@ import {
   useUpdateUserMutation,
 } from "../slices/userApiSlice";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { logout, setCredentials } from "../slices/authSlice";
 import { TabItem, Tabs } from "flowbite-react";
+import { IUser } from "../interfaces/interfaces";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { extractErrorMessage } from "../utils/extractError";
-import { useForm } from "react-hook-form";
-import { IUser } from "../interfaces/interfaces";
+import { logout, setCredentials } from "../slices/authSlice";
 
 // const customTheme = createTheme({
 //   pills:
@@ -151,7 +151,7 @@ const ProfilePage = () => {
                   type='email'
                   id='email'
                   disabled
-                  name='email'
+                  {...register('email')}
                 />
               </div>
 
@@ -187,7 +187,7 @@ const ProfilePage = () => {
 
               <button
                 type='submit'
-                className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors disabled:bg-candledark/50'
+                className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors disabled:bg-candledark/50 disabled:cursor-not-allowed'
                 disabled={!isDirty}
               >
                 {isLoading ? <>Saving...</> : "Save Changes"}

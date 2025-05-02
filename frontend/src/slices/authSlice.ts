@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser, AuthState } from "../interfaces/interfaces";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: AuthState = {
   userInfo: localStorage.getItem("userInfo")

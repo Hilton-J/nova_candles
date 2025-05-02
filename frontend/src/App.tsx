@@ -1,16 +1,17 @@
-import { Routes, Route, useLocation } from "react-router";
-import AdminLayout from "./layouts/AdminLayout";
+import { useEffect } from "react";
+import Shop from "./components/Shop";
+import CartPage from "./pages/CartPage";
+import AboutPage from "./pages/AboutPage";
+import LoginPage from "./pages/LoginPage";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
-import AboutPage from "./pages/AboutPage";
-import Shop from "./components/Shop";
 import ProductPage from "./pages/ProductPage";
-import { useEffect } from "react";
-import NotFoundPage from "./pages/NotFoundPage";
+import ProfilePage from "./pages/ProfilePage";
 import ContactPage from "./pages/ContactPage";
-import LoginPage from "./pages/LoginPage";
-import CartPage from "./pages/CartPage";
-import ProfilePage from "./pages/profilePage";
+import AdminLayout from "./layouts/AdminLayout";
+import NotFoundPage from "./pages/NotFoundPage";
+import { Routes, Route, useLocation } from "react-router";
+import PrivateRoute from "./components/PrivateRoute";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -32,11 +33,14 @@ function App() {
           <Route index element={<LandingPage />} />
           <Route path='/shop' element={<Shop />} />
           <Route path='/cart' element={<CartPage />} />
-          <Route path='/about' element={<AboutPage />} />
           <Route path='/login' element={<LoginPage />} />
+          <Route path='/about' element={<AboutPage />} />
           <Route path='/contact' element={<ContactPage />} />
-          <Route path='/profile' element={<ProfilePage />} />
           <Route path='/product/:id' element={<ProductPage />} />
+
+          <Route element={<PrivateRoute />}>
+            <Route path='/profile' element={<ProfilePage />} />
+          </Route>
         </Route>
         <Route path='*' element={<NotFoundPage />} />
       </Routes>

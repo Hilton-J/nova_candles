@@ -1,5 +1,5 @@
-import { ICart, IMutationResponse } from "../interfaces/interfaces";
 import { apiSlice } from "./apiSlice";
+import { ICart, IMutationResponse } from "../interfaces/interfaces";
 
 const CART_URL = "/api/cart";
 

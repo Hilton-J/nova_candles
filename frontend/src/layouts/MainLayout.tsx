@@ -1,12 +1,9 @@
-// import { useState } from "react";
+import { Outlet } from "react-router";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
-import { Outlet } from "react-router";
 import { ToastContainer } from "react-toastify";
-// import LoginModal from "../components/LoginModal";
 
 const MainLayout = () => {
-  // const [openLoginModal, setOpenLoginModal] = useState(false);
 
   return (
     <>

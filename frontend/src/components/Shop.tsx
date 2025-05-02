@@ -1,7 +1,7 @@
-import { IProduct } from "../interfaces/interfaces";
-import { useGetAllProductQuery } from "../slices/productApiSlice";
 import Loader from "./Loader";
 import ProductCard from "./ProductCard";
+import { IProduct } from "../interfaces/interfaces";
+import { useGetAllProductQuery } from "../slices/productApiSlice";
 
 const Shop = () => {
   const { data, isLoading } = useGetAllProductQuery(1);

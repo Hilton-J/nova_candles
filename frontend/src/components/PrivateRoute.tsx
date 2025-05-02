@@ -1,6 +1,6 @@
-import { Navigate, Outlet } from "react-router";
-import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet } from "react-router";
 
 const PrivateRoute = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);

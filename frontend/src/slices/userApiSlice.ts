@@ -1,10 +1,10 @@
-import { apiSlice } from "./apiSlice";
 import {
   IUser,
   IMutationResponse,
   ApiResponce,
   LoginRequest,
 } from "../interfaces/interfaces";
+import { apiSlice } from "./apiSlice";
 
 const USERS_URL = "/api/users";
 

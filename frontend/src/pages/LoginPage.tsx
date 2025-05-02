@@ -1,15 +1,13 @@
-// import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { useLoginMutation } from "../slices/userApiSlice";
-import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
-import { Lock, Mail } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router";
-import { extractErrorMessage } from "../utils/extractError";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import { Lock, Mail } from "lucide-react";
+import { setCredentials } from "../slices/authSlice";
 import { LoginRequest } from "../interfaces/interfaces";
-// import { RiCloseFill } from "react-icons/ri";
+import { useLoginMutation } from "../slices/userApiSlice";
+import { extractErrorMessage } from "../utils/extractError";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const LoginPage = () => {
   const {
