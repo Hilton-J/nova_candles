@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { useLoginMutation } from "../slices/userApiSlice";
@@ -7,11 +7,16 @@ import { toast } from "react-toastify";
 import { Lock, Mail } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { extractErrorMessage } from "../utils/extractError";
+import { useForm } from "react-hook-form";
+import { LoginRequest } from "../interfaces/interfaces";
 // import { RiCloseFill } from "react-icons/ri";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginRequest>();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,10 +26,9 @@ const LoginPage = () => {
 
   const [login, { isLoading }] = useLoginMutation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: LoginRequest) => {
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await login(data).unwrap();
       dispatch(setCredentials({ ...res }));
       toast.success(`Logged in Successfully`);
       navigate(from, { replace: true });
@@ -44,7 +48,7 @@ const LoginPage = () => {
             <p className='mt-2 text-candlegray'>Sign in to your account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className='space-y-4 mt-8'>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4 mt-8'>
             <div className='space-y-3'>
               <label className='block text-destructiv' htmlFor='email'>
                 Email
@@ -55,11 +59,20 @@ const LoginPage = () => {
                   className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10'
                   type='email'
                   id='email'
-                  name='email'
                   placeholder='youremail@example.com'
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: "Enter a valid email address",
+                    },
+                  })}
                 />
+                {errors.email && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
             </div>
             <div className='space-y-3'>
@@ -72,11 +85,20 @@ const LoginPage = () => {
                   className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10'
                   type='password'
                   id='password'
-                  name='password'
                   placeholder='*******'
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 3,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
                 />
+                {errors.password && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
             </div>
 

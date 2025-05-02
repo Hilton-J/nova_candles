@@ -3,14 +3,10 @@ import {
   IUser,
   IMutationResponse,
   ApiResponce,
+  LoginRequest,
 } from "../interfaces/interfaces";
 
 const USERS_URL = "/api/users";
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

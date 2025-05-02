@@ -66,14 +66,12 @@ const CartPage = () => {
                               <h3 className='capitalize font-medium text-candledark'>
                                 {item.productName}
                               </h3>
-                              <p className='text-candlegray text-sm'>
+                              <p className='text-candlegray text-sm capitalize'>
                                 {item.fragrance}
                               </p>
                               {item.size && (
-                                <p className='text-candlegray text-sm'>
-                                  Size:{" "}
-                                  {item.size.charAt(0).toUpperCase() +
-                                    item.size.slice(1)}
+                                <p className='text-candlegray text-sm capitalize'>
+                                  Size: {item.size}
                                 </p>
                               )}
                               {/* Mobile Only Price */}
@@ -86,7 +84,7 @@ const CartPage = () => {
 
                         {/* Price (Desktop Only) */}
                         <div className='hidden md:block col-span-2 text-center'>
-                          ${item.price.toFixed(2)}
+                          R{item.price.toFixed(2)}
                         </div>
 
                         {/* Quantity */}
@@ -100,7 +98,7 @@ const CartPage = () => {
                               //     item.size
                               //   )
                               // }
-                              className='w-8 h-8 border border-border rounded-l-md flex items-center justify-center hover:bg-secondary transition-colors'
+                              className='w-8 h-8 border border-border rounded-l-md flex items-center justify-center hover:bg-secondary transition-colors cursor-pointer'
                             >
                               <Minus className='h-3 w-3' />
                             </button>
@@ -126,7 +124,7 @@ const CartPage = () => {
                               //     item.size
                               //   )
                               // }
-                              className='w-8 h-8 border border-border rounded-r-md flex items-center justify-center hover:bg-secondary transition-colors'
+                              className='w-8 h-8 border border-border rounded-r-md flex items-center justify-center hover:bg-secondary transition-colors cursor-pointer'
                             >
                               <Plus className='h-3 w-3' />
                             </button>
@@ -136,20 +134,20 @@ const CartPage = () => {
                         {/* Total & Remove (Desktop) */}
                         <div className='col-span-2 text-right hidden md:block'>
                           <div className='font-medium text-candledark'>
-                            ${itemTotal.toFixed(2)}
+                            R{itemTotal.toFixed(2)}
                           </div>
                         </div>
 
                         {/* Mobile Total & Remove */}
                         <div className='md:hidden flex justify-between items-center mt-4'>
                           <div className='font-medium text-candledark'>
-                            Total: ${itemTotal.toFixed(2)}
+                            Total: R{itemTotal.toFixed(2)}
                           </div>
                           <button
                             // onClick={() =>
                             //   removeFromCart(item.productId, item.size)
                             // }
-                            className='text-candlegray hover:text-red-500 transition-colors'
+                            className='text-candlegray hover:text-red-500 transition-colors cursor-pointer'
                           >
                             <Trash2 className='h-5 w-5' />
                           </button>
@@ -161,7 +159,7 @@ const CartPage = () => {
                             // onClick={() =>
                             //   removeFromCart(item.productId, item.size)
                             // }
-                            className='text-candlegray hover:text-red-500 transition-colors'
+                            className='text-candlegray hover:text-red-500 transition-colors cursor-pointer'
                           >
                             <Trash2 className='h-5 w-5' />
                           </button>
@@ -228,7 +226,7 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <button className='w-full py-3 bg-candleamber text-white rounded-md hover:bg-opacity-90 transition-colors mb-4'>
+              <button className='w-full py-3 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors mb-4 cursor-pointer'>
                 Proceed to Checkout
               </button>
 

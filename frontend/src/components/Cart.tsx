@@ -10,7 +10,6 @@ import {
 import { toast } from "react-toastify";
 
 const Cart = ({ toggleDrawer, cart }: CartProps) => {
-  
   const [removeItem] = useRemoveCartItemMutation();
   const [updateQuantity] = useUpdateItemQuantityMutation();
   // const [removeItem, {isLoading: loadingRemoveItem}] = useRemoveCartItemMutation();
@@ -69,8 +68,8 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
             >
               {/* Product Image */}
               <img
-                src={item.productId?.images?.[0] || "/placeholder.png"}
-                alt={item.productId?.productName || "Product Image"}
+                src={item.image || "/placeholder.png"}
+                alt={item.productName || "Product Image"}
                 className='size-20 object-cover rounded'
               />
 
@@ -78,9 +77,9 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
               <div className='flex-1 flex justify-between items-center text-base'>
                 <div className='flex flex-col justify-between font-semibold'>
                   <Link
-                    to={`/products/${item.productId?.productName}/${item.price}`}
+                    to={`/products/${item.productName}/${item.price}`}
                   >
-                    {item.productId?.productName}
+                    {item.productName}
                   </Link>
 
                   <div className='flex items-center gap-3 bg-white/10 rounded-full py-2'>
@@ -90,7 +89,7 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
                         className='hover:text-accent hover:bg-gray-300 rounded-full transition-colors'
                         onClick={() =>
                           handleQuantityChange(
-                            item.productId._id,
+                            item.productId,
                             item.quantity - 1
                           )
                         }
@@ -102,7 +101,7 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
                         className='hover:text-accent hover:bg-gray-300 rounded-full transition-colors'
                         onClick={() =>
                           handleQuantityChange(
-                            item.productId._id,
+                            item.productId,
                             item.quantity + 1
                           )
                         }
@@ -115,7 +114,7 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
                 </div>
                 <RiDeleteBin5Line
                   className='text-red-500 cursor-pointer hover:text-red-700 text-2xl '
-                  onClick={() => handlesRemoveItem(item.productId._id || "")}
+                  onClick={() => handlesRemoveItem(item.productId || "")}
                 />
               </div>
             </div>
@@ -129,7 +128,7 @@ const Cart = ({ toggleDrawer, cart }: CartProps) => {
         <span className='flex justify-between'>
           Total:{" "}
           <p className='font-bold'>
-            {cart ? <>R{cart?.totalPrice.toFixed(2)}</> : '-'}
+            {cart ? <>R{cart?.totalPrice.toFixed(2)}</> : "-"}
           </p>
         </span>
         <button

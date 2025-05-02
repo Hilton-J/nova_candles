@@ -80,16 +80,20 @@ export interface IAddress {
   province: string;
   postalCode: string;
 }
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
 
 export interface IUser {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
+  _id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
   // password?: string;
-  role: string;
-  shipToAddress: IAddress[];
+  role?: string;
+  shipToAddress?: IAddress[];
   createdAt?: string;
   updatedAt?: string;
 }

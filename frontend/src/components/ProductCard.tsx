@@ -20,7 +20,7 @@ const ProductCard = (props: IProduct) => {
 
       <div className='p-4 flex flex-col flex-grow'>
         <div className='flex justify-between items-start mb-2'>
-          <h3 className='font-serif text-lg font-medium text-candledark group-hover:text-candleamber transition-colors'>
+          <h3 className='font-serif text-lg font-medium text-candledark group-hover:text-candleamber transition-colors capitalize'>
             {props.productName}
           </h3>
           <span className='text-candleamber font-medium'>

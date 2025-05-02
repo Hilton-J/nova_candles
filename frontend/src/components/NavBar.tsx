@@ -92,7 +92,7 @@ const NavBar = () => {
                   className={({ isActive }) =>
                     `${activeNavLink(
                       isActive
-                    )} flex items-center text-sm hover:text-candleamber transition-colors`
+                    )} flex items-center text-sm hover:text-candleamber transition-colors uppercase`
                   }
                 >
                   <User className='mr-1.5 h-4 w-4' />

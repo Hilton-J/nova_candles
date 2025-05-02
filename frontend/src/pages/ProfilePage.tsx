@@ -8,13 +8,19 @@ import {
   Truck,
   User,
 } from "lucide-react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
-import { TabItem, Tabs } from "flowbite-react";
+import {
+  useLogoutMutation,
+  useUpdateUserMutation,
+} from "../slices/userApiSlice";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
+import { logout, setCredentials } from "../slices/authSlice";
+import { TabItem, Tabs } from "flowbite-react";
+import { AppDispatch, RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
 import { extractErrorMessage } from "../utils/extractError";
-// import { Link } from "react-router";
-import { useUpdateUserMutation } from "../slices/userApiSlice";
+import { useForm } from "react-hook-form";
+import { IUser } from "../interfaces/interfaces";
 
 // const customTheme = createTheme({
 //   pills:
@@ -22,20 +28,49 @@ import { useUpdateUserMutation } from "../slices/userApiSlice";
 
 const ProfilePage = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
-  const [data, { isLoading }] = useUpdateUserMutation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty },
+  } = useForm<Partial<IUser>>({
+    mode: "onChange",
+    defaultValues: {
+      firstName: userInfo?.firstName,
+      lastName: userInfo?.lastName,
+      email: userInfo?.email,
+      phoneNumber: userInfo?.phoneNumber,
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const [logoutApiCall] = useLogoutMutation();
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: Partial<IUser>) => {
+    // e.preventDefault();
     try {
-      
-      console.log("Minor changes");
+      const res = await updateUser(data).unwrap();
+      const { results, message } = res;
+      dispatch(setCredentials({ ...results }));
+      toast.success(message);
+    } catch (err) {
+      toast.error(extractErrorMessage(err));
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutApiCall({}).unwrap();
+      dispatch(logout());
+      navigate("/");
     } catch (err) {
       toast.error(extractErrorMessage(err));
     }
   };
 
   return (
-    <div className='container mx-auto py-16 px-4'>
+    <div className='container mx-auto py-16 px-4 '>
       <div className='mb-8 flex flex-col md:flex-row md:items-center md:justify-between'>
         <div>
           <h1 className='text-3xl font-serif font-bold text-candledark'>
@@ -47,10 +82,10 @@ const ProfilePage = () => {
         </div>
         <button
           className='flex items-center mt-4 md:mt-0 px-4 py-2 border border-border hover:bg-secondary hover:text-accent-foreground rounded-md text-sm font-medium h-10 transition-colors cursor-pointer'
-          // onClick={logout}
+          onClick={handleLogout}
         >
           <LogOut className='mr-2 h-4 w-4' />
-          Sign Out
+          Log Out
         </button>
       </div>
 
@@ -58,8 +93,11 @@ const ProfilePage = () => {
         {/* TABS */}
         <Tabs aria-label='Pills' variant='pills'>
           {/* PROFILE */}
-          <TabItem active title='Profile' icon={User}>
-            <form onSubmit={handleSubmit} className='space-y-6 max-w-[50%]'>
+          <TabItem active title='Profile' icon={User} className='bg-black'>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className='space-y-6 max-w-[50%]'
+            >
               <div className='space-y-3'>
                 <label
                   className='block text-destructiv font-medium'
@@ -71,8 +109,10 @@ const ProfilePage = () => {
                   className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
                   type='text'
                   id='firstName'
-                  name='firstName'
-                  defaultValue={userInfo?.firstName}
+                  {...register("firstName", {
+                    required: "First Name is required",
+                  })}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -87,9 +127,16 @@ const ProfilePage = () => {
                   className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
                   type='text'
                   id='lastName'
-                  name='lastName'
-                  defaultValue={userInfo?.lastName}
+                  {...register("lastName", {
+                    required: "Last Name is required",
+                  })}
+                  disabled={isLoading}
                 />
+                {errors.lastName && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    {errors.lastName.message}
+                  </p>
+                )}
               </div>
 
               <div className='space-y-3'>
@@ -103,9 +150,8 @@ const ProfilePage = () => {
                   className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
                   type='email'
                   id='email'
-                  name='email'
-                  defaultValue={userInfo?.email}
                   disabled
+                  name='email'
                 />
               </div>
 
@@ -118,19 +164,31 @@ const ProfilePage = () => {
                 </label>
                 <input
                   className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
-                  type='text'
-                  inputMode='numeric'
-                  pattern='0[6-8][0-9]{8}'
+                  type='tel'
+                  inputMode='tel'
                   id='phoneNumber'
-                  name='phoneNumber'
-                  defaultValue={userInfo?.phoneNumber}
+                  {...register("phoneNumber", {
+                    required: "Phone number is required",
+                    min: 10,
+                    maxLength: 12,
+                    pattern: {
+                      value: /0[6-8][0-9]{8}/i,
+                      message: "Format must be 0655235235",
+                    },
+                  })}
+                  disabled={isLoading}
                 />
+                {errors.phoneNumber && (
+                  <p className='text-red-500 text-sm mt-1'>
+                    {errors.phoneNumber.message}
+                  </p>
+                )}
               </div>
 
               <button
                 type='submit'
-                className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors'
-                disabled={isLoading}
+                className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors disabled:bg-candledark/50'
+                disabled={!isDirty}
               >
                 {isLoading ? <>Saving...</> : "Save Changes"}
               </button>
@@ -263,49 +321,6 @@ const ProfilePage = () => {
           {/* SETTINGS */}
           <TabItem title='Settings' icon={Settings}></TabItem>
         </Tabs>
-        {/* <Tabs defaultDefaultdefaultValue='profile'>
-          <TabsList className='mb-6'>
-            <TabsTrigger defaultValue='profile' className='flex items-center'>
-              <User className='mr-2 h-4 w-4' />
-              Profile
-            </TabsTrigger>
-            <TabsTrigger defaultValue='settings' className='flex items-center'>
-              <Settings className='mr-2 h-4 w-4' />
-              Account Settings
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent defaultValue='profile'>
-            <ProfileForm />
-          </TabsContent>
-
-          <TabsContent defaultValue='settings'>
-            <div className='space-y-4'>
-              <h3 className='text-xl font-medium'>Account Settings</h3>
-              <p className='text-candlegray'>
-                Manage your account settings and preferences.
-              </p>
-
-              <div className='border-t pt-4'>
-                <h4 className='font-medium mb-2'>Email Notifications</h4>
-                <div className='space-y-2'>
-                  <div className='flex items-center justify-between'>
-                    <span>Marketing emails</span>
-                    <input type='checkbox' className='toggle' />
-                  </div>
-                  <div className='flex items-center justify-between'>
-                    <span>New product announcements</span>
-                    <input type='checkbox' className='toggle' defaultChecked />
-                  </div>
-                </div>
-              </div>
-
-              <div className='border-t pt-4'>
-                <Button variant='destructive'>Delete Account</Button>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs> */}
       </div>
     </div>
   );

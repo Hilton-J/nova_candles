@@ -136,7 +136,7 @@ const ProductPage = () => {
 
             {/* Product Details */}
             <div>
-              <h1 className='font-serif text-3xl font-medium text-candledark mb-2'>
+              <h1 className='font-serif text-3xl font-medium text-candledark mb-2 capitalize'>
                 {product?.productName}
               </h1>
               <p className='text-candleamber text-xl font-medium mb-6'>
@@ -165,9 +165,9 @@ const ProductPage = () => {
                               selectedSize === size
                                 ? "border-candleamber bg-candleamber text-white"
                                 : "border-border text-candledark hover:border-candleamber cursor-pointer"
-                            } transition-colors`}
+                            } transition-colors capitalize`}
                           >
-                            {size.charAt(0).toUpperCase() + size.slice(1)}
+                            {size}
                           </button>
                         ))}
                     </div>

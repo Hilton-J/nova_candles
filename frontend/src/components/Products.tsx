@@ -6,7 +6,7 @@ import { useGetAllProductQuery } from "../slices/productApiSlice";
 const Products = () => {
   const { data, isLoading } = useGetAllProductQuery(1);
 
-  const product = data?.results.slice(0, 4);
+  const product = data?.results.slice(0, 3);
 
   return (
     <section className='py-20 bg-candlelight'>
