@@ -37,9 +37,9 @@
   h1 {
     font-family: var(--font-rufina);
   }
-  p {
+  /* p {
     font-family: var(--font-playfair);
-  }
+  } */
 }
 
 @layer components {
