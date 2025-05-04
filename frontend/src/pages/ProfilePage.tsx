@@ -1,5 +1,4 @@
 import {
-  Box,
   FileText,
   LogOut,
   MapPin,
@@ -14,13 +13,23 @@ import {
 } from "../slices/userApiSlice";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
-import { TabItem, Tabs } from "flowbite-react";
+import { Link, useNavigate } from "react-router";
+import {
+  TabItem,
+  Tabs,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
 import { IUser } from "../interfaces/interfaces";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { extractErrorMessage } from "../utils/extractError";
 import { logout, setCredentials } from "../slices/authSlice";
+import { useGetOrdersByCustomerQuery } from "../slices/orderApiSlice";
 
 // const customTheme = createTheme({
 //   pills:
@@ -43,6 +52,8 @@ const ProfilePage = () => {
   });
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
+  const { data: userOrders } =
+    useGetOrdersByCustomerQuery(1);
   const [logoutApiCall] = useLogoutMutation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -151,7 +162,7 @@ const ProfilePage = () => {
                   type='email'
                   id='email'
                   disabled
-                  {...register('email')}
+                  {...register("email")}
                 />
               </div>
 
@@ -196,104 +207,46 @@ const ProfilePage = () => {
           </TabItem>
 
           {/* ORDERS */}
-          <TabItem title='Orders' icon={Box}>
+          <TabItem title='Orders' icon={Package}>
             <div className='space-y-6'>
               <div className='flex items-center space-x-2'>
                 <Package className='h-5 w-5 text-candledark' />
                 <h3 className='text-xl font-medium'>My Orders</h3>
               </div>
 
-              {/* {mockOrders.length > 0 ? (
-                <Table>
-                  <TableCaption>A list of your recent orders.</TableCaption>
-                  <TableHeader>
+              {userOrders && userOrders.results.length > 0 ? (
+                <Table hoverable>
+                  {/* TABLE HEADERS */}
+                  <TableHead>
                     <TableRow>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Total</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className='text-right'>Actions</TableHead>
+                      <TableHeadCell>Order Number</TableHeadCell>
+                      <TableHeadCell>Date</TableHeadCell>
+                      <TableHeadCell>Total</TableHeadCell>
+                      <TableHeadCell>Status</TableHeadCell>
+                      <TableHeadCell className='text-right'>
+                        Actions
+                      </TableHeadCell>
                     </TableRow>
-                  </TableHeader>
+                  </TableHead>
+
                   <TableBody>
-                    {mockOrders.map((order) => (
-                      <>
-                        <TableRow key={order.id}>
+                    {userOrders &&
+                      userOrders?.results.map((order) => (
+                        <TableRow key={order._id}>
                           <TableCell className='font-medium'>
-                            {order.id}
+                            {order.orderNumber}
+                          </TableCell>
+                          <TableCell className='font-medium'>
+                            {order.orderDate}
                           </TableCell>
                           <TableCell>
-                            {new Date(order.date).toLocaleDateString()}
+                            {order.totalAmount}
                           </TableCell>
-                          <TableCell>${order.total.toFixed(2)}</TableCell>
                           <TableCell>
-                            <Badge
-                              variant='outline'
-                              className={getStatusColor(order.status)}
-                            >
-                              {order.status.charAt(0).toUpperCase() +
-                                order.status.slice(1)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className='text-right'>
-                            <Button
-                              variant='ghost'
-                              size='sm'
-                              onClick={() => toggleOrderDetails(order.id)}
-                              className='flex items-center'
-                            >
-                              <Eye className='h-4 w-4 mr-1' />
-                              {selectedOrder === order.id ? "Hide" : "View"}
-                            </Button>
+                            Delivered
                           </TableCell>
                         </TableRow>
-                        {selectedOrder === order.id && (
-                          <TableRow>
-                            <TableCell colSpan={5} className='p-0'>
-                              <Card className='bg-gray-50 m-0 rounded-none border-t-0 border-x-0'>
-                                <CardContent className='p-4'>
-                                  <h4 className='font-medium mb-2'>
-                                    Order Items
-                                  </h4>
-                                  <Table>
-                                    <TableHeader>
-                                      <TableRow>
-                                        <TableHead>Item</TableHead>
-                                        <TableHead>Quantity</TableHead>
-                                        <TableHead>Price</TableHead>
-                                      </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                      {order.items.map((item, idx) => (
-                                        <TableRow
-                                          key={`${order.id}-item-${idx}`}
-                                        >
-                                          <TableCell>{item.name}</TableCell>
-                                          <TableCell>{item.quantity}</TableCell>
-                                          <TableCell>
-                                            ${item.price.toFixed(2)}
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
-                                    </TableBody>
-                                  </Table>
-                                  <div className='flex justify-end mt-4 space-x-2'>
-                                    <Button size='sm' variant='outline'>
-                                      Download Invoice
-                                    </Button>
-                                    {order.status === "delivered" && (
-                                      <Button size='sm' variant='outline'>
-                                        Return Items
-                                      </Button>
-                                    )}
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </>
-                    ))}
+                      ))}
                   </TableBody>
                 </Table>
               ) : (
@@ -303,9 +256,14 @@ const ProfilePage = () => {
                   <p className='mt-1 text-sm text-gray-500'>
                     Your orders will appear here once you make a purchase.
                   </p>
-                  <Button className='mt-4'>Start Shopping</Button>
+                  <Link
+                    to='/shop'
+                    className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors disabled:bg-candledark/50 disabled:cursor-not-allowed mt-4'
+                  >
+                    Start Shopping
+                  </Link>
                 </div>
-              )} */}
+              )}
             </div>
           </TabItem>
 
