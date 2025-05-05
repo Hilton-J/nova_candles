@@ -15,26 +15,13 @@ import {
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import {
-  TabItem,
-  Tabs,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
+import { TabItem, Tabs } from "flowbite-react";
 import { IUser } from "../interfaces/interfaces";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { extractErrorMessage } from "../utils/extractError";
 import { logout, setCredentials } from "../slices/authSlice";
 import { useGetOrdersByCustomerQuery } from "../slices/orderApiSlice";
-
-// const customTheme = createTheme({
-//   pills:
-// })
 
 const ProfilePage = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
@@ -217,44 +204,50 @@ const ProfilePage = () => {
               </div>
 
               {userOrders?.results && userOrders.results.length > 0 ? (
-                <Table hoverable>
+                <table className='w-full text-sm text-left rtl:text-right text-gray-500 divide-y divide-secondary'>
                   {/* TABLE HEADERS */}
-                  <TableHead>
-                    <TableRow className='bg-blue-500'>
-                      <TableHeadCell>Order Number</TableHeadCell>
-                      <TableHeadCell>Date</TableHeadCell>
-                      <TableHeadCell>Total</TableHeadCell>
-                      <TableHeadCell>Status</TableHeadCell>
-                      <TableHeadCell className='text-right'>
+                  <thead className='text-sm hover:bg-secondary/40 '>
+                    <tr className='rounded-t-md'>
+                      <th scope='col' className='rounded-tl-md px-6 py-3'>
+                        Order Number
+                      </th>
+                      <th scope='col' className='px-6 py-3'>
+                        Date
+                      </th>
+                      <th scope='col' className='px-6 py-3'>
+                        Total
+                      </th>
+                      <th scope='col' className='px-6 py-3'>
+                        Status
+                      </th>
+                      <th scope='col' className='text-right px-6 py-3'>
                         Actions
-                      </TableHeadCell>
-                    </TableRow>
-                  </TableHead>
+                      </th>
+                    </tr>
+                  </thead>
 
-                  <TableBody className='divide-y'>
+                  <tbody className='divide-y divide-secondary'>
                     {userOrders &&
                       userOrders?.results.map((order) => (
-                        <TableRow key={order._id} className=''>
-                          <TableCell className='font-medium uppercase'>
+                        <tr key={order._id} className='hover:bg-secondary/40'>
+                          <td className='font-medium uppercase px-6 py-3'>
                             {order.orderNumber}
-                          </TableCell>
-                          <TableCell className='font-medium'>
+                          </td>
+                          <td className='font-medium px-6 py-3'>
                             {new Date(order.orderDate).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell>R{order.totalPrice}</TableCell>
-                          <TableCell className='capitalize'>
-                            {order.status}
-                          </TableCell>
-                          <TableCell className='text-right'>
-                            <button className='flex items-center h-9 rounded-md px-3 hover:bg-candlegray hover:text-accent-foreground'>
+                          </td>
+                          <td className="px-6 py-3">R{order.totalPrice}</td>
+                          <td className='capitalize px-6 py-3'>{order.status}</td>
+                          <td className='text-right px-6 py-3'>
+                            <button className='flex items-center h-9 rounded-md px-3 hover:bg-secondary hover:text-accent-foreground'>
                               <Eye className='h-4 w-4 mr-1' />
                               View
                             </button>
-                          </TableCell>
-                        </TableRow>
+                          </td>
+                        </tr>
                       ))}
-                  </TableBody>
-                </Table>
+                  </tbody>
+                </table>
               ) : (
                 <div className='text-center py-12 border rounded-md bg-gray-50'>
                   <Package className='h-12 w-12 mx-auto text-gray-400' />
