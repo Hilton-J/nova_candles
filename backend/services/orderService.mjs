@@ -2,8 +2,7 @@ import Order from '../models/orderModel.mjs';
 import HttpError from '../utils/httpError.mjs';
 import { BAD_REQUEST, NOT_FOUND } from '../constants/http.codes.mjs';
 
-export const getOrdersByCustomer = async (page, userId) => {
-  const limit = 20;
+export const getOrdersByCustomer = async (page, userId, limit) => {
   const skip = (page - 1) * limit;
 
   const document = await Order.find({ userId })

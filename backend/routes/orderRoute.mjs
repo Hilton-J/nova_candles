@@ -5,9 +5,9 @@ import { deleteOrderHandler, getAllOrdersHandler, getOrdersByCustomerHandler, pl
 
 const router = express.Router();
 
-router.route('/', protect)
-  .post(authorizeRoles('customer'), validateOrderPlacement, placeOrderHandler)
-  .get(authorizeRoles('admin'), getAllOrdersHandler);
+router.route('/')
+  .post(protect, authorizeRoles('customer'), validateOrderPlacement, placeOrderHandler)
+  .get(protect, authorizeRoles('admin'), getAllOrdersHandler);
 router.delete('/:id', protect, authorizeRoles('admin'), deleteOrderHandler);
 router.get('/customer', protect, getOrdersByCustomerHandler);
 

@@ -18,8 +18,9 @@ export const placeOrderHandler = asyncHandler(async (req, res) => {
 
 export const getOrdersByCustomerHandler = asyncHandler(async (req, res) => {
   const page = Number(req.query.page) || 1;
+  const limit = 20;
 
-  const { document, totalResults } = await getOrdersByCustomer(page, req.user._id);
+  const { document, totalResults } = await getOrdersByCustomer(page, req.user._id, limit);
 
   res.status(OK).json({
     page,
