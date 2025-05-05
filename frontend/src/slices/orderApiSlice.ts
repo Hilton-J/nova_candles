@@ -24,7 +24,7 @@ const orderApiSlice = apiSlice.injectEndpoints({
     }),
 
     getOrdersByCustomer: builder.query<ApiResponce<IOrder>, number>({
-      query: (page) => `${ORDER_URL}?page=${page}`,
+      query: (page) => `${ORDER_URL}/customer?page=${page}`,
       providesTags: ["Order"],
     }),
   }),

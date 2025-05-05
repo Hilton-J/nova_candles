@@ -47,11 +47,20 @@ export interface IOrder {
   _id: string;
   orderNumber: string;
   orderDate: string;
-  quantity: number;
-  items: string[];
-  totalAmount: number;
+  items: [
+    {
+      productId: string;
+      productName: string;
+      quantity: number;
+      price: number;
+      _id: string;
+    }
+  ];
+  status: string;
+  totalPrice: number;
   userId: string;
   diliveryAddress: IAddress;
+  billingAddress: IAddress;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -70,12 +79,12 @@ export interface IPayment {
 }
 
 export interface IAddress {
-  _id: string;
+  _id?: string;
   recipientName: string;
-  recipientCellNumber: string;
+  recipientLastName: string;
+  recipientPhoneNumber: string;
   streetAddress: string;
-  complex: string;
-  suburb: string;
+  apartment: string;
   city: string;
   province: string;
   postalCode: string;

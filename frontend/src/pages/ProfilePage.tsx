@@ -1,4 +1,5 @@
 import {
+  Eye,
   FileText,
   LogOut,
   MapPin,
@@ -52,11 +53,12 @@ const ProfilePage = () => {
   });
 
   const [updateUser, { isLoading }] = useUpdateUserMutation();
-  const { data: userOrders } =
-    useGetOrdersByCustomerQuery(1);
+  const { data: userOrders } = useGetOrdersByCustomerQuery(1);
   const [logoutApiCall] = useLogoutMutation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
+  console.log(userOrders);
 
   const onSubmit = async (data: Partial<IUser>) => {
     // e.preventDefault();
@@ -214,11 +216,11 @@ const ProfilePage = () => {
                 <h3 className='text-xl font-medium'>My Orders</h3>
               </div>
 
-              {userOrders && userOrders.results.length > 0 ? (
+              {userOrders?.results && userOrders.results.length > 0 ? (
                 <Table hoverable>
                   {/* TABLE HEADERS */}
                   <TableHead>
-                    <TableRow>
+                    <TableRow className='bg-blue-500'>
                       <TableHeadCell>Order Number</TableHeadCell>
                       <TableHeadCell>Date</TableHeadCell>
                       <TableHeadCell>Total</TableHeadCell>
@@ -229,21 +231,25 @@ const ProfilePage = () => {
                     </TableRow>
                   </TableHead>
 
-                  <TableBody>
+                  <TableBody className='divide-y'>
                     {userOrders &&
                       userOrders?.results.map((order) => (
-                        <TableRow key={order._id}>
-                          <TableCell className='font-medium'>
+                        <TableRow key={order._id} className=''>
+                          <TableCell className='font-medium uppercase'>
                             {order.orderNumber}
                           </TableCell>
                           <TableCell className='font-medium'>
-                            {order.orderDate}
+                            {new Date(order.orderDate).toLocaleDateString()}
                           </TableCell>
-                          <TableCell>
-                            {order.totalAmount}
+                          <TableCell>R{order.totalPrice}</TableCell>
+                          <TableCell className='capitalize'>
+                            {order.status}
                           </TableCell>
-                          <TableCell>
-                            Delivered
+                          <TableCell className='text-right'>
+                            <button className='flex items-center h-9 rounded-md px-3 hover:bg-candlegray hover:text-accent-foreground'>
+                              <Eye className='h-4 w-4 mr-1' />
+                              View
+                            </button>
                           </TableCell>
                         </TableRow>
                       ))}
