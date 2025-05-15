@@ -2,14 +2,16 @@ import { AppDispatch } from "../store";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Lock, Mail } from "lucide-react";
+import { Eye, EyeClosed, Lock, Mail } from "lucide-react";
 import { setCredentials } from "../slices/authSlice";
 import { LoginRequest } from "../interfaces/interfaces";
 import { useLoginMutation } from "../slices/userApiSlice";
 import { extractErrorMessage } from "../utils/extractError";
 import { Link, useLocation, useNavigate } from "react-router";
+import { useState } from "react";
 
 const LoginPage = () => {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -52,9 +54,9 @@ const LoginPage = () => {
                 Email
               </label>
               <div className='relative focus:outline-none focus:ring-1 focus:ring-candleamber'>
-                <Mail className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
+                <Mail className='absolute left-3 top-3 h-4 w-4' />
                 <input
-                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10'
+                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10'
                   type='email'
                   id='email'
                   placeholder='youremail@example.com'
@@ -78,10 +80,10 @@ const LoginPage = () => {
                 Password
               </label>
               <div className='relative focus:outline-none focus:ring-1 focus:ring-candleamber'>
-                <Lock className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
+                <Lock className='absolute left-3 top-3 h-4 w-4' />
                 <input
-                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10'
-                  type='password'
+                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10'
+                  type={showPassword ? "text" : "password"}
                   id='password'
                   placeholder='*******'
                   {...register("password", {
@@ -92,6 +94,19 @@ const LoginPage = () => {
                     },
                   })}
                 />
+
+                {showPassword ? (
+                  <Eye
+                    className='absolute right-3 top-3 h-4 w-4 cursor-pointer hover:text-candleamber'
+                    onClick={() => setShowPassword(false)}
+                  />
+                ) : (
+                  <EyeClosed
+                    className='absolute right-3 top-3 h-4 w-4 cursor-pointer hover:text-candleamber '
+                    onClick={() => setShowPassword(true)}
+                  />
+                )}
+
                 {errors.password && (
                   <p className='text-red-500 text-sm mt-1'>
                     {errors.password.message}
