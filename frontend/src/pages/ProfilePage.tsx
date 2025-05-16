@@ -15,16 +15,19 @@ import {
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import { TabItem, Tabs } from "flowbite-react";
+import { Modal, ModalBody, ModalHeader, TabItem, Tabs } from "flowbite-react";
 import { IUser } from "../interfaces/interfaces";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { extractErrorMessage } from "../utils/extractError";
 import { logout, setCredentials } from "../slices/authSlice";
 import { useGetOrdersByCustomerQuery } from "../slices/orderApiSlice";
+import { useState } from "react";
 
 const ProfilePage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.auth);
+
   const {
     register,
     handleSubmit,
@@ -106,7 +109,7 @@ const ProfilePage = () => {
                   First Name
                 </label>
                 <input
-                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
+                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder: focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
                   type='text'
                   id='firstName'
                   {...register("firstName", {
@@ -204,9 +207,9 @@ const ProfilePage = () => {
               </div>
 
               {userOrders?.results && userOrders.results.length > 0 ? (
-                <table className='w-full text-sm text-left rtl:text-right text-gray-500 divide-y divide-secondary'>
+                <table className='w-full text-sm text-left rtl:text-right divide-y divide-secondary'>
                   {/* TABLE HEADERS */}
-                  <thead className='text-sm hover:bg-secondary/40 '>
+                  <thead className='text-sm hover:bg-secondary/40'>
                     <tr className='rounded-t-md'>
                       <th scope='col' className='rounded-tl-md px-6 py-3'>
                         Order Number
@@ -233,13 +236,20 @@ const ProfilePage = () => {
                           <td className='font-medium uppercase px-6 py-3'>
                             {order.orderNumber}
                           </td>
-                          <td className='font-medium px-6 py-3'>
+                          <td className='px-6 py-3'>
                             {new Date(order.orderDate).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-3">R{order.totalPrice}</td>
-                          <td className='capitalize px-6 py-3'>{order.status}</td>
+                          <td className='px-6 py-3'>
+                            R {order.totalPrice.toFixed(2)}
+                          </td>
+                          <td className='capitalize px-6 py-3'>
+                            {order.status}
+                          </td>
                           <td className='text-right px-6 py-3'>
-                            <button className='flex items-center h-9 rounded-md px-3 hover:bg-secondary hover:text-accent-foreground'>
+                            <button
+                              className='flex items-center h-9 rounded-md px-3 hover:bg-secondary hover:text-accent-foreground cursor-pointer'
+                              onClick={() => setIsModalOpen(true)}
+                            >
                               <Eye className='h-4 w-4 mr-1' />
                               View
                             </button>
@@ -252,12 +262,12 @@ const ProfilePage = () => {
                 <div className='text-center py-12 border rounded-md bg-gray-50'>
                   <Package className='h-12 w-12 mx-auto text-gray-400' />
                   <h3 className='mt-4 text-lg font-medium'>No orders yet</h3>
-                  <p className='mt-1 text-sm text-gray-500'>
+                  <p className='mt-1 text-sm text-gray-500 mb-4'>
                     Your orders will appear here once you make a purchase.
                   </p>
                   <Link
                     to='/shop'
-                    className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors disabled:bg-candledark/50 disabled:cursor-not-allowed mt-4'
+                    className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors disabled:bg-candledark/50 disabled:cursor-not-allowed'
                   >
                     Start Shopping
                   </Link>
@@ -279,6 +289,27 @@ const ProfilePage = () => {
           <TabItem title='Settings' icon={Settings}></TabItem>
         </Tabs>
       </div>
+
+      <Modal
+        show={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        className='bg-secondary'
+      >
+        <ModalHeader />
+        <ModalBody className='bg-secondary'>
+          <div className='space-y-4'>
+            <div className='grid grid-cols-2 gap-4'>
+              <div>
+                <p className='text-sm text-muted-foreground'>Date</p>
+                <p>{new Date().toLocaleDateString()}</p>
+              </div>
+              <div>
+                <p className='text-sm '>Status</p>
+              </div>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
   );
 };

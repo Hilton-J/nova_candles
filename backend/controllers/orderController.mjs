@@ -1,9 +1,10 @@
 import Order from '../models/orderModel.mjs';
 import asyncHandler from 'express-async-handler';
 import { CREATED, OK } from '../constants/http.codes.mjs';
-import { deleteOneDoc, getAllDocs } from '../services/crudHandlerFactory.mjs';
+import { deleteOneDoc, getAllDocs, getOneDoc } from '../services/crudHandlerFactory.mjs';
 import { getOrdersByCustomer, createOrder } from '../services/orderService.mjs';
 
+export const getOrderByIdHandler = getOneDoc(Order);
 export const getAllOrdersHandler = getAllDocs(Order);
 export const deleteOrderHandler = deleteOneDoc(Order);
 
