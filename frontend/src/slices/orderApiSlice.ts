@@ -27,6 +27,11 @@ const orderApiSlice = apiSlice.injectEndpoints({
       query: (page) => `${ORDER_URL}/customer?page=${page}`,
       providesTags: ["Order"],
     }),
+
+    getOrdersById: builder.query<IOrder, string | null>({
+      query: (id) => `${ORDER_URL}/${id}`,
+      providesTags: ["Order"],
+    }),
   }),
 });
 
@@ -34,4 +39,5 @@ export const {
   usePlaceOrderMutation,
   useGetAllOrderQuery,
   useGetOrdersByCustomerQuery,
+  useGetOrdersByIdQuery,
 } = orderApiSlice;

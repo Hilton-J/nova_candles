@@ -8,58 +8,52 @@ import {
   Truck,
   User,
 } from "lucide-react";
-import {
-  useLogoutMutation,
-  useUpdateUserMutation,
-} from "../slices/userApiSlice";
+import { useLogoutMutation } from "../slices/userApiSlice";
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import { Modal, ModalBody, ModalHeader, TabItem, Tabs } from "flowbite-react";
-import { IUser } from "../interfaces/interfaces";
+import {
+  Badge,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  TabItem,
+  Tabs,
+} from "flowbite-react";
 import { AppDispatch, RootState } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { extractErrorMessage } from "../utils/extractError";
-import { logout, setCredentials } from "../slices/authSlice";
-import { useGetOrdersByCustomerQuery } from "../slices/orderApiSlice";
+import { logout } from "../slices/authSlice";
+import {
+  useGetOrdersByCustomerQuery,
+  useGetOrdersByIdQuery,
+} from "../slices/orderApiSlice";
 import { useState } from "react";
+import ProfileTab from "../components/ProfileTabForm";
+import Loader from "../components/Loader";
+
+const modalTheme = {
+  header: {
+    close: {
+      base: "ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-candledark hover:bg-transperent hover:text-candleamber dark:hover:bg-transparent dark:hover:text-candleamber cursor-pointer",
+    },
+  },
+};
 
 const ProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty },
-  } = useForm<Partial<IUser>>({
-    mode: "onChange",
-    defaultValues: {
-      firstName: userInfo?.firstName,
-      lastName: userInfo?.lastName,
-      email: userInfo?.email,
-      phoneNumber: userInfo?.phoneNumber,
-    },
-  });
-
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
   const { data: userOrders } = useGetOrdersByCustomerQuery(1);
+  const { data: orderDetails, isLoading } =
+    useGetOrdersByIdQuery(selectedOrder);
   const [logoutApiCall] = useLogoutMutation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  console.log(userOrders);
-
-  const onSubmit = async (data: Partial<IUser>) => {
-    // e.preventDefault();
-    try {
-      const res = await updateUser(data).unwrap();
-      const { results, message } = res;
-      dispatch(setCredentials({ ...results }));
-      toast.success(message);
-    } catch (err) {
-      toast.error(extractErrorMessage(err));
-    }
+  const openOrderModal = (orderId: string) => {
+    setSelectedOrder(orderId);
+    setIsModalOpen(true);
   };
 
   const handleLogout = async () => {
@@ -69,6 +63,21 @@ const ProfilePage = () => {
       navigate("/");
     } catch (err) {
       toast.error(extractErrorMessage(err));
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "delivered":
+        return "green";
+      case "shipped":
+        return "blue";
+      case "processing":
+        return "yellow";
+      case "cancelled":
+        return "red";
+      default:
+        return "gray";
     }
   };
 
@@ -97,105 +106,7 @@ const ProfilePage = () => {
         <Tabs aria-label='Pills' variant='pills'>
           {/* PROFILE */}
           <TabItem active title='Profile' icon={User} className='bg-black'>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className='space-y-6 max-w-[50%]'
-            >
-              <div className='space-y-3'>
-                <label
-                  className='block text-destructiv font-medium'
-                  htmlFor='email'
-                >
-                  First Name
-                </label>
-                <input
-                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder: focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
-                  type='text'
-                  id='firstName'
-                  {...register("firstName", {
-                    required: "First Name is required",
-                  })}
-                  disabled={isLoading}
-                />
-              </div>
-
-              <div className='space-y-3'>
-                <label
-                  className='block text-destructiv font-medium'
-                  htmlFor='email'
-                >
-                  Last Name
-                </label>
-                <input
-                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
-                  type='text'
-                  id='lastName'
-                  {...register("lastName", {
-                    required: "Last Name is required",
-                  })}
-                  disabled={isLoading}
-                />
-                {errors.lastName && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    {errors.lastName.message}
-                  </p>
-                )}
-              </div>
-
-              <div className='space-y-3'>
-                <label
-                  className='block text-destructiv font-medium'
-                  htmlFor='email'
-                >
-                  Email
-                </label>
-                <input
-                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
-                  type='email'
-                  id='email'
-                  disabled
-                  {...register("email")}
-                />
-              </div>
-
-              <div className='space-y-3'>
-                <label
-                  className='block text-destructiv font-medium'
-                  htmlFor='email'
-                >
-                  Mobile Number
-                </label>
-                <input
-                  className='flex h-10 w-full rounded-md border border-black/20 bg-background px-3 py-2 text-base ring-offset-background laceholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-candleamber focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:outline-none focus:ring-1 focus:ring-candleamber'
-                  type='tel'
-                  inputMode='tel'
-                  id='phoneNumber'
-                  {...register("phoneNumber", {
-                    required: "Phone number is required",
-                    min: 10,
-                    maxLength: 12,
-                    pattern: {
-                      value: /0[6-8][0-9]{8}/i,
-                      message: "Format must be 0655235235",
-                    },
-                  })}
-                  disabled={isLoading}
-                />
-                {errors.phoneNumber && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    {errors.phoneNumber.message}
-                  </p>
-                )}
-              </div>
-
-              <button
-                type='submit'
-                className='cursor-pointer px-3 py-2 bg-candleamber text-white rounded-md hover:bg-candleamber/80 transition-colors disabled:bg-candledark/50 disabled:cursor-not-allowed'
-                disabled={!isDirty}
-              >
-                {isLoading ? <>Saving...</> : "Save Changes"}
-              </button>
-            </form>
+            <ProfileTab />
           </TabItem>
 
           {/* ORDERS */}
@@ -243,12 +154,17 @@ const ProfilePage = () => {
                             R {order.totalPrice.toFixed(2)}
                           </td>
                           <td className='capitalize px-6 py-3'>
-                            {order.status}
+                            <Badge
+                              color={getStatusColor(order.status)}
+                              className='w-fit rounded-full'
+                            >
+                              {order.status}
+                            </Badge>
                           </td>
                           <td className='text-right px-6 py-3'>
                             <button
                               className='flex items-center h-9 rounded-md px-3 hover:bg-secondary hover:text-accent-foreground cursor-pointer'
-                              onClick={() => setIsModalOpen(true)}
+                              onClick={() => openOrderModal(order._id)}
                             >
                               <Eye className='h-4 w-4 mr-1' />
                               View
@@ -260,7 +176,7 @@ const ProfilePage = () => {
                 </table>
               ) : (
                 <div className='text-center py-12 border rounded-md bg-gray-50'>
-                  <Package className='h-12 w-12 mx-auto text-gray-400' />
+                  <Package className='h-12 w-12 mx-auto text-secondary/60' />
                   <h3 className='mt-4 text-lg font-medium'>No orders yet</h3>
                   <p className='mt-1 text-sm text-gray-500 mb-4'>
                     Your orders will appear here once you make a purchase.
@@ -293,21 +209,39 @@ const ProfilePage = () => {
       <Modal
         show={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className='bg-secondary'
+        theme={modalTheme}
       >
-        <ModalHeader />
-        <ModalBody className='bg-secondary'>
-          <div className='space-y-4'>
-            <div className='grid grid-cols-2 gap-4'>
-              <div>
-                <p className='text-sm text-muted-foreground'>Date</p>
-                <p>{new Date().toLocaleDateString()}</p>
+        <ModalHeader className='bg-secondary border-none'>
+          Order Details {orderDetails?.orderNumber}
+        </ModalHeader>
+        <ModalBody className='bg-secondary rounded-b-md'>
+          {isLoading ? (
+            <Loader loading={isLoading} />
+          ) : (
+            orderDetails && (
+              <div className='space-y-4'>
+                <div className='grid grid-cols-2 gap-4'>
+                  <div>
+                    <p className='text-sm text-muted-foreground'>Date</p>
+                    <p>
+                      {new Date(orderDetails.orderDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-sm '>Status</p>
+                    <p className='capitalize'>
+                      <Badge
+                        color={getStatusColor(orderDetails.status)}
+                        className='w-fit rounded-full'
+                      >
+                        {orderDetails.status}
+                      </Badge>
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className='text-sm '>Status</p>
-              </div>
-            </div>
-          </div>
+            )
+          )}
         </ModalBody>
       </Modal>
     </div>

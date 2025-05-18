@@ -96,7 +96,7 @@ const NavBar = () => {
 
             <NavLink to='/cart' className='relative p-2'>
               <ShoppingCart className='h-5 w-5 text-candledark hover:text-candleamber transition-colors' />
-              {cart && cart?.items.length > 0 && (
+              {userInfo && cart && cart?.items.length > 0 && (
                 <span className='absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-candleamber rounded-full'>
                   {cart?.items.length}
                 </span>
