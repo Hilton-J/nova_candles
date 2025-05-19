@@ -1,43 +1,37 @@
 import {
   Eye,
-  FileText,
+  User,
+  Truck,
   LogOut,
   MapPin,
   Package,
+  FileText,
   Settings,
-  Truck,
-  User,
 } from "lucide-react";
-import { useLogoutMutation } from "../slices/userApiSlice";
-import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router";
 import {
+  Tabs,
   Badge,
   Modal,
+  TabItem,
   ModalBody,
   ModalHeader,
-  TabItem,
-  Tabs,
 } from "flowbite-react";
-import { AppDispatch, RootState } from "../store";
-import { useDispatch, useSelector } from "react-redux";
-import { extractErrorMessage } from "../utils/extractError";
-import { logout } from "../slices/authSlice";
 import {
-  useGetOrdersByCustomerQuery,
   useGetOrdersByIdQuery,
+  useGetOrdersByCustomerQuery,
 } from "../slices/orderApiSlice";
 import { useState } from "react";
-import ProfileTab from "../components/ProfileTabForm";
+import { toast } from "react-toastify";
 import Loader from "../components/Loader";
-
-const modalTheme = {
-  header: {
-    close: {
-      base: "ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-candledark hover:bg-transperent hover:text-candleamber dark:hover:bg-transparent dark:hover:text-candleamber cursor-pointer",
-    },
-  },
-};
+import { logout } from "../slices/authSlice";
+import { Link, useNavigate } from "react-router";
+import { AppDispatch, RootState } from "../store";
+import ProfileTab from "../components/ProfileTabForm";
+import { useDispatch, useSelector } from "react-redux";
+import { useLogoutMutation } from "../slices/userApiSlice";
+import { extractErrorMessage } from "../utils/extractError";
+import { orderModalTheme } from "../components/themes/FlowbiteCustomStyles";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const ProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,8 +39,9 @@ const ProfilePage = () => {
   const { userInfo } = useSelector((state: RootState) => state.auth);
 
   const { data: userOrders } = useGetOrdersByCustomerQuery(1);
-  const { data: orderDetails, isLoading } =
-    useGetOrdersByIdQuery(selectedOrder);
+  const { data: orderDetails, isLoading } = useGetOrdersByIdQuery(
+    selectedOrder ?? skipToken
+  );
   const [logoutApiCall] = useLogoutMutation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -68,14 +63,14 @@ const ProfilePage = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "delivered":
-        return "green";
       case "shipped":
         return "blue";
-      case "processing":
-        return "yellow";
       case "cancelled":
         return "red";
+      case "delivered":
+        return "green";
+      case "processing":
+        return "yellow";
       default:
         return "gray";
     }
@@ -105,7 +100,7 @@ const ProfilePage = () => {
         {/* TABS */}
         <Tabs aria-label='Pills' variant='pills'>
           {/* PROFILE */}
-          <TabItem active title='Profile' icon={User} className='bg-black'>
+          <TabItem active title='Profile' icon={User}>
             <ProfileTab />
           </TabItem>
 
@@ -157,6 +152,7 @@ const ProfilePage = () => {
                             <Badge
                               color={getStatusColor(order.status)}
                               className='w-fit rounded-full'
+                              size='sm'
                             >
                               {order.status}
                             </Badge>
@@ -209,12 +205,12 @@ const ProfilePage = () => {
       <Modal
         show={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        theme={modalTheme}
+        theme={orderModalTheme}
       >
-        <ModalHeader className='bg-secondary border-none'>
+        <ModalHeader className='bg-background border-none'>
           Order Details {orderDetails?.orderNumber}
         </ModalHeader>
-        <ModalBody className='bg-secondary rounded-b-md'>
+        <ModalBody className='bg-background'>
           {isLoading ? (
             <Loader loading={isLoading} />
           ) : (
@@ -222,20 +218,59 @@ const ProfilePage = () => {
               <div className='space-y-4'>
                 <div className='grid grid-cols-2 gap-4'>
                   <div>
-                    <p className='text-sm text-muted-foreground'>Date</p>
+                    <p className='text-sm font-medium'>Date</p>
                     <p>
                       {new Date(orderDetails.orderDate).toLocaleDateString()}
                     </p>
                   </div>
                   <div>
-                    <p className='text-sm '>Status</p>
+                    <p className='text-sm font-medium'>Status</p>
                     <p className='capitalize'>
                       <Badge
                         color={getStatusColor(orderDetails.status)}
-                        className='w-fit rounded-full'
+                        className='w-fit rounded-full '
+                        size='sm'
                       >
                         {orderDetails.status}
                       </Badge>
+                    </p>
+                  </div>
+                </div>
+                <div className='bg-white p-4 rounded-lg border border-secondary shadow-md'>
+                  <h4 className='font-medium mb-3'>Order Items</h4>
+                  <table className='w-full text-sm text-left rtl:text-right divide-y divide-secondary'>
+                    {/* TABLE HEADERS */}
+                    <thead className='text-sm hover:bg-secondary/40'>
+                      <tr className='rounded-t-md'>
+                        <th scope='col' className='rounded-tl-md px-6 py-3'>
+                          Item
+                        </th>
+                        <th scope='col' className='px-6 py-3'>
+                          Quantity
+                        </th>
+                        <th scope='col' className='px-6 py-3'>
+                          Price
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody className='divide-y divide-secondary'>
+                      {orderDetails?.items.map((item) => (
+                        <tr key={item._id} className='hover:bg-secondary/40'>
+                          <td className='font-medium capitalize px-6 py-3'>
+                            {item.productName}
+                          </td>
+                          <td className='px-6 py-3'>{item.quantity}</td>
+                          <td className='px-6 py-3'>
+                            R {item.price.toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className='mt-4 text-right'>
+                    <p className='font-medium'>
+                      Total: R{orderDetails.totalPrice.toFixed(2)}
                     </p>
                   </div>
                 </div>

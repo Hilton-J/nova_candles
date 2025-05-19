@@ -10,6 +10,6 @@ router.route('/')
   .get(protect, authorizeRoles('admin'), getAllOrdersHandler);
 router.get('/customer', protect, getOrdersByCustomerHandler);
 router.delete('/:id', protect, authorizeRoles('admin'), deleteOrderHandler);
-router.get('/:id', protect, getOrderByIdHandler);
+router.get('/:id', protect, authorizeRoles('admin', 'customer'), getOrderByIdHandler);
 
 export default router;

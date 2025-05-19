@@ -1,17 +1,20 @@
 import { Outlet } from "react-router";
 import Footer from "../components/Footer";
 import NavBar from "../components/NavBar";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Zoom } from "react-toastify";
 
 const MainLayout = () => {
-
   return (
     <>
-      <NavBar/>
-      <Outlet  />
+      <NavBar />
+      <Outlet />
       <Footer />
-      {/* {openLoginModal && <LoginModal setOpenLoginModal={setOpenLoginModal} />} */}
-      <ToastContainer className='z-50' />
+      <ToastContainer
+        position='bottom-right'
+        autoClose={2000}
+        transition={Zoom}
+        className='z-50'
+      />
     </>
   );
 };

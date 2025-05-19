@@ -30,7 +30,6 @@ const LoginPage = () => {
     try {
       const res = await login(data).unwrap();
       dispatch(setCredentials({ ...res }));
-      toast.success(`Logged in Successfully`);
       navigate(from, { replace: true });
     } catch (err) {
       toast.error(extractErrorMessage(err));
